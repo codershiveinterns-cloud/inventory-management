@@ -2,6 +2,7 @@ import express from "express";
 import cors from "cors";
 
 import productRoutes from "./routes/productRoutes.js";
+import dashboardRoutes from "./routes/dashboardRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
@@ -29,6 +30,7 @@ app.get("/api/health", (_req, res) => {
   });
 });
 
+app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/auth", authRoutes);
