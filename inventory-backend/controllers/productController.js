@@ -1,8 +1,20 @@
 import Product from "../models/Product.js";
 import InventoryLog from "../models/InventoryLog.js";
+import InventoryHistory from "../models/InventoryHistory.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { createInventoryLog, getChangeDetailsFromDelta } from "../utils/inventory.js";
+import {
+  createInventoryHistoryEntry,
+  getHistoryActionFromChange,
+} from "../utils/history.js";
 import { DUPLICATE_SKU_MESSAGE, normalizeSku } from "../utils/sku.js";
+
+const allowedCategories = new Set([
+  "Electronics",
+  "Grocery",
+  "Clothing",
+  "Other",
+]);
 
 const ensureSkuIsAvailable = async ({ sku, excludeProductId }) => {
   if (!sku) {
@@ -48,47 +60,331 @@ const normalizeLowStockThreshold = (value, { required = false } = {}) => {
   return numericLowStockThreshold;
 };
 
+const normalizeProductTitle = (value, { required = false } = {}) => {
+  if (value === undefined) {
+    if (required) {
+      const error = new Error("title or name is required");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    return undefined;
+  }
+
+  const normalizedValue = String(value).trim();
+
+  if (!normalizedValue) {
+    const error = new Error("title or name is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return normalizedValue;
+};
+
+const ensureMatchingValues = (firstValue, secondValue, firstLabel, secondLabel) => {
+  if (
+    firstValue !== undefined &&
+    secondValue !== undefined &&
+    String(firstValue) !== String(secondValue)
+  ) {
+    const error = new Error(
+      `${firstLabel} and ${secondLabel} must match when both are provided`
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+};
+
+const normalizeCategory = (value, { required = false } = {}) => {
+  if (value === undefined) {
+    if (required) {
+      const error = new Error("category is required");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    return undefined;
+  }
+
+  const normalizedValue = String(value).trim();
+
+  if (!normalizedValue) {
+    const error = new Error("category is required");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!allowedCategories.has(normalizedValue)) {
+    const error = new Error(
+      `category must be one of: ${Array.from(allowedCategories).join(", ")}`
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return normalizedValue;
+};
+
+const normalizeQuantity = (value, { required = false } = {}) => {
+  if (value === undefined) {
+    if (required) {
+      const error = new Error("quantity is required");
+      error.statusCode = 400;
+      throw error;
+    }
+
+    return undefined;
+  }
+
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue) || numericValue < 0) {
+    const error = new Error("quantity must be a valid non-negative number");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return numericValue;
+};
+
+const escapeRegex = (value) =>
+  value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const normalizePrice = (value, fieldName, { required = false } = {}) => {
+  if (value === undefined) {
+    if (required) {
+      const error = new Error(`${fieldName} is required`);
+      error.statusCode = 400;
+      throw error;
+    }
+
+    return undefined;
+  }
+
+  const numericValue = Number(value);
+
+  if (!Number.isFinite(numericValue) || numericValue < 0) {
+    const error = new Error(`${fieldName} must be a non-negative number`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return numericValue;
+};
+
+const resolveProductName = ({ name, title }) => name ?? title;
+
+const resolveProductQuantity = ({ quantity, stock }) => quantity ?? stock;
+
+const buildProductFilters = ({
+  nameSearch,
+  skuSearch,
+  category,
+  stockStatus,
+  minPrice,
+  maxPrice,
+}) => {
+  const query = {};
+  const andClauses = [];
+  const normalizedNameSearch = nameSearch?.trim();
+  const normalizedSkuSearch = skuSearch?.trim();
+  const normalizedCategory = category?.trim();
+
+  if (normalizedNameSearch) {
+    query.title = { $regex: normalizedNameSearch, $options: "i" };
+  }
+
+  if (normalizedSkuSearch) {
+    query.sku = { $regex: normalizedSkuSearch, $options: "i" };
+  }
+
+  if (normalizedCategory && normalizedCategory !== "All Categories") {
+    const validatedCategory = normalizeCategory(normalizedCategory);
+
+    if (validatedCategory === "Other") {
+      andClauses.push({
+        $or: [
+          { category: "Other" },
+          { category: { $exists: false } },
+          { category: null },
+          { category: "" },
+        ],
+      });
+    } else {
+      query.category = validatedCategory;
+    }
+  }
+
+  const normalizedMinPrice = normalizePrice(minPrice, "minPrice");
+  const normalizedMaxPrice = normalizePrice(maxPrice, "maxPrice");
+
+  if (
+    normalizedMinPrice !== undefined &&
+    normalizedMaxPrice !== undefined &&
+    normalizedMinPrice > normalizedMaxPrice
+  ) {
+    const error = new Error("minPrice cannot be greater than maxPrice");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (
+    normalizedMinPrice !== undefined ||
+    normalizedMaxPrice !== undefined
+  ) {
+    query.price = {
+      ...(normalizedMinPrice !== undefined ? { $gte: normalizedMinPrice } : {}),
+      ...(normalizedMaxPrice !== undefined ? { $lte: normalizedMaxPrice } : {}),
+    };
+  }
+
+  if (
+    stockStatus !== undefined &&
+    stockStatus !== "low" &&
+    stockStatus !== "inStock" &&
+    stockStatus !== ""
+  ) {
+    const error = new Error("stockStatus must be either low or inStock");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (andClauses.length === 1) {
+    Object.assign(query, andClauses[0]);
+  } else if (andClauses.length > 1) {
+    query.$and = andClauses;
+  }
+
+  return query;
+};
+
 // Create a new product and record the initial stock as an inventory event.
-export const createProduct = asyncHandler(async (req, res) => {
-  const { title, sku, stock, price, lowStockThreshold } = req.body;
-  const normalizedSku = normalizeSku(sku);
-  const normalizedLowStockThreshold = normalizeLowStockThreshold(
-    lowStockThreshold,
-    { required: true }
-  );
+export const createProduct = async (req, res) => {
+  try {
+    const {
+      title,
+      name,
+      category,
+      sku,
+      stock,
+      quantity,
+      price,
+      lowStockThreshold,
+    } = req.body;
 
-  await ensureSkuIsAvailable({ sku: normalizedSku });
+    ensureMatchingValues(name, title, "name", "title");
+    ensureMatchingValues(quantity, stock, "quantity", "stock");
 
-  const product = await Product.create({
-    title,
-    sku: normalizedSku,
-    stock,
-    price,
-    lowStockThreshold: normalizedLowStockThreshold,
-  });
+    if (
+      resolveProductName({ name, title }) === undefined ||
+      price === undefined ||
+      resolveProductQuantity({ quantity, stock }) === undefined ||
+      category === undefined ||
+      lowStockThreshold === undefined
+    ) {
+      return res.status(400).json({
+        message:
+          "Missing required fields: title/name, price, quantity, category, and lowStockThreshold are required",
+      });
+    }
 
-  await createInventoryLog({
-    productId: product._id,
-    changeType: "increase",
-    quantity: product.stock,
-  });
+    const normalizedTitle = normalizeProductTitle(
+      resolveProductName({ name, title }),
+      { required: true }
+    );
+    const normalizedQuantity = normalizeQuantity(
+      resolveProductQuantity({ quantity, stock }),
+      { required: true }
+    );
+    const normalizedCategory = normalizeCategory(category, { required: true });
+    const normalizedSku = normalizeSku(sku);
+    const normalizedLowStockThreshold = normalizeLowStockThreshold(
+      lowStockThreshold,
+      { required: true }
+    );
+    const normalizedPrice = normalizePrice(price, "price", { required: true });
 
-  res.status(201).json({
-    success: true,
-    message: "Product created successfully",
-    data: product,
-  });
-});
+    await ensureSkuIsAvailable({ sku: normalizedSku });
+
+    console.log("Incoming data:", req.body);
+
+    const product = await Product.create({
+      title: normalizedTitle,
+      category: normalizedCategory,
+      sku: normalizedSku,
+      stock: normalizedQuantity,
+      price: normalizedPrice,
+      lowStockThreshold: normalizedLowStockThreshold,
+    });
+
+    await createInventoryLog({
+      productId: product._id,
+      changeType: "increase",
+      quantity: product.stock,
+    });
+
+    await createInventoryHistoryEntry({
+      productId: product._id,
+      change: product.stock,
+      action: "added",
+    });
+
+    return res.status(201).json({
+      success: true,
+      message: "Product created successfully",
+      data: product,
+    });
+  } catch (error) {
+    console.error("CREATE PRODUCT ERROR:", error);
+
+    return res.status(error.statusCode || 500).json({
+      message: error.message || "Internal server error",
+    });
+  }
+};
 
 // Fetch all products for dashboard or listing screens.
-export const getProducts = asyncHandler(async (_req, res) => {
-  const products = await Product.find().sort({ createdAt: -1 });
+export const getProducts = asyncHandler(async (req, res) => {
+  const query = buildProductFilters(req.query);
+  console.log("Query:", query);
+  let products = await Product.find(query).sort({ createdAt: -1 });
+
+  if (req.query.stockStatus === "low") {
+    products = products.filter((product) => product.stock <= product.lowStockThreshold);
+  }
+
+  if (req.query.stockStatus === "inStock") {
+    products = products.filter((product) => product.stock > product.lowStockThreshold);
+  }
+
+  console.log("Results:", products.length);
 
   res.json({
     success: true,
     count: products.length,
     data: products,
   });
+});
+
+export const getCategories = asyncHandler(async (_req, res) => {
+  const categories = (await Product.distinct("category"))
+    .filter(Boolean)
+    .sort((left, right) => left.localeCompare(right));
+  const uncategorizedCount = await Product.countDocuments({
+    $or: [
+      { category: { $exists: false } },
+      { category: null },
+      { category: "" },
+    ],
+  });
+
+  if (uncategorizedCount > 0 && !categories.includes("Other")) {
+    categories.push("Other");
+    categories.sort((left, right) => left.localeCompare(right));
+  }
+
+  res.json({ categories });
 });
 
 // Return products whose stock has fallen below the configured threshold.
@@ -121,7 +417,17 @@ export const getProductById = asyncHandler(async (req, res) => {
 
 // Update product details and log stock movements when inventory changes.
 export const updateProduct = asyncHandler(async (req, res) => {
-  const { title, sku, stock, price, lowStockThreshold, change } = req.body;
+  const {
+    title,
+    name,
+    category,
+    sku,
+    stock,
+    quantity,
+    price,
+    lowStockThreshold,
+    change,
+  } = req.body;
   const product = await Product.findById(req.params.id);
 
   if (!product) {
@@ -129,9 +435,14 @@ export const updateProduct = asyncHandler(async (req, res) => {
     throw new Error("Product not found");
   }
 
-  if (stock !== undefined && change !== undefined) {
+  ensureMatchingValues(name, title, "name", "title");
+  ensureMatchingValues(quantity, stock, "quantity", "stock");
+
+  const hasQuantityInput = quantity !== undefined || stock !== undefined;
+
+  if (hasQuantityInput && change !== undefined) {
     res.status(400);
-    throw new Error("Provide either stock or change, not both");
+    throw new Error("Provide either quantity/stock or change, not both");
   }
 
   let stockDelta = 0;
@@ -155,20 +466,23 @@ export const updateProduct = asyncHandler(async (req, res) => {
     product.stock = updatedStock;
   }
 
-  if (stock !== undefined) {
-    const numericStock = Number(stock);
+  if (hasQuantityInput) {
+    const normalizedQuantity = normalizeQuantity(
+      resolveProductQuantity({ quantity, stock })
+    );
 
-    if (Number.isNaN(numericStock) || numericStock < 0) {
-      res.status(400);
-      throw new Error("Stock must be a valid non-negative number");
-    }
-
-    stockDelta = numericStock - product.stock;
-    product.stock = numericStock;
+    stockDelta = normalizedQuantity - product.stock;
+    product.stock = normalizedQuantity;
   }
 
-  if (title !== undefined) {
-    product.title = title;
+  const normalizedTitle = resolveProductName({ name, title });
+
+  if (normalizedTitle !== undefined) {
+    product.title = normalizedTitle;
+  }
+
+  if (category !== undefined) {
+    product.category = normalizeCategory(category);
   }
 
   if (sku !== undefined) {
@@ -183,7 +497,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
   }
 
   if (price !== undefined) {
-    product.price = price;
+    product.price = normalizePrice(price, "price");
   }
 
   if (lowStockThreshold !== undefined) {
@@ -200,6 +514,12 @@ export const updateProduct = asyncHandler(async (req, res) => {
       quantity: changeDetails.quantity,
     });
   }
+
+  await createInventoryHistoryEntry({
+    productId: updatedProduct._id,
+    change: stockDelta,
+    action: getHistoryActionFromChange(stockDelta),
+  });
 
   res.json({
     success: true,
@@ -218,6 +538,7 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   }
 
   await InventoryLog.deleteMany({ productId: product._id });
+  await InventoryHistory.deleteMany({ productId: product._id });
   await product.deleteOne();
 
   res.json({

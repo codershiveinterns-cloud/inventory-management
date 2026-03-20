@@ -27,6 +27,11 @@ export default function AddProductPage() {
     setError('');
 
     try {
+      if (!product.category?.trim()) {
+        setError('Category is required.');
+        return;
+      }
+
       const normalizedSku = normalizeSku(product.sku);
       const products = await getProducts();
       const duplicateProduct = products.find(

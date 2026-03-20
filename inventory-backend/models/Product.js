@@ -7,6 +7,14 @@ const productSchema = new mongoose.Schema(
       type: String,
       required: [true, "Product title is required"],
       trim: true,
+      alias: "name",
+    },
+    category: {
+      type: String,
+      required: [true, "Category is required"],
+      enum: ["Electronics", "Grocery", "Clothing", "Other"],
+      trim: true,
+      default: "Other",
     },
     sku: {
       type: String,
@@ -19,6 +27,7 @@ const productSchema = new mongoose.Schema(
       required: true,
       min: [0, "Stock cannot be negative"],
       default: 0,
+      alias: "quantity",
     },
     price: {
       type: Number,
@@ -41,6 +50,18 @@ const productSchema = new mongoose.Schema(
     toObject: { virtuals: true },
   }
 );
+
+productSchema.pre("validate", function setDefaultCategory() {
+  if (!this.category) {
+    this.category = "Other";
+  }
+});
+
+productSchema.pre("init", function setLegacyCategory(document) {
+  if (!document.category) {
+    document.category = "Other";
+  }
+});
 
 productSchema.virtual("isLowStock").get(function isLowStock() {
   return this.stock <= this.lowStockThreshold;

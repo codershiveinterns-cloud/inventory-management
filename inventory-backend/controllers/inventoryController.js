@@ -1,6 +1,7 @@
 import Product from "../models/Product.js";
 import InventoryLog from "../models/InventoryLog.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import { createInventoryHistoryEntry } from "../utils/history.js";
 import {
   createInventoryLog,
   validateChangeType,
@@ -51,6 +52,12 @@ export const updateInventory = asyncHandler(async (req, res) => {
     productId: updatedProduct._id,
     changeType: normalizedType,
     quantity: normalizedQuantity,
+  });
+
+  await createInventoryHistoryEntry({
+    productId: updatedProduct._id,
+    change: normalizedType === "increase" ? normalizedQuantity : -normalizedQuantity,
+    action: normalizedType === "increase" ? "added" : "sold",
   });
 
   res.json({

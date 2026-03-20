@@ -2,8 +2,11 @@ import { useEffect, useState } from 'react';
 import Button from './Button';
 import Card from './Card';
 
+const categoryOptions = ['Electronics', 'Grocery', 'Clothing', 'Other'];
+
 const emptyForm = {
   title: '',
+  category: '',
   sku: '',
   stock: '',
   price: '',
@@ -23,6 +26,7 @@ export default function ProductForm({
   useEffect(() => {
     setFormData({
       title: initialData.title ?? '',
+      category: initialData.category ?? '',
       sku: initialData.sku ?? '',
       stock: initialData.stock ?? '',
       price: initialData.price ?? '',
@@ -46,6 +50,10 @@ export default function ProductForm({
   function validateForm() {
     const nextErrors = {};
 
+    if (!formData.category) {
+      nextErrors.category = 'Category is required.';
+    }
+
     if (formData.lowStockThreshold === '') {
       nextErrors.lowStockThreshold = 'Low Stock Alert is required.';
     } else if (Number(formData.lowStockThreshold) < 0) {
@@ -65,6 +73,7 @@ export default function ProductForm({
 
     await onSubmit({
       title: formData.title.trim(),
+      category: formData.category,
       sku: formData.sku.trim(),
       stock: Number(formData.stock),
       price: Number(formData.price),
@@ -94,6 +103,33 @@ export default function ProductForm({
               placeholder="Wireless barcode scanner"
               className="w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
             />
+          </label>
+
+          <label className="block">
+            <span className="mb-2 block text-sm font-medium text-slate-200">
+              Category
+            </span>
+            <select
+              required
+              name="category"
+              value={formData.category}
+              onChange={handleChange}
+              className={`w-full rounded-2xl border bg-slate-900/80 px-4 py-3 text-white focus:outline-none focus:ring-2 ${
+                errors.category
+                  ? 'border-rose-400/60 focus:border-rose-400 focus:ring-rose-400/30'
+                  : 'border-white/10 focus:border-brand-300 focus:ring-brand-300/30'
+              }`}
+            >
+              <option value="">Select category</option>
+              {categoryOptions.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+            {errors.category ? (
+              <p className="mt-1 text-sm font-medium text-rose-300">{errors.category}</p>
+            ) : null}
           </label>
 
           <label className="block">

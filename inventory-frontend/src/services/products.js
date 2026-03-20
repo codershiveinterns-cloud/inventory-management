@@ -24,6 +24,7 @@ function normalizeProduct(product = {}) {
   return {
     id: product.id ?? product._id ?? product.productId ?? '',
     title: product.title ?? product.name ?? 'Untitled product',
+    category: product.category ?? '',
     sku: product.sku ?? '',
     lowStockThreshold:
       product.lowStockThreshold !== undefined && product.lowStockThreshold !== null
@@ -35,9 +36,22 @@ function normalizeProduct(product = {}) {
   };
 }
 
+function normalizeHistoryEntry(entry = {}) {
+  const quantity = Number(entry.quantity ?? 0);
+  const changeType = entry.changeType ?? entry.type ?? 'increase';
+
+  return {
+    id: entry.id ?? entry._id ?? `${changeType}-${entry.date ?? entry.createdAt ?? quantity}`,
+    date: entry.date ?? entry.createdAt ?? '',
+    action: changeType === 'decrease' ? 'Sold' : 'Added',
+    change: `${changeType === 'decrease' ? '-' : '+'}${Math.abs(quantity)}`
+  };
+}
+
 function serializeProductInput(product) {
   const payload = {
     title: product.title,
+    category: product.category,
     sku: product.sku,
     stock: Number(product.stock),
     price: Number(product.price),
@@ -47,8 +61,60 @@ function serializeProductInput(product) {
   return payload;
 }
 
-export async function getProducts() {
-  const response = await api.get('/products');
+function serializeCreateProductInput(product) {
+  const title = product.title;
+  const sku = product.sku;
+  const price = product.price;
+  const quantity = product.stock ?? product.quantity;
+  const category = product.category?.trim?.() ?? product.category;
+  const lowStockThreshold = product.lowStockThreshold;
+
+  if (!category) {
+    throw new Error('Category is required.');
+  }
+
+  return {
+    name: title,
+    sku,
+    price: Number(price),
+    quantity: Number(quantity),
+    category,
+    lowStockThreshold: Number(lowStockThreshold)
+  };
+}
+
+export async function getProducts(filters = {}) {
+  const params = {};
+
+  if (filters.nameSearch?.trim()) {
+    params.nameSearch = filters.nameSearch.trim();
+  }
+
+  if (filters.skuSearch?.trim()) {
+    params.skuSearch = filters.skuSearch.trim();
+  }
+
+  if (filters.search?.trim()) {
+    params.search = filters.search.trim();
+  }
+
+  if (filters.category?.trim()) {
+    params.category = filters.category.trim();
+  }
+
+  if (filters.stockStatus?.trim()) {
+    params.stockStatus = filters.stockStatus.trim();
+  }
+
+  if (filters.minPrice !== '' && filters.minPrice !== undefined) {
+    params.minPrice = Number(filters.minPrice);
+  }
+
+  if (filters.maxPrice !== '' && filters.maxPrice !== undefined) {
+    params.maxPrice = Number(filters.maxPrice);
+  }
+
+  const response = await api.get('/products', { params });
   return extractCollection(response.data).map(normalizeProduct);
 }
 
@@ -58,17 +124,11 @@ export async function getProduct(id) {
 }
 
 export async function createProduct(product) {
-  const payload = serializeProductInput(product);
+  const data = serializeCreateProductInput(product);
 
-  console.log({
-    title: payload.title,
-    sku: payload.sku,
-    stock: payload.stock,
-    price: payload.price,
-    lowStockThreshold: payload.lowStockThreshold
-  });
+  console.log('Sending data:', data);
 
-  const response = await api.post('/products', payload);
+  const response = await api.post('/products', data);
   return normalizeProduct(extractItem(response.data));
 }
 
@@ -95,4 +155,14 @@ export async function updateInventory({ productId, quantity, type }) {
 export async function getLowStockProducts() {
   const response = await api.get('/products/low-stock');
   return extractCollection(response.data).map(normalizeProduct);
+}
+
+export async function getCategories() {
+  const response = await api.get('/categories');
+  return response.data?.categories ?? extractCollection(response.data);
+}
+
+export async function getInventoryHistory(productId) {
+  const response = await api.get(`/history/${productId}`);
+  return extractCollection(response.data).map(normalizeHistoryEntry);
 }
