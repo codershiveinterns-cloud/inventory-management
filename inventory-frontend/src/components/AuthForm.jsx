@@ -27,26 +27,7 @@ export default function AuthForm({
       <div className="pointer-events-none absolute right-[10%] top-20 h-96 w-96 rounded-full bg-indigo-500/12 blur-3xl" />
 
       <div className="relative z-10 mx-auto flex min-h-screen max-w-7xl flex-col px-4 py-6 sm:px-6 lg:px-8">
-        <header className="flex items-center justify-between gap-4">
-          <Link to="/" className="flex items-center gap-3">
-            <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 via-brand-400 to-indigo-400 text-sm font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20">
-              IF
-            </div>
-            <div>
-              <p className="text-xs uppercase tracking-[0.28em] text-cyan-200/80">InventoryFlow</p>
-              <p className="text-sm text-slate-400">Inventory Management System</p>
-            </div>
-          </Link>
-
-          <Link
-            to={footerTo}
-            className="rounded-full border border-white/10 bg-white/[0.04] px-4 py-2 text-sm text-slate-300 transition hover:border-white/20 hover:text-white"
-          >
-            {footerLinkLabel}
-          </Link>
-        </header>
-
-        <div className="grid flex-1 items-center gap-10 py-10 lg:grid-cols-[0.95fr_1.05fr]">
+        <div className="grid flex-1 items-center gap-10 py-24 lg:grid-cols-[0.95fr_1.05fr]">
           <div className="max-w-xl">
             <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">
               Secure Workspace Access

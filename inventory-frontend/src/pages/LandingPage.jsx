@@ -1,21 +1,32 @@
-import { useState } from 'react';
 import { Link } from 'react-router-dom';
-
-const navItems = [
-  { label: 'Features', href: '#features' },
-  { label: 'How it Works', href: '#how-it-works' },
-  { label: 'Pricing', href: '#pricing' },
-  { label: 'Login', to: '/login' }
-];
+import Footer from '../components/Footer';
 
 const features = [
-  ['tracking', 'Inventory Tracking', 'Keep products, variants, and stock levels organized in one live workspace.'],
-  ['sync', 'Real-time Updates', 'See stock changes instantly across your team and connected storefronts.'],
-  ['shopify', 'Shopify Integration', 'Sync your Shopify store without manual exports or disconnected tools.'],
-  ['alerts', 'Low Stock Alerts', 'Flag risky inventory levels early and restock before sales are affected.'],
-  ['analytics', 'Analytics Dashboard', 'Understand movement, trends, and inventory health from one dashboard.'],
-  ['secure', 'Secure Authentication', 'Protect store operations with secure access for internal teams.']
+  {
+    kind: 'tracking',
+    title: 'Inventory Tracking That Stays Clear',
+    description:
+      'Monitor products, variants, and stock movement with a clean operational layer built for fast-moving teams.',
+    points: ['Unified SKU visibility', 'Low-stock awareness', 'Fast catalog health checks']
+  },
+  {
+    kind: 'sync',
+    title: 'Real-Time Operations Across Teams',
+    description:
+      'Keep warehouse updates, product changes, and order activity aligned in one premium dashboard experience.',
+    points: ['Live inventory changes', 'Instant dashboard refresh', 'Shared team visibility']
+  },
+  {
+    kind: 'shopify',
+    title: 'Shopify Sync With Smarter Control',
+    description:
+      'Connect your storefront and manage inventory with fewer manual tasks, fewer mistakes, and stronger reporting.',
+    points: ['Seamless Shopify integration', 'Analytics-ready workflows', 'Secure account access']
+  }
 ];
+
+const aboutContent =
+  'InventoryFlow is built to simplify inventory operations for modern businesses. Founded by Tushar Palaria, our mission is to help teams manage stock efficiently, reduce errors, and make faster decisions with real-time insights. We empower eCommerce brands with seamless Shopify integration and powerful analytics.';
 
 const steps = [
   ['account', 'Create Account', 'Set up your workspace and get your operations team aligned.'],
@@ -72,22 +83,6 @@ function buttonClass(primary = true) {
     : 'inline-flex items-center justify-center rounded-2xl border border-white/12 bg-white/[0.05] px-6 py-3.5 text-sm font-semibold text-white backdrop-blur-xl transition duration-200 hover:-translate-y-0.5 hover:border-white/20 hover:bg-white/[0.08]';
 }
 
-function NavLinkItem({ item, onClick }) {
-  if (item.to) {
-    return (
-      <Link to={item.to} onClick={onClick} className="text-sm font-medium text-slate-300 transition hover:text-white">
-        {item.label}
-      </Link>
-    );
-  }
-
-  return (
-    <a href={item.href} onClick={onClick} className="text-sm font-medium text-slate-300 transition hover:text-white">
-      {item.label}
-    </a>
-  );
-}
-
 function Icon({ kind, className = 'h-6 w-6' }) {
   if (kind === 'tracking') {
     return <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className={className}><path d="M12 3 3.5 7.5 12 12l8.5-4.5L12 3Z" /><path d="M3.5 12.5 12 17l8.5-4.5" /><path d="M3.5 17.5 12 22l8.5-4.5" /></svg>;
@@ -120,14 +115,15 @@ function HeroPreview() {
   return (
     <div className="relative mx-auto w-full max-w-2xl">
       <div className="absolute inset-x-10 -top-10 h-28 rounded-full bg-brand-500/25 blur-3xl" />
-      <div className="relative overflow-hidden rounded-[2rem] border border-white/12 bg-slate-950/70 p-4 shadow-[0_30px_90px_rgba(15,23,42,0.65)] backdrop-blur-2xl">
-        <div className="glass-panel rounded-[1.6rem] p-5">
+      <div className="absolute -right-8 top-12 h-36 w-36 rounded-full bg-cyan-400/12 blur-3xl" />
+      <div className="relative overflow-hidden rounded-[2.35rem] border border-white/12 bg-slate-950/70 p-4 shadow-[0_40px_120px_rgba(8,15,31,0.72)] ring-1 ring-white/10 backdrop-blur-2xl">
+        <div className="glass-panel rounded-[1.9rem] bg-[linear-gradient(180deg,rgba(255,255,255,0.06),rgba(255,255,255,0.03))] p-5">
           <div className="flex items-center justify-between border-b border-white/10 pb-4">
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-cyan-200/80">InventoryFlow</p>
-              <h3 className="mt-2 text-xl font-bold text-white">Operations Dashboard</h3>
+              <h3 className="mt-2 text-xl font-bold text-white sm:text-2xl">Operations Dashboard</h3>
             </div>
-            <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 text-right">
+            <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/10 px-3 py-2 text-right shadow-[0_16px_40px_rgba(16,185,129,0.18)]">
               <p className="text-[11px] uppercase tracking-[0.22em] text-emerald-200/80">Sync</p>
               <p className="mt-1 text-sm font-semibold text-emerald-100">Shopify Live</p>
             </div>
@@ -138,17 +134,17 @@ function HeroPreview() {
               <div className="grid gap-4 sm:grid-cols-3">
                 {[
                   ['Tracked SKUs', '1,248'],
-                  ['Low Stock', '18'],
-                  ['Orders Synced', '924']
+                  ['Orders Synced', '924'],
+                  ['Active Alerts', '18']
                 ].map(([label, value]) => (
-                  <div key={label} className="rounded-[1.35rem] border border-white/10 bg-white/[0.04] px-4 py-4">
+                  <div key={label} className="rounded-[1.35rem] border border-white/10 bg-white/[0.05] px-4 py-4 shadow-[0_14px_34px_rgba(15,23,42,0.28)]">
                     <p className="text-xs uppercase tracking-[0.22em] text-slate-400">{label}</p>
-                    <p className="mt-3 text-2xl font-bold text-white">{value}</p>
+                    <p className="mt-3 text-2xl font-bold text-white sm:text-[1.75rem]">{value}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="rounded-[1.4rem] border border-white/10 bg-slate-900/80 p-4">
+              <div className="rounded-[1.4rem] border border-white/10 bg-slate-900/85 p-4 shadow-[0_20px_45px_rgba(15,23,42,0.35)]">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm font-semibold text-white">Inventory Snapshot</p>
@@ -167,7 +163,7 @@ function HeroPreview() {
             </div>
 
             <div className="space-y-4">
-              <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.04] p-4">
+              <div className="rounded-[1.4rem] border border-white/10 bg-white/[0.05] p-4 shadow-[0_20px_45px_rgba(15,23,42,0.3)]">
                 <div className="flex items-center justify-between">
                   <p className="text-sm font-semibold text-white">Alerts</p>
                   <span className="rounded-full border border-amber-300/20 bg-amber-300/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-amber-100">6 Active</span>
@@ -186,7 +182,7 @@ function HeroPreview() {
                 </div>
               </div>
 
-              <div className="rounded-[1.4rem] border border-white/10 bg-slate-900/80 p-4">
+              <div className="rounded-[1.4rem] border border-white/10 bg-slate-900/85 p-4 shadow-[0_20px_45px_rgba(15,23,42,0.35)]">
                 <p className="text-sm font-semibold text-white">Activity Pulse</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {[70, 30, 60, 48, 82, 54, 68, 44].map((width, index) => (
@@ -285,8 +281,6 @@ function ProductPreview() {
 }
 
 export default function LandingPage() {
-  const [menuOpen, setMenuOpen] = useState(false);
-
   return (
     <div id="top" className="relative min-h-screen overflow-hidden bg-slate-950 text-slate-100">
       <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.16),transparent_24%),radial-gradient(circle_at_top_right,rgba(99,102,241,0.18),transparent_28%),radial-gradient(circle_at_50%_75%,rgba(14,165,233,0.12),transparent_24%),linear-gradient(180deg,#020617_0%,#08111f_38%,#0a1020_100%)]" />
@@ -296,58 +290,43 @@ export default function LandingPage() {
       <div className="pointer-events-none absolute bottom-0 left-1/3 h-80 w-80 rounded-full bg-brand-500/10 blur-3xl" />
 
       <div className="relative z-10">
-        <header className="sticky top-0 z-30 border-b border-white/10 bg-slate-950/65 backdrop-blur-2xl">
-          <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 via-brand-400 to-indigo-400 text-sm font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20">IF</div>
-              <div>
-                <p className="text-xs uppercase tracking-[0.28em] text-cyan-200/80">InventoryFlow</p>
-                <p className="text-sm text-slate-400">Inventory Management System</p>
-              </div>
-            </Link>
-
-            <nav className="hidden items-center gap-8 lg:flex">
-              {navItems.map((item) => <NavLinkItem key={item.label} item={item} />)}
-            </nav>
-
-            <div className="hidden lg:block">
-              <Link to="/signup" className={buttonClass(true)}>Get Started</Link>
-            </div>
-
-            <button type="button" className="inline-flex rounded-2xl border border-white/10 bg-white/5 p-3 text-slate-100 lg:hidden" onClick={() => setMenuOpen((current) => !current)} aria-label="Toggle navigation">
-              <span className="h-0.5 w-5 bg-current shadow-[0_6px_0_currentColor,0_-6px_0_currentColor]" />
-            </button>
-          </div>
-
-          {menuOpen ? (
-            <div className="border-t border-white/10 px-4 py-4 lg:hidden">
-              <div className="flex flex-col gap-4">
-                {navItems.map((item) => <NavLinkItem key={item.label} item={item} onClick={() => setMenuOpen(false)} />)}
-                <Link to="/signup" onClick={() => setMenuOpen(false)} className={buttonClass(true)}>Get Started</Link>
-              </div>
-            </div>
-          ) : null}
-        </header>
-
         <main>
-          <section className="mx-auto grid max-w-7xl gap-16 px-4 pb-24 pt-16 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:pb-28 lg:pt-20">
+          <section className="mx-auto grid max-w-7xl gap-16 px-4 pb-28 pt-32 sm:px-6 lg:grid-cols-[0.9fr_1.1fr] lg:px-8 lg:pb-32 lg:pt-36">
             <div className="flex max-w-2xl flex-col justify-center">
-              <span className="inline-flex w-fit rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">Smart Inventory Operations</span>
-              <h1 className="mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl lg:text-6xl">Monitor and Manage Your Inventory in One Smart Dashboard</h1>
-              <p className="mt-6 max-w-xl text-lg leading-8 text-slate-300">Track stock, get low stock alerts, and sync your Shopify store in real-time.</p>
-              <div className="mt-8 flex flex-col gap-3 sm:flex-row">
-                <Link to="/signup" className={buttonClass(true)}>Get Started Free</Link>
-                <Link to="/login" className={buttonClass(false)}>Connect Store</Link>
+              <span className="inline-flex w-fit rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.28em] text-cyan-100 shadow-[0_10px_30px_rgba(34,211,238,0.12)]">
+                Smart Inventory Operations
+              </span>
+              <h1 className="mt-8 text-5xl font-extrabold leading-[1.02] tracking-tight text-white sm:text-6xl lg:text-[4.75rem]">
+                Monitor and Manage Your <span className="text-gradient">Inventory</span> in One{' '}
+                <span className="text-gradient">Smart Dashboard</span>
+              </h1>
+              <p className="mt-8 max-w-2xl text-lg leading-9 text-slate-300 sm:text-xl">
+                Track stock, get low stock alerts, and sync your Shopify store in real-time with a premium interface built for modern operations teams.
+              </p>
+              <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+                <Link
+                  to="/signup"
+                  className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_22px_55px_rgba(29,166,255,0.32)] ring-1 ring-cyan-200/20 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(29,166,255,0.38)]"
+                >
+                  Get Started Free
+                </Link>
+                <Link
+                  to="/login"
+                  className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/[0.03] px-7 py-4 text-sm font-semibold text-white backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-white/[0.08]"
+                >
+                  Connect Store
+                </Link>
               </div>
-              <div className="mt-10 grid gap-4 sm:grid-cols-3">
+
+              <div className="mt-12 grid gap-4 sm:grid-cols-3">
                 {[
                   ['Live Sync', 'Shopify updates in real time'],
                   ['Alerts', 'Low stock warnings that stand out'],
                   ['Visibility', 'Products, stock, and activity together']
                 ].map(([title, text]) => (
-                  <div key={title} className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] px-4 py-4 backdrop-blur-xl">
+                  <div key={title} className="rounded-[1.5rem] border border-white/10 bg-white/[0.04] px-5 py-5 shadow-[0_18px_45px_rgba(15,23,42,0.22)] backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-300/20">
                     <p className="text-sm font-semibold text-white">{title}</p>
-                    <p className="mt-2 text-sm leading-6 text-slate-400">{text}</p>
+                    <p className="mt-2 text-sm leading-7 text-slate-400">{text}</p>
                   </div>
                 ))}
               </div>
@@ -358,21 +337,29 @@ export default function LandingPage() {
             </div>
           </section>
 
-          <section id="features" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
+          <section id="features" className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
             {sectionIntro(
               'Features',
               'Built for teams that need instant inventory clarity',
               'InventoryFlow combines product visibility, live sync, and actionable alerts in a clean interface built to move fast.',
               true
             )}
-            <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-              {features.map(([kind, title, description]) => (
-                <div key={title} className="group rounded-[1.75rem] border border-white/10 bg-white/[0.05] p-6 shadow-[0_22px_55px_rgba(15,23,42,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 hover:border-cyan-300/20 hover:bg-white/[0.08]">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/20 via-brand-500/20 to-indigo-400/20 text-cyan-100 ring-1 ring-white/10 transition duration-300 group-hover:scale-105">
-                    <Icon kind={kind} />
+            <div className="mt-16 grid gap-6 lg:grid-cols-3">
+              {features.map(({ kind, title, description, points }) => (
+                <div key={title} className="group rounded-[1.9rem] border border-white/10 bg-white/[0.05] p-7 shadow-[0_24px_60px_rgba(15,23,42,0.28)] backdrop-blur-xl transition duration-300 hover:-translate-y-2 hover:scale-[1.01] hover:border-cyan-300/20 hover:bg-white/[0.08] hover:shadow-[0_32px_80px_rgba(15,23,42,0.38)]">
+                  <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400/20 via-brand-500/20 to-indigo-400/20 text-cyan-100 ring-1 ring-white/10 transition duration-300 group-hover:scale-105 group-hover:shadow-[0_18px_35px_rgba(34,211,238,0.16)]">
+                    <Icon kind={kind} className="h-7 w-7" />
                   </div>
-                  <h3 className="mt-5 text-xl font-bold text-white">{title}</h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-300">{description}</p>
+                  <h3 className="mt-6 text-2xl font-bold text-white">{title}</h3>
+                  <p className="mt-4 text-base leading-8 text-slate-300">{description}</p>
+                  <div className="mt-6 space-y-3">
+                    {points.map((point) => (
+                      <div key={point} className="flex items-start gap-3 text-sm text-slate-300">
+                        <span className="mt-2 h-2 w-2 rounded-full bg-cyan-300 shadow-[0_0_16px_rgba(34,211,238,0.6)]" />
+                        <span className="leading-7">{point}</span>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -460,30 +447,37 @@ export default function LandingPage() {
             </div>
           </section>
 
-          <section className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-            <div className="relative overflow-hidden rounded-[2.5rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.18),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.2),transparent_30%),rgba(15,23,42,0.75)] px-6 py-14 shadow-[0_28px_80px_rgba(15,23,42,0.45)] backdrop-blur-2xl sm:px-10 lg:px-14">
-              <div className="relative max-w-3xl">
-                <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">Start Today</span>
-                <h2 className="mt-5 text-3xl font-extrabold tracking-tight text-white sm:text-4xl lg:text-5xl">Start Managing Your Inventory Today</h2>
-                <p className="mt-4 max-w-2xl text-base leading-7 text-slate-300 sm:text-lg">Give your team one modern dashboard for stock visibility, Shopify sync, and faster decisions.</p>
-                <Link to="/signup" className="mt-8 inline-flex items-center justify-center rounded-2xl bg-white px-6 py-3.5 text-sm font-semibold text-slate-950 transition hover:bg-cyan-50">
+          <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
+            <div className="relative overflow-hidden rounded-[2.75rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.22),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.24),transparent_30%),linear-gradient(135deg,rgba(11,18,32,0.92),rgba(15,23,42,0.82))] px-6 py-16 text-center shadow-[0_30px_100px_rgba(15,23,42,0.52)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-10 lg:px-16">
+              <div className="pointer-events-none absolute left-10 top-8 h-32 w-32 rounded-full bg-cyan-400/12 blur-3xl" />
+              <div className="pointer-events-none absolute bottom-8 right-10 h-40 w-40 rounded-full bg-indigo-500/14 blur-3xl" />
+              <div className="relative mx-auto max-w-3xl">
+                <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">Start Today</span>
+                <h2 className="mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Start Managing Your Inventory Today</h2>
+                <p className="mt-5 text-base leading-8 text-slate-300 sm:text-lg">Give your team one modern dashboard for stock visibility, Shopify sync, and faster decisions.</p>
+                <Link to="/signup" className="mt-9 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_60px_rgba(29,166,255,0.34)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_32px_75px_rgba(29,166,255,0.4)]">
                   Get Started Free
                 </Link>
               </div>
             </div>
           </section>
+
+          <section id="about" className="mx-auto max-w-7xl px-4 pb-24 pt-4 sm:px-6 lg:px-8">
+            <div className="mx-auto max-w-4xl text-center">
+              <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">
+                About Us
+              </span>
+              <h2 className="mt-6 text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Built for modern teams that need inventory clarity without the noise
+              </h2>
+              <p className="mx-auto mt-6 max-w-3xl text-lg leading-9 text-slate-300">
+                {aboutContent}
+              </p>
+            </div>
+          </section>
         </main>
 
-        <footer id="privacy" className="border-t border-white/10">
-          <div className="mx-auto flex max-w-7xl flex-col gap-4 px-4 py-8 text-sm text-slate-400 sm:px-6 md:flex-row md:items-center md:justify-between lg:px-8">
-            <p>InventoryFlow. Modern inventory operations for fast-moving stores.</p>
-            <div className="flex flex-wrap items-center gap-5">
-              <a href="#features" className="transition hover:text-white">About</a>
-              <a href="mailto:hello@inventoryflow.app" className="transition hover:text-white">Contact</a>
-              <a href="#privacy" className="transition hover:text-white">Privacy</a>
-            </div>
-          </div>
-        </footer>
+        <Footer />
       </div>
     </div>
   );

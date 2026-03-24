@@ -14,7 +14,7 @@ function navClassName({ isActive }) {
   }`;
 }
 
-export default function Navbar() {
+export default function LandingNavbar() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
