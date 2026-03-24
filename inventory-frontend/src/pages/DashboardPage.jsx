@@ -1,28 +1,16 @@
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import {
-  CartesianGrid,
-  Cell,
-  Legend,
-  Line,
-  LineChart,
-  Pie,
-  PieChart,
-  ResponsiveContainer,
-  Tooltip,
-  XAxis,
-  YAxis
-} from 'recharts';
 import Button from '../components/Button';
 import Card from '../components/Card';
+import CategoryDistributionChart from '../components/CategoryDistributionChart';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PageHeader from '../components/PageHeader';
 import StatCard from '../components/StatCard';
+import StockTrendChart from '../components/StockTrendChart';
 import StatusMessage from '../components/StatusMessage';
+import { getCategoryDistribution, getStockTrend } from '../services/analytics';
 import { getApiErrorMessage } from '../services/api';
 import { getDashboardData } from '../services/dashboard';
-
-const categoryColors = ['#38bdf8', '#34d399', '#fb7185', '#f59e0b', '#818cf8', '#22d3ee'];
 
 function formatDate(value) {
   if (!value) {
@@ -43,33 +31,29 @@ function formatDate(value) {
   }).format(date);
 }
 
-function ChartTooltip({ active, payload, label }) {
-  if (!active || !payload?.length) {
-    return null;
-  }
-
-  return (
-    <div className="rounded-2xl border border-white/10 bg-slate-950/95 px-4 py-3 shadow-2xl">
-      <p className="text-sm font-semibold text-white">{label ?? payload[0].name}</p>
-      {payload.map((entry) => (
-        <p key={entry.dataKey} className="mt-1 text-sm text-slate-300">
-          {entry.name}: <span className="font-semibold text-white">{entry.value}</span>
-        </p>
-      ))}
-    </div>
-  );
-}
-
 export default function DashboardPage() {
   const [dashboard, setDashboard] = useState(null);
+  const [stockTrend, setStockTrend] = useState([]);
+  const [categoryDistribution, setCategoryDistribution] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
 
   useEffect(() => {
     async function loadDashboard() {
       try {
-        const data = await getDashboardData();
-        setDashboard(data);
+        const [dashboardData, stockTrendData, categoryDistributionData] = await Promise.all([
+          getDashboardData(),
+          getStockTrend(),
+          getCategoryDistribution()
+        ]);
+
+        console.log('Dashboard stats response:', dashboardData);
+        console.log('Stock trend chart data:', stockTrendData);
+        console.log('Category distribution chart data:', categoryDistributionData);
+
+        setDashboard(dashboardData);
+        setStockTrend(stockTrendData);
+        setCategoryDistribution(categoryDistributionData);
       } catch (requestError) {
         setError(getApiErrorMessage(requestError));
       } finally {
@@ -235,45 +219,10 @@ export default function DashboardPage() {
               <div className="mb-5">
                 <h3 className="text-xl font-bold text-white">Stock Trend</h3>
                 <p className="mt-2 text-sm text-slate-300">
-                  A line chart showing inventory movement over time from the dashboard endpoint.
+                  A line chart showing inventory movement over time from the analytics API.
                 </p>
               </div>
-
-              {dashboard?.stockTrend?.length ? (
-                <div className="h-[320px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <LineChart data={dashboard.stockTrend}>
-                      <CartesianGrid stroke="rgba(148, 163, 184, 0.12)" vertical={false} />
-                      <XAxis
-                        dataKey="label"
-                        tick={{ fill: '#94a3b8', fontSize: 12 }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <YAxis
-                        tick={{ fill: '#94a3b8', fontSize: 12 }}
-                        axisLine={false}
-                        tickLine={false}
-                      />
-                      <Tooltip content={<ChartTooltip />} />
-                      <Legend wrapperStyle={{ color: '#cbd5e1' }} />
-                      <Line
-                        type="monotone"
-                        dataKey="value"
-                        name="Stock"
-                        stroke="#38bdf8"
-                        strokeWidth={3}
-                        dot={{ r: 4, fill: '#38bdf8', strokeWidth: 0 }}
-                        activeDot={{ r: 6 }}
-                      />
-                    </LineChart>
-                  </ResponsiveContainer>
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 px-4 py-14 text-center text-sm text-slate-400">
-                  No stock trend data is available yet.
-                </div>
-              )}
+              <StockTrendChart data={stockTrend} />
             </Card>
 
             <Card className="fade-in-up">
@@ -283,36 +232,7 @@ export default function DashboardPage() {
                   A pie chart showing how inventory is distributed across categories.
                 </p>
               </div>
-
-              {dashboard?.categoryDistribution?.length ? (
-                <div className="h-[320px]">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <PieChart>
-                      <Pie
-                        data={dashboard.categoryDistribution}
-                        dataKey="value"
-                        nameKey="name"
-                        innerRadius={70}
-                        outerRadius={110}
-                        paddingAngle={4}
-                      >
-                        {dashboard.categoryDistribution.map((entry, index) => (
-                          <Cell
-                            key={`${entry.name}-${index}`}
-                            fill={categoryColors[index % categoryColors.length]}
-                          />
-                        ))}
-                      </Pie>
-                      <Tooltip content={<ChartTooltip />} />
-                      <Legend wrapperStyle={{ color: '#cbd5e1' }} />
-                    </PieChart>
-                  </ResponsiveContainer>
-                </div>
-              ) : (
-                <div className="rounded-2xl border border-dashed border-white/10 bg-slate-900/40 px-4 py-14 text-center text-sm text-slate-400">
-                  No category distribution data is available yet.
-                </div>
-              )}
+              <CategoryDistributionChart data={categoryDistribution} />
             </Card>
           </div>
         </div>

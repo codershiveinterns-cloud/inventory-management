@@ -60,7 +60,8 @@ function normalizeRecentUpdate(item = {}, index) {
 }
 
 export async function getDashboardData() {
-  const response = await api.get('http://localhost:5000/api/dashboard');
+  const response = await api.get('/dashboard');
+  console.log('Dashboard API response:', response.data);
   const source = extractDashboardSource(response.data);
   const dashboard = source.dashboard ?? source;
   const stats = dashboard.stats ?? dashboard.summary ?? dashboard.overview ?? {};

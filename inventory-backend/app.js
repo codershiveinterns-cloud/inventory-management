@@ -1,6 +1,7 @@
 import express from "express";
 import cors from "cors";
 
+import analyticsRoutes from "./routes/analyticsRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
@@ -33,6 +34,7 @@ app.get("/api/health", (_req, res) => {
 });
 
 app.use("/api/categories", categoryRoutes);
+app.use("/api/analytics", analyticsRoutes);
 app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
