@@ -26,6 +26,7 @@ function normalizeProduct(product = {}) {
     id: product.id ?? product._id ?? product.productId ?? '',
     title: product.title ?? product.name ?? 'Untitled product',
     category: product.category ?? '',
+    currency: product.currency ?? 'EUR',
     sku: product.sku ?? '',
     lowStockThreshold:
       product.lowStockThreshold !== undefined && product.lowStockThreshold !== null

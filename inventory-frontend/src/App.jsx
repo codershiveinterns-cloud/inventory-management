@@ -8,6 +8,7 @@ import AddProductPage from './pages/AddProductPage';
 import AboutPage from './pages/About';
 import BlogPage from './pages/Blog';
 import CareersPage from './pages/Careers';
+import ContactPage from './pages/Contact';
 import CookiesPage from './pages/Cookies';
 import DashboardPage from './pages/DashboardPage';
 import EditProductPage from './pages/EditProductPage';
@@ -62,6 +63,7 @@ function AppShell() {
         <Route path="/features" element={<FeaturesPage />} />
         <Route path="/pricing" element={<PricingPage />} />
         <Route path="/about" element={<AboutPage />} />
+        <Route path="/contact" element={<ContactPage />} />
         <Route path="/careers" element={<CareersPage />} />
         <Route path="/blog" element={<BlogPage />} />
         <Route path="/help" element={<HelpPage />} />

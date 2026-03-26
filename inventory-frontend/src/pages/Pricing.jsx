@@ -19,7 +19,7 @@ const plans = [
     features: [
       'Up to 100 SKUs',
       'Basic inventory tracking',
-      'Low stock alerts (email)',
+      'Low stock alerts',
       'Manual stock updates',
       'Single user'
     ]

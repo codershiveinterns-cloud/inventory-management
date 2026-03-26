@@ -1,6 +1,7 @@
 import Product from "../models/Product.js";
 import InventoryLog from "../models/InventoryLog.js";
 import InventoryHistory from "../models/InventoryHistory.js";
+import { DEFAULT_CURRENCY } from "../config/currency.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { createInventoryLog, getChangeDetailsFromDelta } from "../utils/inventory.js";
 import { buildProductFilters } from "../utils/productFilters.js";
@@ -246,6 +247,7 @@ export const createProduct = async (req, res) => {
       sku: normalizedSku,
       stock: normalizedQuantity,
       price: normalizedPrice,
+      currency: DEFAULT_CURRENCY,
       lowStockThreshold: normalizedLowStockThreshold,
     });
 
@@ -441,6 +443,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   if (price !== undefined) {
     product.price = normalizePrice(price, "price");
+    product.currency = DEFAULT_CURRENCY;
   }
 
   if (lowStockThreshold !== undefined) {

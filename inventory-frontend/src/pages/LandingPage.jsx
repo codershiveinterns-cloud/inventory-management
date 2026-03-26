@@ -42,7 +42,7 @@ const plans = [
     points: [
       'Up to 100 SKUs',
       'Basic inventory tracking',
-      'Low stock alerts (email)'
+      'Low stock alerts'
     ],
     cta: 'Get Started'
   },

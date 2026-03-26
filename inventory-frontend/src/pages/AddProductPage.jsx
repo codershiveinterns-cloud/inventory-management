@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
 import ProductForm from '../components/ProductForm';
 import StatusMessage from '../components/StatusMessage';
+import { CURRENCY_SYMBOL } from '../lib/currency';
 import { getApiErrorMessage } from '../services/api';
 import { createProduct, getProducts } from '../services/products';
 
@@ -63,7 +64,7 @@ export default function AddProductPage() {
       <PageHeader
         badge="New Product"
         title="Add inventory without slowing down your team"
-        description="Create a product record, sync it to the backend, and return to the live catalog with the new item ready to manage."
+        description={`Create a product record in ${CURRENCY_SYMBOL}, sync it to the backend, and return to the live catalog with the new item ready to manage.`}
       />
 
       {error ? <StatusMessage type="error">{error}</StatusMessage> : null}

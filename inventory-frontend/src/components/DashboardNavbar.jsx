@@ -8,7 +8,8 @@ const navItems = [
   { label: 'Add Product', to: '/add-product' },
   { label: 'Inventory Update', to: '/inventory-update' },
   { label: 'Low Stock', to: '/low-stock' },
-  { label: 'Shopify', to: '/shopify' }
+  { label: 'Shopify', to: '/shopify' },
+  { label: 'Contact', to: '/contact' }
 ];
 
 function navClassName({ isActive }) {

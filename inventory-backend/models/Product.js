@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DEFAULT_CURRENCY } from "../config/currency.js";
 import { normalizeSku } from "../utils/sku.js";
 
 const productSchema = new mongoose.Schema(
@@ -40,6 +41,13 @@ const productSchema = new mongoose.Schema(
         validator: (value) => value > 0,
         message: "Price must be positive",
       },
+    },
+    currency: {
+      type: String,
+      trim: true,
+      uppercase: true,
+      enum: ["EUR"],
+      default: DEFAULT_CURRENCY,
     },
     lowStockThreshold: {
       type: Number,

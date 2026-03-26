@@ -4,6 +4,7 @@ import LoadingSpinner from '../components/LoadingSpinner';
 import PageHeader from '../components/PageHeader';
 import ProductForm from '../components/ProductForm';
 import StatusMessage from '../components/StatusMessage';
+import { CURRENCY_SYMBOL } from '../lib/currency';
 import { getApiErrorMessage } from '../services/api';
 import { getProduct, getProducts, updateProduct } from '../services/products';
 
@@ -90,7 +91,7 @@ export default function EditProductPage() {
       <PageHeader
         badge="Product Editor"
         title="Refresh product details without leaving the flow"
-        description="Load the current product data, adjust title, stock, or price, and send the update to your backend in one save."
+        description={`Load the current product data, adjust title, stock, or price in ${CURRENCY_SYMBOL}, and send the update to your backend in one save.`}
       />
 
       {error ? <StatusMessage type="error">{error}</StatusMessage> : null}

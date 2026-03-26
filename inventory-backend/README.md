@@ -89,7 +89,8 @@ npm run seed
 {
   "title": "Bluetooth Scanner",
   "stock": 15,
-  "price": 129.99
+  "price": 129.99,
+  "currency": "EUR"
 }
 ```
 

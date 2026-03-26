@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 
 import connectDB from "../config/db.js";
+import { DEFAULT_CURRENCY } from "../config/currency.js";
 import Product from "../models/Product.js";
 import InventoryLog from "../models/InventoryLog.js";
 import User from "../models/User.js";
@@ -25,6 +26,7 @@ const seedSampleData = async () => {
     const createdProducts = await Product.insertMany(
       sampleProducts.map((product) => ({
         ...product,
+        currency: DEFAULT_CURRENCY,
         user: seedUser._id,
       }))
     );

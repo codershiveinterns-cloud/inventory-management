@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { DEFAULT_CURRENCY } from "./currency.js";
 import Product from "../models/Product.js";
 
 const connectDB = async () => {
@@ -9,6 +10,14 @@ const connectDB = async () => {
   }
 
   await mongoose.connect(mongoUri);
+  await Product.updateMany(
+    {
+      $or: [{ currency: { $exists: false } }, { currency: { $ne: DEFAULT_CURRENCY } }],
+    },
+    {
+      $set: { currency: DEFAULT_CURRENCY },
+    }
+  );
   await Product.syncIndexes();
   console.log("MongoDB connected successfully");
 };

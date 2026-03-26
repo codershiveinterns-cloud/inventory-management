@@ -1,0 +1,287 @@
+API error: {
+  method: 'GET',
+  path: '/api/dashboard',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/stock-trend',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/category-distribution',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/dashboard',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/stock-trend',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/category-distribution',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/dashboard',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/stock-trend',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/category-distribution',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/dashboard',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/stock-trend',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+API error: {
+  method: 'GET',
+  path: '/api/analytics/category-distribution',
+  statusCode: 401,
+  name: 'Error',
+  code: undefined,
+  message: 'Unauthorized',
+  keyValue: undefined,
+  stack: 'Error: Unauthorized\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/middleware/protect.js:28:11\n' +
+    '    at file:///C:/Users/dhire/OneDrive/Desktop/inventory-management/inventory-backend/utils/asyncHandler.js:2:19\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)\n' +
+    '    at trimPrefix (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:342:13)\n' +
+    '    at C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:297:9\n' +
+    '    at processParams (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:582:12)\n' +
+    '    at next (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:291:5)\n' +
+    '    at Function.handle (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:186:3)\n' +
+    '    at router (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\index.js:60:12)\n' +
+    '    at Layer.handleRequest (C:\\Users\\dhire\\OneDrive\\Desktop\\inventory-management\\inventory-backend\\node_modules\\router\\lib\\layer.js:152:17)'
+}
+Failed to start server: index not found with name [sku_1]
+Failed to start server: index not found with name [sku_1]
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.
+(node:2256) [MONGOOSE] Warning: mongoose: the `new` option for `findOneAndUpdate()` and `findOneAndReplace()` is deprecated. Use `returnDocument: 'after'` instead.

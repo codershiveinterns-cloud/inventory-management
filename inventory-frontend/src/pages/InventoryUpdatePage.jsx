@@ -4,15 +4,9 @@ import Card from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PageHeader from '../components/PageHeader';
 import StatusMessage from '../components/StatusMessage';
+import { formatCurrency } from '../lib/currency';
 import { getApiErrorMessage } from '../services/api';
 import { getProducts, updateInventory } from '../services/products';
-
-function formatCurrency(value) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(value);
-}
 
 export default function InventoryUpdatePage() {
   const [products, setProducts] = useState([]);

@@ -5,6 +5,7 @@ import Card from '../components/Card';
 import LoadingSpinner from '../components/LoadingSpinner';
 import PageHeader from '../components/PageHeader';
 import StatusMessage from '../components/StatusMessage';
+import { CURRENCY_SYMBOL, formatCurrency } from '../lib/currency';
 import { getApiErrorMessage } from '../services/api';
 import {
   deleteProduct,
@@ -21,13 +22,6 @@ const initialFilters = {
   minPrice: '',
   maxPrice: ''
 };
-
-function formatCurrency(value) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD'
-  }).format(value);
-}
 
 function formatDate(value) {
   if (!value) {
@@ -395,27 +389,37 @@ export default function ProductsPage() {
                 <span className="mb-2 block text-sm font-medium text-slate-200">
                   Min price
                 </span>
-                <input
-                  type="number"
-                  min="0"
-                  value={minPrice}
-                  onChange={(event) => setMinPrice(event.target.value)}
-                  placeholder="0"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
-                />
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    {CURRENCY_SYMBOL}
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={minPrice}
+                    onChange={(event) => setMinPrice(event.target.value)}
+                    placeholder="0"
+                    className="w-full rounded-2xl border border-white/10 bg-slate-900/80 pl-10 pr-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
+                  />
+                </div>
               </label>
               <label className="block">
                 <span className="mb-2 block text-sm font-medium text-slate-200">
                   Max price
                 </span>
-                <input
-                  type="number"
-                  min="0"
-                  value={maxPrice}
-                  onChange={(event) => setMaxPrice(event.target.value)}
-                  placeholder="500"
-                  className="w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
-                />
+                <div className="relative">
+                  <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                    {CURRENCY_SYMBOL}
+                  </span>
+                  <input
+                    type="number"
+                    min="0"
+                    value={maxPrice}
+                    onChange={(event) => setMaxPrice(event.target.value)}
+                    placeholder="500"
+                    className="w-full rounded-2xl border border-white/10 bg-slate-900/80 pl-10 pr-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
+                  />
+                </div>
               </label>
             </div>
           </div>

@@ -3,6 +3,7 @@ import { Link, NavLink } from 'react-router-dom';
 
 const navItems = [
   { label: 'Home', to: '/', end: true },
+  { label: 'Contact', to: '/contact' },
   { label: 'Login', to: '/login' }
 ];
 
