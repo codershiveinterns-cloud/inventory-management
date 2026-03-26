@@ -1,56 +1,31 @@
 import axios from 'axios';
 
 const DEFAULT_DEV_API_URL = 'http://localhost:5000';
-const DEFAULT_PROD_API_URL = 'https://inventory-backend-n3vi.onrender.com';
 
 function normalizeApiUrl(url) {
   return url.replace(/\/+$/, '');
 }
 
-function isLocalHostname(hostname = '') {
-  return hostname === 'localhost' || hostname === '127.0.0.1' || hostname === '::1';
-}
-
-function getBrowserHostname() {
-  return typeof window === 'undefined' ? '' : window.location.hostname;
-}
-
-function shouldUseProductionFallback(configuredUrl) {
-  const currentHostname = getBrowserHostname();
-
-  if (!currentHostname || isLocalHostname(currentHostname)) {
-    return false;
-  }
-
-  try {
-    return isLocalHostname(new URL(configuredUrl).hostname);
-  } catch {
-    return false;
-  }
-}
-
 function resolveApiBaseUrl() {
+  const mode = import.meta.env.MODE;
   const configuredUrl = import.meta.env.VITE_API_URL?.trim();
 
-  if (configuredUrl) {
-    const safeApiUrl = shouldUseProductionFallback(configuredUrl)
-      ? DEFAULT_PROD_API_URL
-      : configuredUrl;
-
-    return `${normalizeApiUrl(safeApiUrl)}/api`;
-  }
-
-  if (import.meta.env.DEV || isLocalHostname(getBrowserHostname())) {
+  if (mode === 'development') {
     return `${DEFAULT_DEV_API_URL}/api`;
   }
 
-  return `${DEFAULT_PROD_API_URL}/api`;
+  if (!configuredUrl) {
+    throw new Error('VITE_API_URL is required for production builds.');
+  }
+
+  return `${normalizeApiUrl(configuredUrl)}/api`;
 }
 
 export const API_BASE_URL = resolveApiBaseUrl();
 
 const api = axios.create({
   baseURL: API_BASE_URL,
+  withCredentials: true,
   headers: {
     'Content-Type': 'application/json'
   }
