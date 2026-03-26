@@ -1,7 +1,6 @@
 import Store from "../models/Store.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
-// Placeholder route for starting Shopify OAuth.
 export const startShopifyAuth = asyncHandler(async (req, res) => {
   res.json({
     success: true,
@@ -12,7 +11,6 @@ export const startShopifyAuth = asyncHandler(async (req, res) => {
   });
 });
 
-// Placeholder callback that can already persist a shop/access token structure.
 export const handleShopifyCallback = asyncHandler(async (req, res) => {
   const shopName = req.query.shop || req.query.shopName;
   const accessToken =

@@ -11,12 +11,27 @@ function getBearerToken(headerValue = "") {
   return token || null;
 }
 
-export const protect = asyncHandler(async (req, res, next) => {
-  const token = getBearerToken(req.headers.authorization || "");
+function getQueryToken(queryValue) {
+  if (typeof queryValue !== "string") {
+    return null;
+  }
+
+  const token = queryValue.trim();
+  return token || null;
+}
+
+export async function authenticateRequest(
+  req,
+  { allowQueryToken = false } = {}
+) {
+  const token =
+    getBearerToken(req.headers.authorization || "") ||
+    (allowQueryToken ? getQueryToken(req.query.idToken) : null);
 
   if (!token) {
-    res.status(401);
-    throw new Error("Unauthorized");
+    const error = new Error("Unauthorized");
+    error.statusCode = 401;
+    throw error;
   }
 
   let decodedToken;
@@ -28,8 +43,9 @@ export const protect = asyncHandler(async (req, res, next) => {
       throw error;
     }
 
-    res.status(401);
-    throw new Error("Unauthorized");
+    const unauthorizedError = new Error("Unauthorized");
+    unauthorizedError.statusCode = 401;
+    throw unauthorizedError;
   }
 
   const user = await User.findOneAndUpdate(
@@ -53,6 +69,9 @@ export const protect = asyncHandler(async (req, res, next) => {
     email: user.email,
     displayName: user.displayName,
   };
+}
 
+export const protect = asyncHandler(async (req, res, next) => {
+  await authenticateRequest(req);
   next();
 });

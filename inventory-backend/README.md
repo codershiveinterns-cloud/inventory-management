@@ -7,7 +7,7 @@ Production-ready backend for an Inventory Management System built with Node.js, 
 - Product CRUD APIs
 - Inventory change tracking with logs
 - Low-stock detection endpoint
-- Shopify OAuth placeholder routes
+- Shopify OAuth and product sync routes
 - Webhook placeholder for inventory updates
 - Sample seed data for quick setup
 
@@ -72,10 +72,11 @@ npm run seed
 - `POST /api/inventory/update`
 - `GET /api/inventory/logs`
 
-### Shopify Placeholders
+### Shopify
 
-- `GET /auth`
-- `GET /auth/callback`
+- `GET /shopify?shop=your-store.myshopify.com`
+- `GET /shopify/callback`
+- `GET /shopify/products`
 
 ### Webhooks
 
@@ -133,4 +134,5 @@ Optional product fields:
 
 - Stock changes are automatically saved in the `InventoryLog` collection with `changeType`, `quantity`, and `date`.
 - Products are considered low stock when `stock < lowStockThreshold`.
-- Shopify OAuth and webhook logic are scaffolded and ready for later implementation.
+- Shopify OAuth uses signed state plus Shopify HMAC validation before storing a store token.
+- `GET /shopify/products` uses the logged-in user's stored Shopify token to fetch products.
