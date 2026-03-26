@@ -165,17 +165,22 @@ export default function ProductForm({
             <span className="mb-2 block text-sm font-medium text-slate-200">
               Price
             </span>
-            <input
-              required
-              min="0"
-              step="0.01"
-              type="number"
-              name="price"
-              value={formData.price}
-              onChange={handleChange}
-              placeholder="149.99"
-              className="w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
-            />
+            <div className="relative">
+              <span className="pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-slate-400">
+                {'\u20AC'}
+              </span>
+              <input
+                required
+                min="0"
+                step="0.01"
+                type="number"
+                name="price"
+                value={formData.price}
+                onChange={handleChange}
+                placeholder={'Enter price in \u20AC'}
+                className="w-full rounded-2xl border border-white/10 bg-slate-900/80 pl-10 pr-4 py-3 text-white placeholder:text-slate-500 focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
+              />
+            </div>
           </label>
 
           <label className="block">

@@ -36,25 +36,33 @@ const steps = [
 
 const plans = [
   {
-    name: 'Free',
-    price: '$0',
-    description: 'For teams getting inventory visibility in place.',
-    points: ['Up to 100 SKUs', 'Basic stock tracking', 'Email low stock alerts'],
-    cta: 'Start Free'
+    name: 'Starter',
+    price: '€59',
+    description: 'For smaller teams that need practical control over inventory without extra overhead.',
+    points: [
+      'Up to 100 SKUs',
+      'Basic inventory tracking',
+      'Low stock alerts (email)'
+    ],
+    cta: 'Get Started'
   },
   {
-    name: 'Pro',
-    price: '$49',
-    description: 'For growing stores that need live sync and faster decisions.',
-    points: ['Unlimited SKUs', 'Shopify real-time sync', 'Advanced analytics dashboard'],
+    name: 'Growth',
+    price: '€199',
+    description: 'For growing stores that need real-time sync, analytics, and stronger team workflows.',
+    points: [
+      'Up to 1000 SKUs',
+      'Real-time inventory sync',
+      'Analytics dashboard'
+    ],
     cta: 'Get Started',
     popular: true
   },
   {
-    name: 'Business',
-    price: '$129',
-    description: 'For larger teams managing more complexity and volume.',
-    points: ['Multi-user access', 'Priority support', 'Custom reporting workflows'],
+    name: 'Enterprise',
+    price: '€299',
+    description: 'For larger operations managing multiple stores, unlimited users, and deeper reporting.',
+    points: ['Unlimited SKUs', 'Multi-store management', 'Dedicated support'],
     cta: 'Contact Sales'
   }
 ];
@@ -416,7 +424,7 @@ export default function LandingPage() {
             {sectionIntro(
               'Pricing',
               'Simple plans for every stage of inventory growth',
-              'Start free, upgrade when your workflow needs deeper automation, and keep your team aligned from day one.',
+              'Choose a monthly plan now, then switch to yearly on the pricing page to unlock 20% savings.',
               true
             )}
             <div className="mt-14 grid gap-6 xl:grid-cols-3">
@@ -439,7 +447,7 @@ export default function LandingPage() {
                       </div>
                     ))}
                   </div>
-                  <Link to={plan.name === 'Business' ? '/login' : '/signup'} className={`mt-8 inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition ${plan.popular ? 'bg-white text-slate-950 hover:bg-cyan-50' : 'border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.08]'}`}>
+                  <Link to={plan.name === 'Enterprise' ? '/help' : '/signup'} className={`mt-8 inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition ${plan.popular ? 'bg-white text-slate-950 hover:bg-cyan-50' : 'border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.08]'}`}>
                     {plan.cta}
                   </Link>
                 </div>
