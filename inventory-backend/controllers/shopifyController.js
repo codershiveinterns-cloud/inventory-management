@@ -164,11 +164,16 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       productIds: products.slice(0, 10).map((product) => product?.id).filter(Boolean),
     });
 
-    res.redirect(SHOPIFY_SUCCESS_REDIRECT);
+    res.redirect(
+      buildRedirectUrl(SHOPIFY_SUCCESS_REDIRECT, {
+        shop: normalizedShop,
+      })
+    );
   } catch (error) {
     if (SHOPIFY_ERROR_REDIRECT) {
       return res.redirect(
         buildRedirectUrl(SHOPIFY_ERROR_REDIRECT, {
+          shop: req.query.shop,
           error: error.message,
         })
       );

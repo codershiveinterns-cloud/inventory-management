@@ -9,7 +9,7 @@ import dashboardRoutes from "./routes/dashboardRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import authRoutes from "./routes/authRoutes.js";
-import shopifyRoutes from "./routes/shopify.routes.js";
+import shopifyRoutes from "./routes/shopifyRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
