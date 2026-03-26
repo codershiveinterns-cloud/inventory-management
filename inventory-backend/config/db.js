@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import Product from "../models/Product.js";
 
 const connectDB = async () => {
   const mongoUri = process.env.MONGO_URI;
@@ -8,6 +9,7 @@ const connectDB = async () => {
   }
 
   await mongoose.connect(mongoUri);
+  await Product.syncIndexes();
   console.log("MongoDB connected successfully");
 };
 

@@ -17,12 +17,13 @@ const allowedCategories = new Set([
   "Other",
 ]);
 
-const ensureSkuIsAvailable = async ({ sku, excludeProductId }) => {
+const ensureSkuIsAvailable = async ({ userId, sku, excludeProductId }) => {
   if (!sku) {
     return;
   }
 
   const existingProduct = await Product.findOne({
+    user: userId,
     sku,
     ...(excludeProductId ? { _id: { $ne: excludeProductId } } : {}),
   }).select("_id");
@@ -179,9 +180,18 @@ const resolveProductName = ({ name, title }) => name ?? title;
 
 const resolveProductQuantity = ({ quantity, stock }) => quantity ?? stock;
 
+const buildOwnedProductQuery = (productId, userId) => ({
+  _id: productId,
+  user: userId,
+});
+
 // Create a new product and record the initial stock as an inventory event.
 export const createProduct = async (req, res) => {
   try {
+    if (!req.user?.id) {
+      return res.status(401).json({ message: "Unauthorized" });
+    }
+
     const {
       title,
       name,
@@ -225,11 +235,12 @@ export const createProduct = async (req, res) => {
     );
     const normalizedPrice = normalizePrice(price, "price", { required: true });
 
-    await ensureSkuIsAvailable({ sku: normalizedSku });
+    await ensureSkuIsAvailable({ userId: req.user.id, sku: normalizedSku });
 
     console.log("Incoming data:", req.body);
 
     const product = await Product.create({
+      user: req.user.id,
       title: normalizedTitle,
       category: normalizedCategory,
       sku: normalizedSku,
@@ -267,11 +278,14 @@ export const createProduct = async (req, res) => {
 // Fetch all products for dashboard or listing screens.
 export const getProducts = asyncHandler(async (req, res) => {
   console.log("GET /api/products req.query:", req.query);
-  const query = buildProductFilters({
-    ...req.query,
-    normalizeCategory,
-    normalizePrice,
-  });
+  const query = {
+    user: req.user.id,
+    ...buildProductFilters({
+      ...req.query,
+      normalizeCategory,
+      normalizePrice,
+    }),
+  };
   console.log("GET /api/products final query:", JSON.stringify(query));
   let products = await Product.find(query).sort({ createdAt: -1 });
 
@@ -292,11 +306,12 @@ export const getProducts = asyncHandler(async (req, res) => {
   });
 });
 
-export const getCategories = asyncHandler(async (_req, res) => {
-  const categories = (await Product.distinct("category"))
+export const getCategories = asyncHandler(async (req, res) => {
+  const categories = (await Product.distinct("category", { user: req.user.id }))
     .filter(Boolean)
     .sort((left, right) => left.localeCompare(right));
   const uncategorizedCount = await Product.countDocuments({
+    user: req.user.id,
     $or: [
       { category: { $exists: false } },
       { category: null },
@@ -313,8 +328,9 @@ export const getCategories = asyncHandler(async (_req, res) => {
 });
 
 // Return products whose stock has fallen below the configured threshold.
-export const getLowStockProducts = asyncHandler(async (_req, res) => {
+export const getLowStockProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({
+    user: req.user.id,
     $expr: { $lte: ["$stock", "$lowStockThreshold"] },
   }).sort({ stock: 1, title: 1 });
 
@@ -327,7 +343,7 @@ export const getLowStockProducts = asyncHandler(async (_req, res) => {
 
 // Fetch a single product by its MongoDB id.
 export const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.user.id));
 
   if (!product) {
     res.status(404);
@@ -353,11 +369,12 @@ export const updateProduct = asyncHandler(async (req, res) => {
     lowStockThreshold,
     change,
   } = req.body;
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.user.id));
 
   if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
+    const existingProduct = await Product.exists({ _id: req.params.id });
+    res.status(existingProduct ? 403 : 404);
+    throw new Error(existingProduct ? "Unauthorized" : "Product not found");
   }
 
   ensureMatchingValues(name, title, "name", "title");
@@ -414,6 +431,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     const normalizedSku = normalizeSku(sku);
 
     await ensureSkuIsAvailable({
+      userId: req.user.id,
       sku: normalizedSku,
       excludeProductId: product._id,
     });
@@ -455,11 +473,12 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
 // Delete a product and clean up related inventory logs.
 export const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findById(req.params.id);
+  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.user.id));
 
   if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
+    const existingProduct = await Product.exists({ _id: req.params.id });
+    res.status(existingProduct ? 403 : 404);
+    throw new Error(existingProduct ? "Unauthorized" : "Product not found");
   }
 
   await InventoryLog.deleteMany({ productId: product._id });

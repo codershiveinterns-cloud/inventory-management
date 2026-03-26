@@ -2978,3 +2978,554 @@ Server running on port 5000
 [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
 MongoDB connected successfully
 Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+MongoDB connected successfully
+Server running on port 5000
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {}
+Results: 5
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {}
+Results: 5
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {}
+Results: 5
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {}
+Results: 5
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {}
+Results: 5
+Dashboard API hit: GET /api/dashboard
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+Dashboard API hit: GET /api/dashboard
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+Dashboard API hit: GET /api/dashboard
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 43,
+    productCount: 2,
+    date: '2026-03-19',
+    label: '2026-03-19',
+    value: 43
+  },
+  {
+    totalQuantity: 25,
+    productCount: 1,
+    date: '2026-03-20',
+    label: '2026-03-20',
+    value: 25
+  },
+  {
+    totalQuantity: 181,
+    productCount: 2,
+    date: '2026-03-24',
+    label: '2026-03-24',
+    value: 181
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 170,
+    category: 'Clothing',
+    name: 'Clothing',
+    value: 170
+  },
+  {
+    productCount: 3,
+    totalQuantity: 68,
+    category: 'Other',
+    name: 'Other',
+    value: 68
+  },
+  {
+    productCount: 1,
+    totalQuantity: 11,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 11
+  }
+]
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+MongoDB connected successfully
+Server running on port 5000

@@ -26,6 +26,7 @@ import SecurityPage from './pages/Security';
 import ShopifyConnectPage from './pages/ShopifyConnectPage';
 import SignupPage from './pages/SignupPage';
 import TermsPage from './pages/Terms';
+import { useAuth } from './context/AuthContext';
 
 function AppLayout() {
   return (
@@ -42,7 +43,11 @@ function AppLayout() {
 
 function AppShell() {
   const location = useLocation();
-  const isAuthenticated = Boolean(localStorage.getItem('token'));
+  const { isAuthenticated, isAuthLoading } = useAuth();
+
+  if (isAuthLoading) {
+    return null;
+  }
 
   return (
     <>

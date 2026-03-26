@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { auth } from '../lib/firebase';
 
 const DEFAULT_DEV_API_URL = 'http://localhost:5000';
 
@@ -29,6 +30,17 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json'
   }
+});
+
+api.interceptors.request.use(async (config) => {
+  const currentUser = auth.currentUser;
+
+  if (currentUser) {
+    const token = await currentUser.getIdToken();
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
 });
 
 export function getApiErrorMessage(error) {

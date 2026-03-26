@@ -28,11 +28,12 @@ export const updateInventory = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  const product = await Product.findById(productId);
+  const product = await Product.findOne({ _id: productId, user: req.user.id });
 
   if (!product) {
-    res.status(404);
-    throw new Error("Product not found");
+    const existingProduct = await Product.exists({ _id: productId });
+    res.status(existingProduct ? 403 : 404);
+    throw new Error(existingProduct ? "Unauthorized" : "Product not found");
   }
 
   const nextStock =
@@ -71,8 +72,9 @@ export const updateInventory = asyncHandler(async (req, res) => {
 });
 
 // Optional helper endpoint for auditing recent stock movement.
-export const getInventoryLogs = asyncHandler(async (_req, res) => {
-  const logs = await InventoryLog.find()
+export const getInventoryLogs = asyncHandler(async (req, res) => {
+  const ownedProductIds = await Product.find({ user: req.user.id }).distinct("_id");
+  const logs = await InventoryLog.find({ productId: { $in: ownedProductIds } })
     .populate("productId", "title sku")
     .sort({ date: -1, createdAt: -1 });
 

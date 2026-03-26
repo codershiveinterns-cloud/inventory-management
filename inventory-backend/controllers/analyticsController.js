@@ -1,8 +1,15 @@
 import Product from "../models/Product.js";
+import mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
 
-export const getStockTrend = asyncHandler(async (_req, res) => {
+export const getStockTrend = asyncHandler(async (req, res) => {
+  const userId = new mongoose.Types.ObjectId(req.user.id);
   const stockTrend = await Product.aggregate([
+    {
+      $match: {
+        user: userId,
+      },
+    },
     {
       $project: {
         quantity: { $ifNull: ["$stock", 0] },
@@ -43,8 +50,14 @@ export const getStockTrend = asyncHandler(async (_req, res) => {
   });
 });
 
-export const getCategoryDistribution = asyncHandler(async (_req, res) => {
+export const getCategoryDistribution = asyncHandler(async (req, res) => {
+  const userId = new mongoose.Types.ObjectId(req.user.id);
   const categoryDistribution = await Product.aggregate([
+    {
+      $match: {
+        user: userId,
+      },
+    },
     {
       $project: {
         category: {

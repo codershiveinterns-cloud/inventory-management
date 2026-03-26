@@ -25,7 +25,6 @@ export function AuthProvider({ children }) {
 
   async function login(credentials) {
     const authenticatedUser = await loginUser(credentials.email, credentials.password);
-    localStorage.setItem('token', 'user_logged_in');
     return authenticatedUser;
   }
 
@@ -36,11 +35,7 @@ export function AuthProvider({ children }) {
   }
 
   async function logout() {
-    try {
-      return await logoutUser();
-    } finally {
-      localStorage.removeItem('token');
-    }
+    return logoutUser();
   }
 
   async function forgotPassword(email) {
@@ -52,7 +47,7 @@ export function AuthProvider({ children }) {
       value={{
         user,
         isAuthLoading,
-        isAuthenticated: Boolean(localStorage.getItem('token')),
+        isAuthenticated: Boolean(user),
         login,
         signup,
         forgotPassword,

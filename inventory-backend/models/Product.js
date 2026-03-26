@@ -3,6 +3,12 @@ import { normalizeSku } from "../utils/sku.js";
 
 const productSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: [true, "Product owner is required"],
+      index: true,
+    },
     title: {
       type: String,
       required: [true, "Product title is required"],
@@ -18,8 +24,6 @@ const productSchema = new mongoose.Schema(
     },
     sku: {
       type: String,
-      unique: true,
-      sparse: true,
       set: normalizeSku,
     },
     stock: {
@@ -48,6 +52,16 @@ const productSchema = new mongoose.Schema(
     timestamps: true,
     toJSON: { virtuals: true },
     toObject: { virtuals: true },
+  }
+);
+
+productSchema.index(
+  { user: 1, sku: 1 },
+  {
+    unique: true,
+    partialFilterExpression: {
+      sku: { $exists: true, $type: "string" },
+    },
   }
 );
 

@@ -1,8 +1,15 @@
 import Product from "../models/Product.js";
+import mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
 
-export const getDashboardAnalytics = asyncHandler(async (_req, res) => {
+export const getDashboardAnalytics = asyncHandler(async (req, res) => {
+  const userId = new mongoose.Types.ObjectId(req.user.id);
   const [analytics] = await Product.aggregate([
+    {
+      $match: {
+        user: userId,
+      },
+    },
     {
       $facet: {
         totals: [
