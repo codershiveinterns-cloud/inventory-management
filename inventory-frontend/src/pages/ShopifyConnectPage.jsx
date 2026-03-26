@@ -61,7 +61,7 @@ export default function ShopifyConnectPage() {
     setIsConnecting(true);
 
     try {
-      window.location.href = `${backendBaseUrl}/shopify?shop=${encodeURIComponent(
+      window.location.href = `${backendBaseUrl}/shopify/connect?shop=${encodeURIComponent(
         normalizedShop
       )}`;
     } catch (connectError) {

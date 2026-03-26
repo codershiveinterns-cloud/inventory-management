@@ -2,6 +2,7 @@ import Store from "../models/Store.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import {
   SHOPIFY_ERROR_REDIRECT,
+  SHOPIFY_REDIRECT_URI,
   SHOPIFY_SUCCESS_REDIRECT,
 } from "../config/shopify.js";
 import {
@@ -13,6 +14,18 @@ import {
   verifyShopifyCallbackHmac,
   verifySignedState,
 } from "../services/shopifyService.js";
+
+function normalizeUrl(url = "") {
+  return url.trim().replace(/\/+$/, "");
+}
+
+function ensureShopifyRedirectUriConfigured() {
+  if (!normalizeUrl(SHOPIFY_REDIRECT_URI)) {
+    const error = new Error("SHOPIFY_REDIRECT_URI is required");
+    error.statusCode = 500;
+    throw error;
+  }
+}
 
 function buildRedirectUrl(baseUrl, params = {}) {
   const target = new URL(baseUrl);
@@ -59,6 +72,7 @@ async function findStoreForUser(userId, shop) {
 }
 
 export const connectShopifyStore = asyncHandler(async (req, res) => {
+  ensureShopifyRedirectUriConfigured();
   const shop = normalizeShopDomain(req.query.shop || "");
   const state = createSignedState({ shop });
   const authUrl = buildShopifyAuthUrl({ shop, state });
@@ -68,6 +82,7 @@ export const connectShopifyStore = asyncHandler(async (req, res) => {
 
 export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
   try {
+    ensureShopifyRedirectUriConfigured();
     const { code, shop, state } = req.query;
 
     if (req.query.error) {
@@ -108,6 +123,14 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       throw error;
     }
 
+    const productResponse = await fetchShopifyProducts({
+      shop: normalizedShop,
+      accessToken,
+    });
+    const products = Array.isArray(productResponse?.products)
+      ? productResponse.products
+      : [];
+
     await Store.findOneAndUpdate(
       {
         user: statePayload.userId ?? null,
@@ -135,13 +158,13 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       userId: statePayload.userId ?? null,
       shop: normalizedShop,
     });
+    console.log("Shopify products fetched", {
+      shop: normalizedShop,
+      count: products.length,
+      productIds: products.slice(0, 10).map((product) => product?.id).filter(Boolean),
+    });
 
-    res.redirect(
-      buildRedirectUrl(SHOPIFY_SUCCESS_REDIRECT, {
-        shopify: "connected",
-        shop: normalizedShop,
-      })
-    );
+    res.redirect(SHOPIFY_SUCCESS_REDIRECT);
   } catch (error) {
     if (SHOPIFY_ERROR_REDIRECT) {
       return res.redirect(
