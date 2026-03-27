@@ -210,3 +210,39 @@ export async function fetchShopifyProducts({ shop, accessToken }) {
     );
   }
 }
+
+export async function registerWebhooks({ shop, accessToken }) {
+  assertShopifyEnv();
+  const normalizedShop = normalizeShopDomain(shop);
+  const backendUrl = new URL(SHOPIFY_REDIRECT_URI).origin;
+  
+  const topics = ["orders/create", "inventory_levels/update", "products/update"];
+  
+  for (const topic of topics) {
+    const address = `${backendUrl}/webhooks/${topic}`;
+    try {
+      await axios.post(
+        `https://${normalizedShop}/admin/api/${SHOPIFY_API_VERSION}/webhooks.json`,
+        {
+          webhook: {
+            topic,
+            address,
+            format: "json",
+          },
+        },
+        {
+          headers: {
+            "X-Shopify-Access-Token": accessToken,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      console.log(`Registered webhook ${topic} for ${shop} at ${address}`);
+    } catch (error) {
+      // 422 usually means the webhook address is already registered, so we can ignore it
+      if (error.response?.status !== 422) {
+        console.error(`Failed to register webhook ${topic} for ${shop}:`, error.message);
+      }
+    }
+  }
+}

@@ -11,6 +11,8 @@ import StatusMessage from '../components/StatusMessage';
 import { getCategoryDistribution, getStockTrend } from '../services/analytics';
 import { getApiErrorMessage } from '../services/api';
 import { getDashboardData } from '../services/dashboard';
+import { socket } from '../services/socket';
+import { useAuth } from '../context/AuthContext';
 
 function formatDate(value) {
   if (!value) {
@@ -37,6 +39,7 @@ export default function DashboardPage() {
   const [categoryDistribution, setCategoryDistribution] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const { user } = useAuth();
 
   useEffect(() => {
     async function loadDashboard() {
@@ -63,6 +66,42 @@ export default function DashboardPage() {
 
     loadDashboard();
   }, []);
+
+  useEffect(() => {
+    if (!user?._id) return;
+
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.emit('joinUser', user._id);
+
+    function handleInventoryUpdated() {
+      console.log('Real-time inventory update received on dashboard!');
+      // Re-fetch dashboard data automatically
+      async function reloadDashboard() {
+        try {
+          const [dashboardData, stockTrendData, categoryDistributionData] = await Promise.all([
+            getDashboardData(),
+            getStockTrend(),
+            getCategoryDistribution()
+          ]);
+          setDashboard(dashboardData);
+          setStockTrend(stockTrendData);
+          setCategoryDistribution(categoryDistributionData);
+        } catch (err) {
+          console.error("Failed to refresh dashboard on socket event", err);
+        }
+      }
+      reloadDashboard();
+    }
+
+    socket.on('inventoryUpdated', handleInventoryUpdated);
+
+    return () => {
+      socket.off('inventoryUpdated', handleInventoryUpdated);
+    };
+  }, [user?._id]);
 
   return (
     <section>

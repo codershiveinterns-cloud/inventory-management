@@ -1,9 +1,15 @@
 import { Router } from "express";
 
-import { handleInventoryWebhook } from "../controllers/webhookController.js";
+import {
+  handleOrdersCreate,
+  handleInventoryUpdate,
+  handleProductsUpdate,
+} from "../controllers/webhookController.js";
 
 const router = Router();
 
-router.post("/inventory-update", handleInventoryWebhook);
+router.post("/orders/create", handleOrdersCreate);
+router.post("/inventory_levels/update", handleInventoryUpdate);
+router.post("/products/update", handleProductsUpdate);
 
 export default router;

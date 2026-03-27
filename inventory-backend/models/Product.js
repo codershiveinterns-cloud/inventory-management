@@ -61,6 +61,18 @@ const productSchema = new mongoose.Schema(
       min: [0, "Low stock threshold must be a non-negative number"],
       default: 0,
     },
+    shopifyProductId: {
+      type: String,
+      index: true,
+    },
+    shopifyVariantId: {
+      type: String,
+      index: true,
+    },
+    inventoryItemId: {
+      type: String,
+      index: true,
+    },
   },
   {
     timestamps: true,

@@ -58,7 +58,15 @@ const corsOptions = {
 // Core middleware for cross-origin requests and JSON request bodies.
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
-app.use(express.json());
+app.use(
+  express.json({
+    verify: (req, res, buf) => {
+      if (req.originalUrl.startsWith("/webhooks")) {
+        req.rawBody = buf.toString("utf8");
+      }
+    },
+  })
+);
 
 app.get("/", (_req, res) => {
   res.json({

@@ -13,6 +13,7 @@ import {
   normalizeShopDomain,
   verifyShopifyCallbackHmac,
   verifySignedState,
+  registerWebhooks,
 } from "../services/shopifyService.js";
 
 function normalizeUrl(url = "") {
@@ -158,6 +159,10 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       userId: statePayload.userId ?? null,
       shop: normalizedShop,
     });
+    
+    // Register webhooks for real-time sync
+    await registerWebhooks({ shop: normalizedShop, accessToken });
+
     console.log("Shopify products fetched", {
       shop: normalizedShop,
       count: products.length,

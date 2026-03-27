@@ -13,6 +13,8 @@ import {
   getInventoryHistory,
   getProducts
 } from '../services/products';
+import { socket } from '../services/socket';
+import { useAuth } from '../context/AuthContext';
 
 const initialFilters = {
   nameSearch: '',
@@ -133,6 +135,8 @@ export default function ProductsPage() {
   const [message, setMessage] = useState(location.state?.message ?? '');
   const [error, setError] = useState('');
   const [hasLoadedProducts, setHasLoadedProducts] = useState(false);
+  const [refreshTrigger, setRefreshTrigger] = useState(0);
+  const { user } = useAuth();
 
   async function fetchProducts(overrides = {}) {
     const filters = {
@@ -155,6 +159,26 @@ export default function ProductsPage() {
       skuSearch: skuSearch.trim()
     });
   }, [nameSearch, skuSearch]);
+
+  useEffect(() => {
+    if (!user?._id) return;
+
+    if (!socket.connected) {
+      socket.connect();
+    }
+
+    socket.emit('joinUser', user._id);
+
+    function handleInventoryUpdated() {
+      setRefreshTrigger((prev) => prev + 1);
+    }
+
+    socket.on('inventoryUpdated', handleInventoryUpdated);
+
+    return () => {
+      socket.off('inventoryUpdated', handleInventoryUpdated);
+    };
+  }, [user?._id]);
 
   useEffect(() => {
     let isActive = true;
@@ -226,7 +250,7 @@ export default function ProductsPage() {
     return () => {
       isActive = false;
     };
-  }, [nameSearch, skuSearch, category, minPrice, maxPrice, stockStatus, hasLoadedProducts]);
+  }, [nameSearch, skuSearch, category, minPrice, maxPrice, stockStatus, hasLoadedProducts, refreshTrigger]);
 
   useEffect(() => {
     if (location.state?.message) {
