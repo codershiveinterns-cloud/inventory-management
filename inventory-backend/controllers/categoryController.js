@@ -1,11 +1,11 @@
-import Product from "../models/Product.js";
+import Product, { buildProductOwnerFilter } from "../models/Product.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 const defaultCategories = ["Electronics", "Grocery", "Clothing", "Other"];
 
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = await Product.distinct("category", {
-    user: req.user.id,
+    ...buildProductOwnerFilter(req.user.id),
     category: { $exists: true, $ne: "" },
   });
 

@@ -4023,3 +4023,139 @@ Server running on port 5000
 [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
 MongoDB connected successfully
 Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  suppress all logs with { quiet: true }
+MongoDB connected successfully
+Server running on port 5000
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 9,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 9
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 9,
+    productCount: 1,
+    date: '2026-03-26',
+    label: '2026-03-26',
+    value: 9
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 9,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 9
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 9,
+    productCount: 1,
+    date: '2026-03-26',
+    label: '2026-03-26',
+    value: 9
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 9,
+    productCount: 1,
+    date: '2026-03-26',
+    label: '2026-03-26',
+    value: 9
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 9,
+    productCount: 1,
+    date: '2026-03-26',
+    label: '2026-03-26',
+    value: 9
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 9,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 9
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 9,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 9
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 9,
+    productCount: 1,
+    date: '2026-03-26',
+    label: '2026-03-26',
+    value: 9
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 9,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 9
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 9,
+    productCount: 1,
+    date: '2026-03-26',
+    label: '2026-03-26',
+    value: 9
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 9,
+    category: 'Electronics',
+    name: 'Electronics',
+    value: 9
+  }
+]
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

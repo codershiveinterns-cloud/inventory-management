@@ -1,4 +1,7 @@
-import Product from "../models/Product.js";
+import Product, {
+  buildOwnedProductQuery,
+  buildProductOwnerFilter,
+} from "../models/Product.js";
 import InventoryLog from "../models/InventoryLog.js";
 import InventoryHistory from "../models/InventoryHistory.js";
 import { DEFAULT_CURRENCY } from "../config/currency.js";
@@ -24,7 +27,7 @@ const ensureSkuIsAvailable = async ({ userId, sku, excludeProductId }) => {
   }
 
   const existingProduct = await Product.findOne({
-    user: userId,
+    ...buildProductOwnerFilter(userId),
     sku,
     ...(excludeProductId ? { _id: { $ne: excludeProductId } } : {}),
   }).select("_id");
@@ -181,11 +184,6 @@ const resolveProductName = ({ name, title }) => name ?? title;
 
 const resolveProductQuantity = ({ quantity, stock }) => quantity ?? stock;
 
-const buildOwnedProductQuery = (productId, userId) => ({
-  _id: productId,
-  user: userId,
-});
-
 // Create a new product and record the initial stock as an inventory event.
 export const createProduct = async (req, res) => {
   try {
@@ -241,7 +239,7 @@ export const createProduct = async (req, res) => {
     console.log("Incoming data:", req.body);
 
     const product = await Product.create({
-      user: req.user.id,
+      userId: req.user.id,
       title: normalizedTitle,
       category: normalizedCategory,
       sku: normalizedSku,
@@ -281,7 +279,7 @@ export const createProduct = async (req, res) => {
 export const getProducts = asyncHandler(async (req, res) => {
   console.log("GET /api/products req.query:", req.query);
   const query = {
-    user: req.user.id,
+    ...buildProductOwnerFilter(req.user.id),
     ...buildProductFilters({
       ...req.query,
       normalizeCategory,
@@ -309,11 +307,13 @@ export const getProducts = asyncHandler(async (req, res) => {
 });
 
 export const getCategories = asyncHandler(async (req, res) => {
-  const categories = (await Product.distinct("category", { user: req.user.id }))
+  const categories = (
+    await Product.distinct("category", buildProductOwnerFilter(req.user.id))
+  )
     .filter(Boolean)
     .sort((left, right) => left.localeCompare(right));
   const uncategorizedCount = await Product.countDocuments({
-    user: req.user.id,
+    ...buildProductOwnerFilter(req.user.id),
     $or: [
       { category: { $exists: false } },
       { category: null },
@@ -332,7 +332,7 @@ export const getCategories = asyncHandler(async (req, res) => {
 // Return products whose stock has fallen below the configured threshold.
 export const getLowStockProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({
-    user: req.user.id,
+    ...buildProductOwnerFilter(req.user.id),
     $expr: { $lte: ["$stock", "$lowStockThreshold"] },
   }).sort({ stock: 1, title: 1 });
 

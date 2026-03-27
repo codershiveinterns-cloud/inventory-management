@@ -1,4 +1,4 @@
-import Product from "../models/Product.js";
+import Product, { buildProductOwnerFilter } from "../models/Product.js";
 import InventoryLog from "../models/InventoryLog.js";
 import asyncHandler from "../utils/asyncHandler.js";
 import { createInventoryHistoryEntry } from "../utils/history.js";
@@ -28,7 +28,10 @@ export const updateInventory = asyncHandler(async (req, res) => {
     throw error;
   }
 
-  const product = await Product.findOne({ _id: productId, user: req.user.id });
+  const product = await Product.findOne({
+    _id: productId,
+    ...buildProductOwnerFilter(req.user.id),
+  });
 
   if (!product) {
     const existingProduct = await Product.exists({ _id: productId });
@@ -73,7 +76,9 @@ export const updateInventory = asyncHandler(async (req, res) => {
 
 // Optional helper endpoint for auditing recent stock movement.
 export const getInventoryLogs = asyncHandler(async (req, res) => {
-  const ownedProductIds = await Product.find({ user: req.user.id }).distinct("_id");
+  const ownedProductIds = await Product.find(
+    buildProductOwnerFilter(req.user.id)
+  ).distinct("_id");
   const logs = await InventoryLog.find({ productId: { $in: ownedProductIds } })
     .populate("productId", "title sku")
     .sort({ date: -1, createdAt: -1 });

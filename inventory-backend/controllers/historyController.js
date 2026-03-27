@@ -1,11 +1,11 @@
-import Product from "../models/Product.js";
+import Product, { buildProductOwnerFilter } from "../models/Product.js";
 import InventoryHistory from "../models/InventoryHistory.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const getProductHistory = asyncHandler(async (req, res) => {
   const product = await Product.findOne({
     _id: req.params.productId,
-    user: req.user.id,
+    ...buildProductOwnerFilter(req.user.id),
   }).select("_id");
 
   if (!product) {
