@@ -3,7 +3,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 import {
   SHOPIFY_ERROR_REDIRECT,
   SHOPIFY_REDIRECT_URI,
-  SHOPIFY_SUCCESS_REDIRECT,
+  SHOPIFY_FRONTEND_URL,
 } from "../config/shopify.js";
 import {
   buildShopifyAuthUrl,
@@ -83,7 +83,7 @@ export const connectShopifyStore = asyncHandler(async (req, res) => {
 export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
   try {
     ensureShopifyRedirectUriConfigured();
-    const { code, shop, state } = req.query;
+    const { code, shop, state, host } = req.query;
 
     if (req.query.error) {
       const error = new Error(
@@ -165,8 +165,9 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
     });
 
     res.redirect(
-      buildRedirectUrl(SHOPIFY_SUCCESS_REDIRECT, {
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL, {
         shop: normalizedShop,
+        host,
       })
     );
   } catch (error) {
