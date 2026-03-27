@@ -1,5 +1,5 @@
-import { useState } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useSearchParams, useNavigate } from 'react-router-dom';
 import Button from '../components/Button';
 import StatusMessage from '../components/StatusMessage';
 
@@ -39,10 +39,23 @@ function ShopifyIcon() {
 
 export default function ShopifyConnectPage() {
   const [searchParams] = useSearchParams();
+  const navigate = useNavigate();
   const [shopDomain, setShopDomain] = useState('');
   const [error, setError] = useState(searchParams.get('error') || '');
   const [isConnecting, setIsConnecting] = useState(false);
   const backendBaseUrl = resolveBackendBaseUrl();
+
+  useEffect(() => {
+    const shop = searchParams.get('shop');
+    if (shop) {
+      const redirectUrl = `${window.location.origin}/app`;
+      if (window.top !== window.self) {
+        window.top.location.href = redirectUrl;
+      } else {
+        navigate('/app', { replace: true });
+      }
+    }
+  }, [searchParams, navigate]);
 
   async function handleConnectShopify() {
     const normalizedShop = normalizeShopDomain(shopDomain);
