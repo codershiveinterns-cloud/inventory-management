@@ -14,7 +14,6 @@ import {
   getProducts
 } from '../services/products';
 import { socket } from '../services/socket';
-import { useAuth } from '../context/AuthContext';
 
 const initialFilters = {
   nameSearch: '',
@@ -136,7 +135,6 @@ export default function ProductsPage() {
   const [error, setError] = useState('');
   const [hasLoadedProducts, setHasLoadedProducts] = useState(false);
   const [refreshTrigger, setRefreshTrigger] = useState(0);
-  const { user } = useAuth();
 
   async function fetchProducts(overrides = {}) {
     const filters = {
@@ -161,13 +159,11 @@ export default function ProductsPage() {
   }, [nameSearch, skuSearch]);
 
   useEffect(() => {
-    if (!user?._id) return;
-
     if (!socket.connected) {
       socket.connect();
     }
 
-    socket.emit('joinUser', user._id);
+    socket.emit('joinGlobal');
 
     function handleInventoryUpdated() {
       setRefreshTrigger((prev) => prev + 1);
@@ -178,7 +174,7 @@ export default function ProductsPage() {
     return () => {
       socket.off('inventoryUpdated', handleInventoryUpdated);
     };
-  }, [user?._id]);
+  }, [nameSearch, skuSearch]);
 
   useEffect(() => {
     let isActive = true;

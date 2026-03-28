@@ -4,7 +4,7 @@ import { Link, NavLink } from 'react-router-dom';
 const navItems = [
   { label: 'Home', to: '/', end: true },
   { label: 'Contact', to: '/contact' },
-  { label: 'Login', to: '/login' }
+  { label: 'Dashboard', to: '/dashboard' }
 ];
 
 function navClassName({ isActive }) {
@@ -42,7 +42,7 @@ export default function LandingNavbar() {
                 </NavLink>
               ))}
               <Link
-                to="/signup"
+                to="/dashboard"
                 className="ml-2 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(29,166,255,0.28)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(29,166,255,0.35)]"
               >
                 Get Started
@@ -74,7 +74,7 @@ export default function LandingNavbar() {
                   </NavLink>
                 ))}
                 <Link
-                  to="/signup"
+                  to="/dashboard"
                   onClick={() => setIsOpen(false)}
                   className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(29,166,255,0.28)] transition duration-300 hover:-translate-y-0.5"
                 >

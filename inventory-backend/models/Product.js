@@ -4,17 +4,10 @@ import { normalizeSku } from "../utils/sku.js";
 
 const productSchema = new mongoose.Schema(
   {
-    userId: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: [true, "Product owner is required"],
+    shop: {
+      type: String,
+      required: [true, "Shop domain is required"],
       index: true,
-    },
-    user: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      select: false,
-      default: undefined,
     },
     title: {
       type: String,
@@ -82,25 +75,17 @@ const productSchema = new mongoose.Schema(
 );
 
 productSchema.index(
-  { userId: 1, sku: 1 },
+  { shop: 1, sku: 1 },
   {
     unique: true,
     partialFilterExpression: {
       sku: { $exists: true, $type: "string" },
-      userId: { $exists: true, $type: "objectId" },
+      shop: { $exists: true, $type: "string" },
     },
   }
 );
 
-productSchema.pre("validate", function normalizeOwnershipAndCategory() {
-  if (!this.userId && this.user) {
-    this.userId = this.user;
-  }
-
-  if (!this.user && this.userId) {
-    this.user = this.userId;
-  }
-
+productSchema.pre("validate", function normalizeCategory() {
   if (!this.category) {
     this.category = "Other";
   }
@@ -116,16 +101,14 @@ productSchema.virtual("isLowStock").get(function isLowStock() {
   return this.stock <= this.lowStockThreshold;
 });
 
-export function buildProductOwnerFilter(userId) {
-  return {
-    $or: [{ userId }, { user: userId }],
-  };
+export function buildProductOwnerFilter(shop) {
+  return { shop };
 }
 
-export function buildOwnedProductQuery(productId, userId) {
+export function buildOwnedProductQuery(productId, shop) {
   return {
     _id: productId,
-    ...buildProductOwnerFilter(userId),
+    ...buildProductOwnerFilter(shop),
   };
 }
 

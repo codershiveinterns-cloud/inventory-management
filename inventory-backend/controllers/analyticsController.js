@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const getStockTrend = asyncHandler(async (req, res) => {
-  const userId = new mongoose.Types.ObjectId(req.user.id);
+  const shop = req.shop;
   const stockTrend = await Product.aggregate([
     {
-      $match: buildProductOwnerFilter(userId),
+      $match: buildProductOwnerFilter(shop),
     },
     {
       $project: {
@@ -49,10 +49,10 @@ export const getStockTrend = asyncHandler(async (req, res) => {
 });
 
 export const getCategoryDistribution = asyncHandler(async (req, res) => {
-  const userId = new mongoose.Types.ObjectId(req.user.id);
+  const shop = req.shop;
   const categoryDistribution = await Product.aggregate([
     {
-      $match: buildProductOwnerFilter(userId),
+      $match: buildProductOwnerFilter(shop),
     },
     {
       $project: {

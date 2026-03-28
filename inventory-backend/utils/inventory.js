@@ -31,12 +31,13 @@ export const getChangeDetailsFromDelta = (delta) => {
   };
 };
 
-export const createInventoryLog = async ({ productId, changeType, quantity }) => {
+export const createInventoryLog = async ({ shop, productId, changeType, quantity }) => {
   if (!quantity) {
     return null;
   }
 
   return InventoryLog.create({
+    shop,
     productId,
     changeType,
     quantity,

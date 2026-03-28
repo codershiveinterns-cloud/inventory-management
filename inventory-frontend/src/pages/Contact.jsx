@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useLocation } from 'react-router-dom';
 import Footer from '../components/Footer';
 
 const supportEmail = 'tusharpalaria2@gmail.com';
@@ -12,6 +13,7 @@ const initialForm = {
 export default function ContactPage() {
   const [formData, setFormData] = useState(initialForm);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const location = useLocation();
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -125,12 +127,11 @@ export default function ContactPage() {
                 <p className="text-xs font-semibold uppercase tracking-[0.22em] text-cyan-100/80">
                   Support Email
                 </p>
-                <a
-                  href={`mailto:${supportEmail}`}
-                  className="mt-3 block break-all text-lg font-semibold text-white transition hover:text-cyan-100"
+                <p
+                  className="mt-3 block break-all text-lg font-semibold text-white"
                 >
                   {supportEmail}
-                </a>
+                </p>
                 <p className="mt-3 text-sm text-slate-300">
                   Send your issue, feature request, or account question here.
                 </p>
@@ -139,7 +140,7 @@ export default function ContactPage() {
           </section>
         </main>
 
-        <Footer />
+        {!location.pathname.startsWith('/dashboard') && <Footer />}
       </div>
     </div>
   );

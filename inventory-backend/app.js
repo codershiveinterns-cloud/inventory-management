@@ -8,7 +8,6 @@ import productRoutes from "./routes/productRoutes.js";
 import dashboardRoutes from "./routes/dashboardRoutes.js";
 import historyRoutes from "./routes/historyRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
-import authRoutes from "./routes/authRoutes.js";
 import shopifyRoutes from "./routes/shopifyRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
 import notFound from "./middleware/notFound.js";
@@ -89,7 +88,6 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use("/auth", authRoutes);
 app.use("/shopify", shopifyRoutes);
 app.use("/webhooks", webhookRoutes);
 

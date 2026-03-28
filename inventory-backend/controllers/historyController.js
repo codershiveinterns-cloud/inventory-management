@@ -5,7 +5,7 @@ import asyncHandler from "../utils/asyncHandler.js";
 export const getProductHistory = asyncHandler(async (req, res) => {
   const product = await Product.findOne({
     _id: req.params.productId,
-    ...buildProductOwnerFilter(req.user.id),
+    ...buildProductOwnerFilter(req.shop),
   }).select("_id");
 
   if (!product) {
@@ -15,6 +15,7 @@ export const getProductHistory = asyncHandler(async (req, res) => {
   }
 
   const history = await InventoryHistory.find({
+    shop: req.shop,
     productId: product._id,
   }).sort({ date: -1, createdAt: -1 });
 

@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { Link, NavLink, useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 
 const navItems = [
   { label: 'Dashboard', to: '/app' },
@@ -8,8 +7,7 @@ const navItems = [
   { label: 'Add Product', to: '/add-product' },
   { label: 'Inventory Update', to: '/inventory-update' },
   { label: 'Low Stock', to: '/low-stock' },
-  { label: 'Shopify', to: '/shopify' },
-  { label: 'Contact', to: '/contact' }
+  { label: 'Contact', to: '/dashboard/contact' }
 ];
 
 function navClassName({ isActive }) {
@@ -23,17 +21,6 @@ function navClassName({ isActive }) {
 export default function DashboardNavbar() {
   const [isOpen, setIsOpen] = useState(false);
   const navigate = useNavigate();
-  const { logout } = useAuth();
-
-  async function handleLogout() {
-    try {
-      await logout();
-    } catch (error) {
-      console.error('Logout failed:', error);
-    } finally {
-      navigate('/', { replace: true });
-    }
-  }
 
   return (
     <header className="fixed inset-x-0 top-0 z-50">
@@ -60,21 +47,7 @@ export default function DashboardNavbar() {
               ))}
             </nav>
 
-            <div className="hidden items-center gap-3 md:flex">
-              <Link
-                to="/shopify"
-                className="inline-flex items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/15 px-5 py-2.5 text-sm font-semibold text-emerald-100 transition duration-300 hover:-translate-y-0.5 hover:bg-emerald-400/20 hover:text-white"
-              >
-                Connect Store
-              </Link>
-              <button
-                type="button"
-                onClick={handleLogout}
-                className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-2.5 text-sm font-semibold text-slate-100 transition duration-300 hover:-translate-y-0.5 hover:bg-white/10 hover:text-white"
-              >
-                Logout
-              </button>
-            </div>
+
 
             <button
               type="button"
@@ -99,20 +72,6 @@ export default function DashboardNavbar() {
                     {item.label}
                   </NavLink>
                 ))}
-                <Link
-                  to="/shopify"
-                  onClick={() => setIsOpen(false)}
-                  className="inline-flex items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/15 px-5 py-3 text-sm font-semibold text-emerald-100 transition duration-300 hover:bg-emerald-400/20 hover:text-white"
-                >
-                  Connect Store
-                </Link>
-                <button
-                  type="button"
-                  onClick={handleLogout}
-                  className="inline-flex items-center justify-center rounded-full border border-white/10 bg-white/[0.06] px-5 py-3 text-sm font-semibold text-slate-100 transition duration-300 hover:bg-white/10 hover:text-white"
-                >
-                  Logout
-                </button>
               </div>
             </div>
           ) : null}

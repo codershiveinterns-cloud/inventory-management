@@ -12,7 +12,6 @@ import { getCategoryDistribution, getStockTrend } from '../services/analytics';
 import { getApiErrorMessage } from '../services/api';
 import { getDashboardData } from '../services/dashboard';
 import { socket } from '../services/socket';
-import { useAuth } from '../context/AuthContext';
 
 function formatDate(value) {
   if (!value) {
@@ -39,7 +38,6 @@ export default function DashboardPage() {
   const [categoryDistribution, setCategoryDistribution] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
-  const { user } = useAuth();
 
   useEffect(() => {
     async function loadDashboard() {
@@ -68,13 +66,11 @@ export default function DashboardPage() {
   }, []);
 
   useEffect(() => {
-    if (!user?._id) return;
-
     if (!socket.connected) {
       socket.connect();
     }
 
-    socket.emit('joinUser', user._id);
+    socket.emit('joinGlobal');
 
     function handleInventoryUpdated() {
       console.log('Real-time inventory update received on dashboard!');
@@ -101,7 +97,7 @@ export default function DashboardPage() {
     return () => {
       socket.off('inventoryUpdated', handleInventoryUpdated);
     };
-  }, [user?._id]);
+  }, []);
 
   return (
     <section>
@@ -114,9 +110,7 @@ export default function DashboardPage() {
             <Link to="/products/new">
               <Button>Add Product</Button>
             </Link>
-            <Link to="/shopify/connect">
-              <Button variant="success">Connect Store</Button>
-            </Link>
+
           </div>
         }
       />
@@ -240,15 +234,7 @@ export default function DashboardPage() {
                     Increase or decrease stock using the dedicated inventory API.
                   </p>
                 </Link>
-                <Link
-                  to="/shopify/connect"
-                  className="rounded-2xl border border-white/10 bg-white/5 px-4 py-4 transition hover:border-white/20 hover:bg-white/10"
-                >
-                  <p className="font-semibold text-white">Prepare Shopify</p>
-                  <p className="mt-1 text-sm text-slate-400">
-                    Use the connect store button and placeholder OAuth screen for the next integration step.
-                  </p>
-                </Link>
+
               </div>
             </Card>
           </div>

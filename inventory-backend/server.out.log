@@ -4159,3 +4159,413 @@ GET /api/analytics/category-distribution response: [
 [32m[nodemon] starting `node server.js server.js`[39m
 [dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  load multiple .env files with { path: ['.env.local', '.env'] }
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚡️ secrets for agents: https://dotenvx.com/as2
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛠️  run anywhere with `dotenvx run -- yourcommand`
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+MongoDB connected successfully
+Server running on port 5000
+Client connected via Socket.io: HIkCFmeZr451Ju0kAAAB
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 86,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 86
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 86,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 86
+  }
+]
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+Socket HIkCFmeZr451Ju0kAAAB joined global inventory updates room
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"$or":[{"userId":"69c77c619a6f350d3439b725"},{"user":"69c77c619a6f350d3439b725"}]}
+Results: 1
+Client disconnected: HIkCFmeZr451Ju0kAAAB
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🤖 agentic secret storage: https://dotenvx.com/as2
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  write to custom object with { processEnv: myObject }
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  specify custom .env file path with { path: '/custom/path/.env' }
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent building .env in docker: https://dotenvx.com/prebuild
+MongoDB connected successfully
+Server running on port 5000
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m

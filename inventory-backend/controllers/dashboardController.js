@@ -3,10 +3,10 @@ import mongoose from "mongoose";
 import asyncHandler from "../utils/asyncHandler.js";
 
 export const getDashboardAnalytics = asyncHandler(async (req, res) => {
-  const userId = new mongoose.Types.ObjectId(req.user.id);
+  const shop = req.shop;
   const [analytics] = await Product.aggregate([
     {
-      $match: buildProductOwnerFilter(userId),
+      $match: buildProductOwnerFilter(shop),
     },
     {
       $facet: {

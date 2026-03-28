@@ -34,38 +34,7 @@ const steps = [
   ['dashboard', 'Manage Inventory from Dashboard', 'Track stock and act on alerts from one smart interface.']
 ];
 
-const plans = [
-  {
-    name: 'Starter',
-    price: '€59',
-    description: 'For smaller teams that need practical control over inventory without extra overhead.',
-    points: [
-      'Up to 100 SKUs',
-      'Basic inventory tracking',
-      'Low stock alerts'
-    ],
-    cta: 'Get Started'
-  },
-  {
-    name: 'Growth',
-    price: '€199',
-    description: 'For growing stores that need real-time sync, analytics, and stronger team workflows.',
-    points: [
-      'Up to 1000 SKUs',
-      'Real-time inventory sync',
-      'Analytics dashboard'
-    ],
-    cta: 'Get Started',
-    popular: true
-  },
-  {
-    name: 'Enterprise',
-    price: '€299',
-    description: 'For larger operations managing multiple stores, unlimited users, and deeper reporting.',
-    points: ['Unlimited SKUs', 'Multi-store management', 'Dedicated support'],
-    cta: 'Contact Sales'
-  }
-];
+
 
 const rows = [
   ['Classic Tee', 'CT-204', '248', 'Healthy'],
@@ -313,16 +282,10 @@ export default function LandingPage() {
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Link
-                  to="/signup"
+                  to="/dashboard"
                   className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_22px_55px_rgba(29,166,255,0.32)] ring-1 ring-cyan-200/20 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(29,166,255,0.38)]"
                 >
-                  Get Started Free
-                </Link>
-                <Link
-                  to="/login"
-                  className="inline-flex items-center justify-center rounded-2xl border border-white/15 bg-white/[0.03] px-7 py-4 text-sm font-semibold text-white backdrop-blur-xl transition duration-300 hover:-translate-y-1 hover:border-cyan-300/30 hover:bg-white/[0.08]"
-                >
-                  Connect Store
+                  Get Started
                 </Link>
               </div>
 
@@ -420,41 +383,6 @@ export default function LandingPage() {
             </div>
           </section>
 
-          <section id="pricing" className="mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
-            {sectionIntro(
-              'Pricing',
-              'Simple plans for every stage of inventory growth',
-              'Choose a monthly plan now, then switch to yearly on the pricing page to unlock 20% savings.',
-              true
-            )}
-            <div className="mt-14 grid gap-6 xl:grid-cols-3">
-              {plans.map((plan) => (
-                <div key={plan.name} className={`relative flex h-full flex-col rounded-[2rem] border p-7 backdrop-blur-xl transition duration-300 hover:-translate-y-1.5 ${plan.popular ? 'border-cyan-300/30 bg-gradient-to-b from-brand-500/18 to-white/[0.08] shadow-[0_25px_80px_rgba(29,166,255,0.2)]' : 'border-white/10 bg-white/[0.05]'}`}>
-                  {plan.popular ? <span className="absolute right-6 top-6 rounded-full border border-cyan-300/20 bg-cyan-300/12 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-cyan-100">Most Popular</span> : null}
-                  <div>
-                    <p className="text-sm font-semibold uppercase tracking-[0.24em] text-cyan-100/80">{plan.name} Plan</p>
-                    <div className="mt-5 flex items-end gap-2">
-                      <span className="text-5xl font-extrabold text-white">{plan.price}</span>
-                      <span className="pb-2 text-sm text-slate-400">/month</span>
-                    </div>
-                    <p className="mt-4 text-sm leading-7 text-slate-300">{plan.description}</p>
-                  </div>
-                  <div className="mt-8 space-y-3">
-                    {plan.points.map((point) => (
-                      <div key={point} className="flex items-start gap-3 text-sm text-slate-200">
-                        <span className="mt-1.5 h-2 w-2 rounded-full bg-cyan-300" />
-                        <span className="leading-6">{point}</span>
-                      </div>
-                    ))}
-                  </div>
-                  <Link to={plan.name === 'Enterprise' ? '/help' : '/signup'} className={`mt-8 inline-flex items-center justify-center rounded-2xl px-5 py-3 text-sm font-semibold transition ${plan.popular ? 'bg-white text-slate-950 hover:bg-cyan-50' : 'border border-white/12 bg-white/[0.04] text-white hover:border-white/20 hover:bg-white/[0.08]'}`}>
-                    {plan.cta}
-                  </Link>
-                </div>
-              ))}
-            </div>
-          </section>
-
           <section className="mx-auto max-w-7xl px-4 py-24 sm:px-6 lg:px-8">
             <div className="relative overflow-hidden rounded-[2.75rem] border border-white/10 bg-[radial-gradient(circle_at_top_left,rgba(34,211,238,0.22),transparent_26%),radial-gradient(circle_at_bottom_right,rgba(99,102,241,0.24),transparent_30%),linear-gradient(135deg,rgba(11,18,32,0.92),rgba(15,23,42,0.82))] px-6 py-16 text-center shadow-[0_30px_100px_rgba(15,23,42,0.52)] ring-1 ring-white/10 backdrop-blur-2xl sm:px-10 lg:px-16">
               <div className="pointer-events-none absolute left-10 top-8 h-32 w-32 rounded-full bg-cyan-400/12 blur-3xl" />
@@ -463,8 +391,8 @@ export default function LandingPage() {
                 <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">Start Today</span>
                 <h2 className="mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Start Managing Your Inventory Today</h2>
                 <p className="mt-5 text-base leading-8 text-slate-300 sm:text-lg">Give your team one modern dashboard for stock visibility, Shopify sync, and faster decisions.</p>
-                <Link to="/signup" className="mt-9 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_60px_rgba(29,166,255,0.34)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_32px_75px_rgba(29,166,255,0.4)]">
-                  Get Started Free
+                <Link to="/dashboard" className="mt-9 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_60px_rgba(29,166,255,0.34)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_32px_75px_rgba(29,166,255,0.4)]">
+                  Get Started
                 </Link>
               </div>
             </div>

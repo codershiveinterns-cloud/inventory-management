@@ -30,7 +30,7 @@ export const updateInventory = asyncHandler(async (req, res) => {
 
   const product = await Product.findOne({
     _id: productId,
-    ...buildProductOwnerFilter(req.user.id),
+    ...buildProductOwnerFilter(req.shop),
   });
 
   if (!product) {
@@ -53,12 +53,14 @@ export const updateInventory = asyncHandler(async (req, res) => {
   const updatedProduct = await product.save();
 
   const log = await createInventoryLog({
+    shop: req.shop,
     productId: updatedProduct._id,
     changeType: normalizedType,
     quantity: normalizedQuantity,
   });
 
   await createInventoryHistoryEntry({
+    shop: req.shop,
     productId: updatedProduct._id,
     change: normalizedType === "increase" ? normalizedQuantity : -normalizedQuantity,
     action: normalizedType === "increase" ? "added" : "sold",
@@ -77,9 +79,9 @@ export const updateInventory = asyncHandler(async (req, res) => {
 // Optional helper endpoint for auditing recent stock movement.
 export const getInventoryLogs = asyncHandler(async (req, res) => {
   const ownedProductIds = await Product.find(
-    buildProductOwnerFilter(req.user.id)
+    buildProductOwnerFilter(req.shop)
   ).distinct("_id");
-  const logs = await InventoryLog.find({ productId: { $in: ownedProductIds } })
+  const logs = await InventoryLog.find({ shop: req.shop, productId: { $in: ownedProductIds } })
     .populate("productId", "title sku")
     .sort({ date: -1, createdAt: -1 });
 

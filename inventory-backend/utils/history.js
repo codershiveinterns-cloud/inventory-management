@@ -13,6 +13,7 @@ export const getHistoryActionFromChange = (change) => {
 };
 
 export const createInventoryHistoryEntry = async ({
+  shop,
   productId,
   change,
   action,
@@ -22,6 +23,7 @@ export const createInventoryHistoryEntry = async ({
   }
 
   return InventoryHistory.create({
+    shop,
     productId,
     change,
     action,

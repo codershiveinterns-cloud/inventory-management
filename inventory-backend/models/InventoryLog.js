@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 
 const inventoryLogSchema = new mongoose.Schema(
   {
+    shop: {
+      type: String,
+      required: true,
+      index: true,
+    },
     productId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Product",

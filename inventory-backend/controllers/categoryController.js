@@ -5,7 +5,7 @@ const defaultCategories = ["Electronics", "Grocery", "Clothing", "Other"];
 
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = await Product.distinct("category", {
-    ...buildProductOwnerFilter(req.user.id),
+    ...buildProductOwnerFilter(req.shop),
     category: { $exists: true, $ne: "" },
   });
 

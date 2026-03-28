@@ -3,6 +3,8 @@ import { SHOPIFY_API_SECRET } from "../config/shopify.js";
 import WebhookLog from "../models/WebhookLog.js";
 import Store from "../models/Store.js";
 import Product, { buildProductOwnerFilter } from "../models/Product.js";
+import InventoryLog from "../models/InventoryLog.js";
+import InventoryHistory from "../models/InventoryHistory.js";
 import asyncHandler from "../utils/asyncHandler.js";
 
 function getIo(req) {
@@ -58,11 +60,6 @@ export const handleOrdersCreate = asyncHandler(async (req, res) => {
     return res.status(200).send("Already processed");
   }
 
-  const store = await Store.findOne({ shopName: shopDomain });
-  if (!store || !store.user) {
-    return res.status(200).send("Store not found or unassociated");
-  }
-
   const order = req.body;
   const io = getIo(req);
   let updated = false;
@@ -78,7 +75,7 @@ export const handleOrdersCreate = asyncHandler(async (req, res) => {
     const result = await Product.findOneAndUpdate(
       {
         $or: queryOpts,
-        ...buildProductOwnerFilter(store.user)
+        ...buildProductOwnerFilter(shopDomain)
       },
       { 
         $inc: { stock: -item.quantity } 
@@ -89,7 +86,7 @@ export const handleOrdersCreate = asyncHandler(async (req, res) => {
   }
 
   if (updated && io) {
-    io.to(store.user.toString()).emit("inventoryUpdated", { source: "orders/create" });
+    io.to("inventory_updates").emit("inventoryUpdated", { source: "orders/create" });
   }
 
   res.status(200).send("OK");
@@ -102,9 +99,6 @@ export const handleInventoryUpdate = asyncHandler(async (req, res) => {
     return res.status(200).send("Already processed");
   }
 
-  const store = await Store.findOne({ shopName: shopDomain });
-  if (!store || !store.user) return res.status(200).send("Store not found or unassociated");
-
   const payload = req.body;
   const io = getIo(req);
 
@@ -116,7 +110,7 @@ export const handleInventoryUpdate = asyncHandler(async (req, res) => {
     const result = await Product.findOneAndUpdate(
       {
         inventoryItemId,
-        ...buildProductOwnerFilter(store.user)
+        ...buildProductOwnerFilter(shopDomain)
       },
       { 
         stock: available 
@@ -125,7 +119,7 @@ export const handleInventoryUpdate = asyncHandler(async (req, res) => {
     );
 
     if (result && io) {
-      io.to(store.user.toString()).emit("inventoryUpdated", { source: "inventory_levels/update" });
+      io.to("inventory_updates").emit("inventoryUpdated", { source: "inventory_levels/update" });
     }
   }
 
@@ -138,9 +132,6 @@ export const handleProductsUpdate = asyncHandler(async (req, res) => {
   if (await checkIdempotency(webhookId, shopDomain, topic)) {
     return res.status(200).send("Already processed");
   }
-
-  const store = await Store.findOne({ shopName: shopDomain });
-  if (!store || !store.user) return res.status(200).send("Store not found or unassociated");
 
   const productMeta = req.body;
   const io = getIo(req);
@@ -173,7 +164,7 @@ export const handleProductsUpdate = asyncHandler(async (req, res) => {
     const result = await Product.findOneAndUpdate(
       {
         shopifyProductId,
-        ...buildProductOwnerFilter(store.user)
+        ...buildProductOwnerFilter(shopDomain)
       },
       { $set: updateFields },
       { new: true }
@@ -183,8 +174,29 @@ export const handleProductsUpdate = asyncHandler(async (req, res) => {
   }
 
   if (updated && io) {
-    io.to(store.user.toString()).emit("inventoryUpdated", { source: "products/update" });
+    io.to("inventory_updates").emit("inventoryUpdated", { source: "products/update" });
   }
 
   res.status(200).send("OK");
+});
+
+// 4. app/uninstalled
+export const handleAppUninstalled = asyncHandler(async (req, res) => {
+  const shopDomain = req.headers["x-shopify-shop-domain"];
+
+  if (!shopDomain) {
+    return res.status(400).json({ error: "Shop is required" });
+  }
+
+  try {
+    await Product.deleteMany({ shop: shopDomain });
+    await InventoryLog.deleteMany({ shop: shopDomain });
+    await InventoryHistory.deleteMany({ shop: shopDomain });
+    await Store.deleteOne({ shopName: shopDomain });
+
+    res.sendStatus(200);
+  } catch (error) {
+    console.error("Webhook error:", error);
+    res.sendStatus(200);
+  }
 });

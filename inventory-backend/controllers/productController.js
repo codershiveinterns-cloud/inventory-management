@@ -21,13 +21,13 @@ const allowedCategories = new Set([
   "Other",
 ]);
 
-const ensureSkuIsAvailable = async ({ userId, sku, excludeProductId }) => {
+const ensureSkuIsAvailable = async ({ shop, sku, excludeProductId }) => {
   if (!sku) {
     return;
   }
 
   const existingProduct = await Product.findOne({
-    ...buildProductOwnerFilter(userId),
+    ...buildProductOwnerFilter(shop),
     sku,
     ...(excludeProductId ? { _id: { $ne: excludeProductId } } : {}),
   }).select("_id");
@@ -187,9 +187,7 @@ const resolveProductQuantity = ({ quantity, stock }) => quantity ?? stock;
 // Create a new product and record the initial stock as an inventory event.
 export const createProduct = async (req, res) => {
   try {
-    if (!req.user?.id) {
-      return res.status(401).json({ message: "Unauthorized" });
-    }
+
 
     const {
       title,
@@ -234,12 +232,12 @@ export const createProduct = async (req, res) => {
     );
     const normalizedPrice = normalizePrice(price, "price", { required: true });
 
-    await ensureSkuIsAvailable({ userId: req.user.id, sku: normalizedSku });
+    await ensureSkuIsAvailable({ shop: req.shop, sku: normalizedSku });
 
     console.log("Incoming data:", req.body);
 
     const product = await Product.create({
-      userId: req.user.id,
+      shop: req.shop,
       title: normalizedTitle,
       category: normalizedCategory,
       sku: normalizedSku,
@@ -250,12 +248,14 @@ export const createProduct = async (req, res) => {
     });
 
     await createInventoryLog({
+      shop: req.shop,
       productId: product._id,
       changeType: "increase",
       quantity: product.stock,
     });
 
     await createInventoryHistoryEntry({
+      shop: req.shop,
       productId: product._id,
       change: product.stock,
       action: "added",
@@ -279,7 +279,7 @@ export const createProduct = async (req, res) => {
 export const getProducts = asyncHandler(async (req, res) => {
   console.log("GET /api/products req.query:", req.query);
   const query = {
-    ...buildProductOwnerFilter(req.user.id),
+    ...buildProductOwnerFilter(req.shop),
     ...buildProductFilters({
       ...req.query,
       normalizeCategory,
@@ -308,12 +308,12 @@ export const getProducts = asyncHandler(async (req, res) => {
 
 export const getCategories = asyncHandler(async (req, res) => {
   const categories = (
-    await Product.distinct("category", buildProductOwnerFilter(req.user.id))
+    await Product.distinct("category", buildProductOwnerFilter(req.shop))
   )
     .filter(Boolean)
     .sort((left, right) => left.localeCompare(right));
   const uncategorizedCount = await Product.countDocuments({
-    ...buildProductOwnerFilter(req.user.id),
+    ...buildProductOwnerFilter(req.shop),
     $or: [
       { category: { $exists: false } },
       { category: null },
@@ -332,7 +332,7 @@ export const getCategories = asyncHandler(async (req, res) => {
 // Return products whose stock has fallen below the configured threshold.
 export const getLowStockProducts = asyncHandler(async (req, res) => {
   const products = await Product.find({
-    ...buildProductOwnerFilter(req.user.id),
+    ...buildProductOwnerFilter(req.shop),
     $expr: { $lte: ["$stock", "$lowStockThreshold"] },
   }).sort({ stock: 1, title: 1 });
 
@@ -345,7 +345,7 @@ export const getLowStockProducts = asyncHandler(async (req, res) => {
 
 // Fetch a single product by its MongoDB id.
 export const getProductById = asyncHandler(async (req, res) => {
-  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.user.id));
+  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.shop));
 
   if (!product) {
     res.status(404);
@@ -371,7 +371,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     lowStockThreshold,
     change,
   } = req.body;
-  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.user.id));
+  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.shop));
 
   if (!product) {
     const existingProduct = await Product.exists({ _id: req.params.id });
@@ -433,7 +433,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
     const normalizedSku = normalizeSku(sku);
 
     await ensureSkuIsAvailable({
-      userId: req.user.id,
+      shop: req.shop,
       sku: normalizedSku,
       excludeProductId: product._id,
     });
@@ -455,6 +455,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
   if (changeDetails) {
     await createInventoryLog({
+      shop: req.shop,
       productId: updatedProduct._id,
       changeType: changeDetails.changeType,
       quantity: changeDetails.quantity,
@@ -462,6 +463,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
   }
 
   await createInventoryHistoryEntry({
+    shop: req.shop,
     productId: updatedProduct._id,
     change: stockDelta,
     action: getHistoryActionFromChange(stockDelta),
@@ -476,7 +478,7 @@ export const updateProduct = asyncHandler(async (req, res) => {
 
 // Delete a product and clean up related inventory logs.
 export const deleteProduct = asyncHandler(async (req, res) => {
-  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.user.id));
+  const product = await Product.findOne(buildOwnedProductQuery(req.params.id, req.shop));
 
   if (!product) {
     const existingProduct = await Product.exists({ _id: req.params.id });
