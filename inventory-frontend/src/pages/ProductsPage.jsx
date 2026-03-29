@@ -399,8 +399,9 @@ export default function ProductsPage() {
                 className="w-full rounded-2xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white focus:border-brand-300 focus:outline-none focus:ring-2 focus:ring-brand-300/30"
               >
                 <option value="">All Stock</option>
-                <option value="low">Low Stock</option>
                 <option value="inStock">In Stock</option>
+                <option value="low">Low Stock</option>
+                <option value="outOfStock">Out of Stock</option>
               </select>
             </label>
 
@@ -485,11 +486,19 @@ export default function ProductsPage() {
                     SKU: {product.sku || 'Unavailable'}
                   </p>
                 </div>
-                {product.isLowStock === true ? (
+                {product.stock === 0 ? (
                   <span className="rounded-full border border-rose-300/25 bg-rose-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-rose-200">
+                    Out of Stock
+                  </span>
+                ) : product.stock <= product.lowStockThreshold ? (
+                  <span className="rounded-full border border-amber-300/25 bg-amber-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-amber-200">
                     Low Stock
                   </span>
-                ) : null}
+                ) : (
+                  <span className="rounded-full border border-emerald-300/25 bg-emerald-400/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.22em] text-emerald-200">
+                    In Stock
+                  </span>
+                )}
               </div>
 
               <div className="mt-6 grid gap-3 rounded-2xl border border-white/10 bg-slate-900/50 p-4 text-sm text-slate-300">

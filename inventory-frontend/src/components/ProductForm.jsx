@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import Button from './Button';
 import Card from './Card';
 
-const categoryOptions = ['Electronics', 'Grocery', 'Clothing', 'Other'];
-
 const emptyForm = {
   title: '',
   category: '',
@@ -50,7 +48,7 @@ export default function ProductForm({
   function validateForm() {
     const nextErrors = {};
 
-    if (!formData.category) {
+    if (!formData.category || !formData.category.trim()) {
       nextErrors.category = 'Category is required.';
     }
 
@@ -71,9 +69,14 @@ export default function ProductForm({
       return;
     }
 
+    const rawCategory = formData.category.trim();
+    const normalizedCategory = rawCategory 
+      ? rawCategory.charAt(0).toUpperCase() + rawCategory.slice(1)
+      : '';
+
     await onSubmit({
       title: formData.title.trim(),
-      category: formData.category,
+      category: normalizedCategory,
       sku: formData.sku.trim(),
       stock: Number(formData.stock),
       price: Number(formData.price),
@@ -109,24 +112,20 @@ export default function ProductForm({
             <span className="mb-2 block text-sm font-medium text-slate-200">
               Category
             </span>
-            <select
+            <input
               required
+              type="text"
               name="category"
               value={formData.category}
               onChange={handleChange}
+              placeholder="e.g. Tools, Electronics, Consumables"
+              list="category-suggestions"
               className={`w-full rounded-2xl border bg-slate-900/80 px-4 py-3 text-white focus:outline-none focus:ring-2 ${
                 errors.category
                   ? 'border-rose-400/60 focus:border-rose-400 focus:ring-rose-400/30'
                   : 'border-white/10 focus:border-brand-300 focus:ring-brand-300/30'
               }`}
-            >
-              <option value="">Select category</option>
-              {categoryOptions.map((option) => (
-                <option key={option} value={option}>
-                  {option}
-                </option>
-              ))}
-            </select>
+            />
             {errors.category ? (
               <p className="mt-1 text-sm font-medium text-rose-300">{errors.category}</p>
             ) : null}

@@ -87,9 +87,10 @@ export const buildProductFilters = ({
     stockStatus !== undefined &&
     stockStatus !== "low" &&
     stockStatus !== "inStock" &&
+    stockStatus !== "outOfStock" &&
     stockStatus !== ""
   ) {
-    const error = new Error("stockStatus must be either low or inStock");
+    const error = new Error("stockStatus must be either low, inStock, or outOfStock");
     error.statusCode = 400;
     throw error;
   }

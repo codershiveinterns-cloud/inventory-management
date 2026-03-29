@@ -14,13 +14,6 @@ import {
 } from "../utils/history.js";
 import { DUPLICATE_SKU_MESSAGE, normalizeSku } from "../utils/sku.js";
 
-const allowedCategories = new Set([
-  "Electronics",
-  "Grocery",
-  "Clothing",
-  "Other",
-]);
-
 const ensureSkuIsAvailable = async ({ shop, sku, excludeProductId }) => {
   if (!sku) {
     return;
@@ -117,14 +110,6 @@ const normalizeCategory = (value, { required = false } = {}) => {
 
   if (!normalizedValue) {
     const error = new Error("category is required");
-    error.statusCode = 400;
-    throw error;
-  }
-
-  if (!allowedCategories.has(normalizedValue)) {
-    const error = new Error(
-      `category must be one of: ${Array.from(allowedCategories).join(", ")}`
-    );
     error.statusCode = 400;
     throw error;
   }
@@ -290,11 +275,15 @@ export const getProducts = asyncHandler(async (req, res) => {
   let products = await Product.find(query).sort({ createdAt: -1 });
 
   if (req.query.stockStatus === "low") {
-    products = products.filter((product) => product.stock <= product.lowStockThreshold);
+    products = products.filter((product) => product.stock > 0 && product.stock <= product.lowStockThreshold);
   }
 
   if (req.query.stockStatus === "inStock") {
     products = products.filter((product) => product.stock > product.lowStockThreshold);
+  }
+
+  if (req.query.stockStatus === "outOfStock") {
+    products = products.filter((product) => product.stock === 0);
   }
 
   console.log("Results:", products.length);
