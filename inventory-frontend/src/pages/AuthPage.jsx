@@ -1,6 +1,6 @@
 import createApp from '@shopify/app-bridge';
 import { Redirect } from '@shopify/app-bridge/actions';
-import { useEffect } from 'react';
+import { useEffect, useRef } from 'react';
 import { useSearchParams } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
@@ -8,20 +8,39 @@ const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 export default function AuthPage() {
   const [searchParams] = useSearchParams();
   const shop = searchParams.get('shop');
-  const host = searchParams.get('host');
-  const apiKey = searchParams.get('apiKey');
+  const host = searchParams.get('host') || new URLSearchParams(window.location.search).get("host");
+  const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY;
+  const redirectStarted = useRef(false);
 
   useEffect(() => {
-    if (!shop || !apiKey) {
-      console.error('Missing shop or apiKey parameter for Shopify Auth initialization.');
+    if (redirectStarted.current) return;
+    
+    console.log("Shop:", shop);
+    console.log("Host:", host);
+
+    if (!shop) {
+      console.error('Missing shop parameter for Shopify Auth initialization.');
+      return;
+    }
+
+    if (!apiKey) {
+      console.error('Missing VITE_SHOPIFY_API_KEY.');
+      return;
+    }
+
+    redirectStarted.current = true;
+
+    if (!host) {
+      // If host is absent, we are not embedded in an Iframe yet. Proceed to standard backend OAuth init natively.
+      window.location.href = `${API_URL}/shopify/connect?shop=${shop}`;
       return;
     }
 
     // Initialize App Bridge securely passing parameters from the Node.js interceptor
     const app = createApp({
       apiKey,
-      host: host || btoa(`${shop}/admin`),
-      forceRedirect: false
+      host,
+      forceRedirect: true
     });
 
     const redirect = Redirect.create(app);

@@ -1,5 +1,5 @@
 import { Navigate, Outlet, Route, Routes, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import createApp from '@shopify/app-bridge';
 import { setupApiInterceptor } from './services/api';
 import DashboardNavbar from './components/DashboardNavbar';
@@ -33,6 +33,7 @@ function AppLayout() {
   const host = params.get('host') || localStorage.getItem('host');
   const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY;
   const navigate = useNavigate();
+  const [isAppBridgeReady, setIsAppBridgeReady] = useState(false);
 
   useEffect(() => {
     if (!shop) {
@@ -43,15 +44,38 @@ function AppLayout() {
     if (shop) localStorage.setItem('shop', shop);
     if (host) localStorage.setItem('host', host);
 
-    if (host && apiKey) {
-      const app = createApp({
-        apiKey,
-        host,
-        forceRedirect: false,
-      });
-      setupApiInterceptor(app);
+    if (!host) {
+      window.location.href = `/auth?shop=${shop}`;
+      return;
     }
-  }, [host, shop, apiKey]);
+
+    if (host && apiKey) {
+      try {
+        const app = createApp({
+          apiKey,
+          host,
+          forceRedirect: true,
+        });
+        setupApiInterceptor(app);
+        setIsAppBridgeReady(true);
+      } catch (err) {
+        console.error("AppBridge Init Error:", err);
+      }
+    }
+  }, [host, shop, apiKey, navigate]);
+
+  if (!isAppBridgeReady) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-slate-950 font-sans">
+        <div className="text-center">
+          <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-cyan-400 border-t-transparent" />
+          <p className="mt-6 text-sm font-semibold tracking-wide text-slate-400">
+            Establishing Secure Session...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <>
