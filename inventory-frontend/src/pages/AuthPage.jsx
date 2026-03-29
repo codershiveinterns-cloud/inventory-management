@@ -1,42 +1,47 @@
 import createApp from '@shopify/app-bridge';
 import { Redirect } from '@shopify/app-bridge/actions';
-import { useEffect, useRef } from 'react';
+import { useEffect, useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AuthPage() {
   const params = new URLSearchParams(window.location.search);
   const shop = params.get("shop");
-  const host = params.get("host");
+  const host = params.get("host") || localStorage.getItem("host");
 
-  const initialized = useRef(false);
+  const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
-    if (initialized.current) return;
-    
     console.log("Shop:", shop);
     console.log("Host:", host);
 
-    // 2. Add validation: If host OR shop is missing, Redirect to `/auth?shop=${shop}`
-    if (!shop || !host) {
-      window.location.href = `/auth?shop=${shop}`;
+    if (!shop) {
+      console.error('Missing shop parameter.');
       return;
     }
 
-    initialized.current = true;
+    if (!host) {
+      console.warn('Missing host. Restarting OAuth natively.');
+      // Securely hit the native backend OAuth entry
+      window.location.href = `${API_URL}/shopify/connect?shop=${shop}`;
+      return;
+    }
 
-    // 3. Fix App Bridge initialization exactly as specified
-    const app = createApp({
-      apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
-      host: host,
-      forceRedirect: true
-    });
+    if (!redirected && host) {
+      const app = createApp({
+        apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
+        host,
+        forceRedirect: true
+      });
 
-    const redirect = Redirect.create(app);
+      const redirect = Redirect.create(app);
 
-    // Escape iframe by navigating top-level window to backend connect URL securely
-    redirect.dispatch(Redirect.Action.REMOTE, `${API_URL}/shopify/connect?shop=${shop}&host=${host}`);
-  }, [shop, host]);
+      // The string-based payload naturally routes the top-level parent window, bypassing popup blockers cleanly
+      redirect.dispatch(Redirect.Action.REMOTE, `${API_URL}/shopify/connect?shop=${shop}`);
+
+      setRedirected(true);
+    }
+  }, [shop, host, redirected]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 font-sans">
@@ -44,9 +49,6 @@ export default function AuthPage() {
         <div className="mx-auto h-12 w-12 animate-spin rounded-full border-4 border-cyan-400 border-t-transparent" />
         <p className="mt-6 text-lg font-semibold tracking-wide text-slate-300">
           Authenticating with Shopify...
-        </p>
-        <p className="mt-2 text-sm text-slate-500">
-          Please wait while we securely connect your store.
         </p>
       </div>
     </div>
