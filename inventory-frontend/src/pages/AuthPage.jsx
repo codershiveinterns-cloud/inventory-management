@@ -1,56 +1,47 @@
 import createApp from '@shopify/app-bridge';
 import { Redirect } from '@shopify/app-bridge/actions';
 import { useEffect, useRef } from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AuthPage() {
-  const [searchParams] = useSearchParams();
-  const shop = searchParams.get('shop');
-  const host = searchParams.get('host') || new URLSearchParams(window.location.search).get("host");
-  const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY;
-  const redirectStarted = useRef(false);
+  const params = new URLSearchParams(window.location.search);
+  const shop = params.get("shop");
+  const host = params.get("host");
+
+  const initialized = useRef(false);
 
   useEffect(() => {
-    if (redirectStarted.current) return;
+    if (initialized.current) return;
     
     console.log("Shop:", shop);
     console.log("Host:", host);
 
-    if (!shop) {
-      console.error('Missing shop parameter for Shopify Auth initialization.');
+    // Add validation: If host OR shop is missing
+    if (!shop || !host) {
+      console.warn('Missing shop or host. Redirecting to start OAuth correctly.');
+      window.location.href = `/auth?shop=${shop}`;
       return;
     }
 
-    if (!apiKey) {
-      console.error('Missing VITE_SHOPIFY_API_KEY.');
-      return;
-    }
+    initialized.current = true;
 
-    redirectStarted.current = true;
-
-    if (!host) {
-      // If host is absent, we are not embedded in an Iframe yet. Proceed to standard backend OAuth init natively.
-      window.location.href = `${API_URL}/shopify/connect?shop=${shop}`;
-      return;
-    }
-
-    // Initialize App Bridge securely passing parameters from the Node.js interceptor
+    // Fix App Bridge initialization exactly as specified
     const app = createApp({
-      apiKey,
-      host,
+      apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
+      host: host,
       forceRedirect: true
     });
 
     const redirect = Redirect.create(app);
 
     // Escape iframe by navigating top-level window to backend connect URL securely
+    // We strictly preserve existing backend functionality natively.
     redirect.dispatch(Redirect.Action.REMOTE, {
-      url: `${API_URL}/shopify/connect?shop=${shop}`,
+      url: `${API_URL}/shopify/connect?shop=${shop}&host=${host}`,
       newContext: true
     });
-  }, [shop, host, apiKey]);
+  }, [shop, host]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 font-sans">
@@ -60,7 +51,7 @@ export default function AuthPage() {
           Authenticating with Shopify...
         </p>
         <p className="mt-2 text-sm text-slate-500">
-          Please wait while we securely break out of the App iframe.
+          Please wait while we securely connect your store.
         </p>
       </div>
     </div>
