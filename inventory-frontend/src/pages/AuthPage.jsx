@@ -8,8 +8,6 @@ export default function AuthPage() {
   const params = new URLSearchParams(window.location.search);
   const shop = params.get("shop");
   const host = params.get("host");
-  const urlApiKey = params.get("apiKey");
-  const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY || urlApiKey;
 
   const initialized = useRef(false);
 
@@ -19,23 +17,17 @@ export default function AuthPage() {
     console.log("Shop:", shop);
     console.log("Host:", host);
 
-    // Add validation: If host OR shop is missing
+    // 2. Add validation: If host OR shop is missing, Redirect to `/auth?shop=${shop}`
     if (!shop || !host) {
-      console.warn('Missing shop or host. Redirecting to start OAuth natively (top-level).');
-      window.location.href = `${API_URL}/shopify/connect?shop=${shop}`;
-      return;
-    }
-
-    if (!apiKey) {
-      console.error('Missing apiKey for Shopify Auth initialization.');
+      window.location.href = `/auth?shop=${shop}`;
       return;
     }
 
     initialized.current = true;
 
-    // Fix App Bridge initialization exactly as specified
+    // 3. Fix App Bridge initialization exactly as specified
     const app = createApp({
-      apiKey: apiKey,
+      apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
       host: host,
       forceRedirect: true
     });
@@ -43,11 +35,8 @@ export default function AuthPage() {
     const redirect = Redirect.create(app);
 
     // Escape iframe by navigating top-level window to backend connect URL securely
-    redirect.dispatch(Redirect.Action.REMOTE, {
-      url: `${API_URL}/shopify/connect?shop=${shop}&host=${host}`,
-      newContext: true
-    });
-  }, [shop, host, apiKey]);
+    redirect.dispatch(Redirect.Action.REMOTE, `${API_URL}/shopify/connect?shop=${shop}&host=${host}`);
+  }, [shop, host]);
 
   return (
     <div className="flex min-h-screen items-center justify-center bg-slate-950 font-sans">
