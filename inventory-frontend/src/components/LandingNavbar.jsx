@@ -42,7 +42,7 @@ export default function LandingNavbar() {
                 </NavLink>
               ))}
               <Link
-                to="/dashboard"
+                to="/connect"
                 className="ml-2 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-5 py-2.5 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(29,166,255,0.28)] transition duration-300 hover:-translate-y-0.5 hover:shadow-[0_22px_55px_rgba(29,166,255,0.35)]"
               >
                 Get Started
@@ -74,7 +74,7 @@ export default function LandingNavbar() {
                   </NavLink>
                 ))}
                 <Link
-                  to="/dashboard"
+                  to="/connect"
                   onClick={() => setIsOpen(false)}
                   className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-5 py-3 text-sm font-semibold text-white shadow-[0_18px_40px_rgba(29,166,255,0.28)] transition duration-300 hover:-translate-y-0.5"
                 >

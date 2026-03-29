@@ -1,5 +1,6 @@
 import User from "../models/User.js";
 import asyncHandler from "../utils/asyncHandler.js";
+import jwt from "jsonwebtoken";
 
 const DEFAULT_FIREBASE_UID = "local_default_user_uid";
 
@@ -26,10 +27,19 @@ export const protect = asyncHandler(async (req, res, next) => {
     displayName: user.displayName,
   };
 
-  req.shop = "test-store.myshopify.com";
+  const authHeader = req.headers.authorization;
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ error: "Missing or invalid authorization header" });
+  }
 
-  if (!req.shop) {
-    return res.status(400).json({ error: "Shop is required" });
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.SHOPIFY_API_SECRET);
+    const shop = decoded.dest.replace("https://", "");
+    req.shop = shop;
+  } catch (error) {
+    return res.status(401).json({ error: "Invalid session token" });
   }
 
   next();

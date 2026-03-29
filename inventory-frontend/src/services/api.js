@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { getSessionToken } from '@shopify/app-bridge/utilities';
 
 const DEFAULT_DEV_API_URL = 'http://localhost:5000';
 
@@ -31,7 +32,19 @@ const api = axios.create({
   }
 });
 
-
+export function setupApiInterceptor(app) {
+  api.interceptors.request.use(async (config) => {
+    try {
+      const token = await getSessionToken(app);
+      if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
+      }
+    } catch (error) {
+      console.warn('Shopify session token generation failed:', error.message);
+    }
+    return config;
+  });
+}
 
 export function getApiErrorMessage(error) {
   const validationErrors = error?.response?.data?.errors;

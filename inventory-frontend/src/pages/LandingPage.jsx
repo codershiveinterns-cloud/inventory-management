@@ -282,7 +282,7 @@ export default function LandingPage() {
               </p>
               <div className="mt-10 flex flex-col gap-4 sm:flex-row">
                 <Link
-                  to="/dashboard"
+                  to="/connect"
                   className="inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-400 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_22px_55px_rgba(29,166,255,0.32)] ring-1 ring-cyan-200/20 transition duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(29,166,255,0.38)]"
                 >
                   Get Started
@@ -391,7 +391,7 @@ export default function LandingPage() {
                 <span className="inline-flex rounded-full border border-cyan-300/20 bg-cyan-300/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-[0.24em] text-cyan-100">Start Today</span>
                 <h2 className="mt-6 text-4xl font-extrabold tracking-tight text-white sm:text-5xl">Start Managing Your Inventory Today</h2>
                 <p className="mt-5 text-base leading-8 text-slate-300 sm:text-lg">Give your team one modern dashboard for stock visibility, Shopify sync, and faster decisions.</p>
-                <Link to="/dashboard" className="mt-9 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_60px_rgba(29,166,255,0.34)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_32px_75px_rgba(29,166,255,0.4)]">
+                <Link to="/connect" className="mt-9 inline-flex items-center justify-center rounded-2xl bg-gradient-to-r from-cyan-300 via-brand-500 to-indigo-500 px-7 py-4 text-sm font-semibold text-white shadow-[0_24px_60px_rgba(29,166,255,0.34)] transition duration-300 hover:-translate-y-1 hover:shadow-[0_32px_75px_rgba(29,166,255,0.4)]">
                   Get Started
                 </Link>
               </div>

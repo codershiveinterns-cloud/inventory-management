@@ -72,6 +72,28 @@ async function findStoreForUser(userId, shop) {
     .select("+accessToken");
 }
 
+export const handleAppEntry = asyncHandler(async (req, res) => {
+  const shopParam = req.query.shop;
+
+  if (!shopParam) {
+    return res.json({
+      success: true,
+      message: "Inventory Management API is running",
+    });
+  }
+
+  const shop = normalizeShopDomain(shopParam);
+  const existingStore = await Store.findOne({ shopName: shop });
+
+  if (existingStore && existingStore.accessToken) {
+    return res.redirect(`${SHOPIFY_FRONTEND_URL}/dashboard?shop=${shop}`);
+  }
+
+  const apiKey = process.env.SHOPIFY_API_KEY || "";
+  const host = req.query.host || "";
+  return res.redirect(`${SHOPIFY_FRONTEND_URL}/auth?shop=${shop}&host=${host}&apiKey=${apiKey}`);
+});
+
 export const connectShopifyStore = asyncHandler(async (req, res) => {
   ensureShopifyRedirectUriConfigured();
   const shop = normalizeShopDomain(req.query.shop || "");
@@ -170,7 +192,7 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
     });
 
     res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL, {
+      buildRedirectUrl(`${SHOPIFY_FRONTEND_URL}/dashboard`, {
         shop: normalizedShop,
         host,
       })

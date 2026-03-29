@@ -10,6 +10,7 @@
     "test": "node scripts/testProductQueryParams.js"
   },
   "dependencies": {
+    "@shopify/app-bridge": "^3.7.11",
     "axios": "^1.7.9",
     "firebase": "^12.11.0",
     "react": "^18.3.1",

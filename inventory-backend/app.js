@@ -10,6 +10,7 @@ import historyRoutes from "./routes/historyRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import shopifyRoutes from "./routes/shopifyRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
+import { handleAppEntry } from "./controllers/shopifyController.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
 
@@ -67,12 +68,7 @@ app.use(
   })
 );
 
-app.get("/", (_req, res) => {
-  res.json({
-    success: true,
-    message: "Inventory Management API is running",
-  });
-});
+app.get("/", handleAppEntry);
 
 app.get("/api/health", (_req, res) => {
   res.json({

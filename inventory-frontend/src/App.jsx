@@ -1,4 +1,7 @@
-import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+import createApp from '@shopify/app-bridge';
+import { setupApiInterceptor } from './services/api';
 import DashboardNavbar from './components/DashboardNavbar';
 import LandingNavbar from './components/LandingNavbar';
 import ScrollToTop from './components/ScrollToTop';
@@ -20,9 +23,36 @@ import PrivacyPage from './pages/Privacy';
 import RefundPage from './pages/Refund';
 import SecurityPage from './pages/Security';
 import TermsPage from './pages/Terms';
+import AuthPage from './pages/AuthPage';
+import ConnectPage from './pages/ConnectPage';
 
 function AppLayout() {
   const location = useLocation();
+  const [params] = useSearchParams();
+  const shop = params.get('shop') || localStorage.getItem('shop');
+  const host = params.get('host') || localStorage.getItem('host');
+  const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!shop) {
+      navigate('/connect', { replace: true });
+      return;
+    }
+    
+    if (shop) localStorage.setItem('shop', shop);
+    if (host) localStorage.setItem('host', host);
+
+    if (host && apiKey) {
+      const app = createApp({
+        apiKey,
+        host,
+        forceRedirect: false,
+      });
+      setupApiInterceptor(app);
+    }
+  }, [host, shop, apiKey]);
+
   return (
     <>
       <DashboardNavbar key={`dashboard-${location.pathname}`} />
@@ -82,6 +112,8 @@ function AppShell() {
         </Route>
 
         <Route path="*" element={<Navigate to="/" replace />} />
+        <Route path="/auth" element={<AuthPage />} />
+        <Route path="/connect" element={<ConnectPage />} />
       </Routes>
     </>
   );
