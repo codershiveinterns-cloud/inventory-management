@@ -38,9 +38,7 @@ export default function ConnectPage() {
         
         <div className="relative z-10">
           <div className="mb-6 flex justify-center">
-             <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 via-brand-400 to-indigo-400 text-sm font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20">
-              IF
-             </div>
+             <img src="/logo.png" alt="Inventory Flow" className="h-10 w-10 rounded-full object-contain" />
           </div>
           
           <h1 className="mb-2 text-center text-2xl font-bold tracking-tight text-white">Connect Shopify Store</h1>

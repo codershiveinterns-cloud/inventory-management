@@ -23,9 +23,7 @@ export default function Navbar() {
         <div className="rounded-[1.75rem] border border-white/10 bg-white/10 shadow-[0_24px_65px_rgba(2,6,23,0.35)] backdrop-blur-lg">
           <div className="flex items-center justify-between gap-4 px-4 py-3 sm:px-5 lg:px-6">
             <Link to="/" className="flex items-center gap-3">
-              <div className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-300 via-brand-400 to-indigo-400 text-sm font-extrabold text-slate-950 shadow-lg shadow-cyan-500/20">
-                IF
-              </div>
+              <img src="/logo.png" alt="Inventory Flow" className="h-10 w-10 rounded-full object-contain" />
               <div>
                 <p className="text-xs uppercase tracking-[0.28em] text-cyan-200/80">
                   InventoryFlow
