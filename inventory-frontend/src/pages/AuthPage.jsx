@@ -23,7 +23,7 @@ export default function AuthPage() {
     if (!host) {
       console.warn('Missing host. Restarting OAuth natively.');
       // Securely hit the native backend OAuth entry
-      window.location.href = `${API_URL}/shopify/connect?shop=${shop}`;
+      window.location.href = `${API_URL}/auth?shop=${shop}`;
       return;
     }
 
@@ -37,7 +37,7 @@ export default function AuthPage() {
       const redirect = Redirect.create(app);
 
       // The string-based payload naturally routes the top-level parent window, bypassing popup blockers cleanly
-      redirect.dispatch(Redirect.Action.REMOTE, `${API_URL}/shopify/connect?shop=${shop}`);
+      redirect.dispatch(Redirect.Action.REMOTE, `${API_URL}/auth?shop=${shop}`);
 
       setRedirected(true);
     }

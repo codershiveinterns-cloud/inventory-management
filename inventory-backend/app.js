@@ -84,7 +84,7 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use("/shopify", shopifyRoutes);
+app.use("/", shopifyRoutes);
 app.use("/webhooks", webhookRoutes);
 
 app.use(notFound);

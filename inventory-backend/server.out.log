@@ -4569,3 +4569,480 @@ MongoDB connected successfully
 [dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
 MongoDB connected successfully
 [31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🛡️ auth for agents: https://vestauth.com
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  override existing env vars with { override: true }
+MongoDB connected successfully
+Server running on port 5000
+Client connected via Socket.io: srYr96dR8BQ8_SVgAAAB
+Client connected via Socket.io: 6lM7LTjpKBA5g2ZCAAAD
+Dashboard API hit: GET /api/dashboard
+Socket 6lM7LTjpKBA5g2ZCAAAD joined global inventory updates room
+Socket 6lM7LTjpKBA5g2ZCAAAD joined global inventory updates room
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 0,
+    productCount: 1,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 0
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 0,
+    productCount: 1,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 0
+  }
+]
+Client connected via Socket.io: VUMINP7atJ8TxUhAAAAF
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 0,
+    productCount: 1,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 0
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 0,
+    productCount: 1,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 0
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 2
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 2
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 2
+Incoming data: {
+  name: 'sad',
+  sku: 'ASD',
+  price: 21312,
+  quantity: 123,
+  category: 'Sd',
+  lowStockThreshold: 21
+}
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 123,
+    productCount: 2,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 123
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 123,
+    category: 'Sd',
+    name: 'Sd',
+    value: 123
+  },
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 123,
+    productCount: 2,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 123
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 123,
+    category: 'Sd',
+    name: 'Sd',
+    value: 123
+  },
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] { category: 'Sd' }
+GET /api/products final query: {"shop":"test-store.myshopify.com","$and":[{"category":"Sd"}]}
+Results: 1
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] { stockStatus: 'low' }
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 0
+GET /api/products req.query: [Object: null prototype] { stockStatus: 'outOfStock' }
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 1
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 123,
+    productCount: 2,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 123
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 123,
+    category: 'Sd',
+    name: 'Sd',
+    value: 123
+  },
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 123,
+    productCount: 2,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 123
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 123,
+    category: 'Sd',
+    name: 'Sd',
+    value: 123
+  },
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+GET /api/products req.query: [Object: null prototype] {}
+GET /api/products final query: {"shop":"test-store.myshopify.com"}
+Results: 3
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Socket VUMINP7atJ8TxUhAAAAF joined global inventory updates room
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 123,
+    category: 'Sd',
+    name: 'Sd',
+    value: 123
+  },
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 123,
+    productCount: 2,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 123
+  }
+]
+Dashboard API hit: GET /api/dashboard
+GET /api/analytics/stock-trend response: [
+  {
+    totalQuantity: 23,
+    productCount: 1,
+    date: '2026-03-28',
+    label: '2026-03-28',
+    value: 23
+  },
+  {
+    totalQuantity: 123,
+    productCount: 2,
+    date: '2026-03-29',
+    label: '2026-03-29',
+    value: 123
+  }
+]
+GET /api/analytics/category-distribution response: [
+  {
+    productCount: 1,
+    totalQuantity: 123,
+    category: 'Sd',
+    name: 'Sd',
+    value: 123
+  },
+  {
+    productCount: 2,
+    totalQuantity: 23,
+    category: 'Grocery',
+    name: 'Grocery',
+    value: 23
+  }
+]
+Client disconnected: srYr96dR8BQ8_SVgAAAB
+Client disconnected: 6lM7LTjpKBA5g2ZCAAAD
+Client disconnected: VUMINP7atJ8TxUhAAAAF
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 encrypt with Dotenvx: https://dotenvx.com
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: ⚙️  enable debug logging with { debug: true }
+MongoDB connected successfully
+[31m[nodemon] app crashed - waiting for file changes before starting...[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[32m[nodemon] restarting due to changes...[39m
+[32m[nodemon] starting `node server.js server.js`[39m
+[dotenv@17.3.1] injecting env (0) from .env -- tip: 🔐 prevent committing .env to code: https://dotenvx.com/precommit
+MongoDB connected successfully
+Server running on port 5000
+Client connected via Socket.io: uEAvC3ly4nPZK7qQAAAB
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Socket uEAvC3ly4nPZK7qQAAAB joined global inventory updates room
+Client disconnected: uEAvC3ly4nPZK7qQAAAB
+Client connected via Socket.io: 1LuxLuYTE-LYP2aUAAAD
+Socket 1LuxLuYTE-LYP2aUAAAD joined global inventory updates room
+Socket 1LuxLuYTE-LYP2aUAAAD joined global inventory updates room
+Client disconnected: 1LuxLuYTE-LYP2aUAAAD

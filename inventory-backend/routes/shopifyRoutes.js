@@ -9,9 +9,8 @@ import {
 
 const router = Router();
 
-router.get("/", connectShopifyStore);
-router.get("/connect", connectShopifyStore);
-router.get("/callback", handleShopifyCallback);
+router.get("/auth", connectShopifyStore);
+router.get("/auth/callback", handleShopifyCallback);
 router.get("/products", protect, getShopifyProducts);
 
 export default router;

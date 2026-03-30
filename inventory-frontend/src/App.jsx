@@ -45,7 +45,8 @@ function AppLayout() {
     if (host) localStorage.setItem('host', host);
 
     if (!host) {
-      window.location.href = `/auth?shop=${shop}`;
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
+      window.location.href = `${apiUrl}/auth?shop=${shop}`;
       return;
     }
 
