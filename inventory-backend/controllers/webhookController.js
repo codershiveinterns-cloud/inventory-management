@@ -200,3 +200,25 @@ export const handleAppUninstalled = asyncHandler(async (req, res) => {
     res.sendStatus(200);
   }
 });
+
+// 5. Mandatory GDPR Webhooks
+export const handleCustomersDataRequest = asyncHandler(async (req, res) => {
+  const { topic, shopDomain } = verifyWebhook(req);
+  console.log(`✅ GDPR Webhook Received: ${topic} for ${shopDomain}`);
+  console.log('Payload:', req.body);
+  res.status(200).send("OK");
+});
+
+export const handleCustomersRedact = asyncHandler(async (req, res) => {
+  const { topic, shopDomain } = verifyWebhook(req);
+  console.log(`✅ GDPR Webhook Received: ${topic} for ${shopDomain}`);
+  console.log('Payload:', req.body);
+  res.status(200).send("OK");
+});
+
+export const handleShopRedact = asyncHandler(async (req, res) => {
+  const { topic, shopDomain } = verifyWebhook(req);
+  console.log(`✅ GDPR Webhook Received: ${topic} for ${shopDomain}`);
+  console.log('Payload:', req.body);
+  res.status(200).send("OK");
+});
