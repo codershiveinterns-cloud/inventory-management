@@ -25,6 +25,7 @@ import SecurityPage from './pages/Security';
 import TermsPage from './pages/Terms';
 import AuthPage from './pages/AuthPage';
 import ConnectPage from './pages/ConnectPage';
+import PricingPage from './pages/PricingPage';
 
 function AppLayout() {
   const location = useLocation();
@@ -36,6 +37,26 @@ function AppLayout() {
   const [isAppBridgeReady, setIsAppBridgeReady] = useState(false);
 
   useEffect(() => {
+    // DEV MODE BYPASS
+    const isDevMode = import.meta.env.VITE_DEV_LOGIN === 'true';
+    if (isDevMode) {
+      const devUserStr = localStorage.getItem('dev_user');
+      if (devUserStr) {
+        try {
+          const devUser = JSON.parse(devUserStr);
+          if (devUser && devUser.shop) {
+             if (shop !== devUser.shop) {
+               localStorage.setItem('shop', devUser.shop);
+             }
+             setIsAppBridgeReady(true);
+             return; // Bypass original init
+          }
+        } catch (e) {
+          console.error("Failed to parse dev_user", e);
+        }
+      }
+    }
+
     if (!shop) {
       navigate('/connect', { replace: true });
       return;
@@ -65,6 +86,8 @@ function AppLayout() {
     }
   }, [host, shop, apiKey, navigate]);
 
+  const activePlan = localStorage.getItem('app_plan');
+
   if (!isAppBridgeReady) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-slate-950 font-sans">
@@ -76,6 +99,10 @@ function AppLayout() {
         </div>
       </div>
     );
+  }
+
+  if (!activePlan && location.pathname !== '/pricing') {
+    return <Navigate to="/pricing" replace />;
   }
 
   return (
@@ -118,7 +145,7 @@ function AppShell() {
           <Route path="/help" element={<HelpPage />} />
           <Route path="/terms" element={<TermsPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
-          <Route path="/refund" element={<RefundPage />} />
+          <Route path="/refund-policy" element={<RefundPage />} />
           <Route path="/cookies" element={<CookiesPage />} />
           <Route path="/security" element={<SecurityPage />} />
         </Route>
@@ -133,6 +160,7 @@ function AppShell() {
           <Route path="/inventory-update" element={<InventoryUpdatePage />} />
           <Route path="/inventory/update" element={<InventoryUpdatePage />} />
           <Route path="/low-stock" element={<LowStockPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/dashboard/contact" element={<ContactPage />} />
         </Route>
 

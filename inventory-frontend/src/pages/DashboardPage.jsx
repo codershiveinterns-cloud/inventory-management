@@ -38,6 +38,7 @@ export default function DashboardPage() {
   const [categoryDistribution, setCategoryDistribution] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState('');
+  const activePlan = localStorage.getItem('app_plan') || 'basic';
 
   useEffect(() => {
     async function loadDashboard() {
@@ -122,20 +123,24 @@ export default function DashboardPage() {
       ) : (
         <div className="space-y-8">
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            <StatCard
-              eyebrow="Catalog"
-              title="Total Products"
-              value={dashboard?.totalProducts ?? 0}
-              helper="The total number of products currently tracked by the dashboard API."
-              tone="cyan"
-            />
-            <StatCard
-              eyebrow="Inventory"
-              title="Total Stock"
-              value={dashboard?.totalStock ?? 0}
-              helper="The combined quantity currently available across all products."
-              tone="emerald"
-            />
+            {activePlan !== 'basic' && (
+              <StatCard
+                eyebrow="Catalog"
+                title="Total Products"
+                value={dashboard?.totalProducts ?? 0}
+                helper="The total number of products currently tracked by the dashboard API."
+                tone="cyan"
+              />
+            )}
+            {activePlan !== 'basic' && (
+              <StatCard
+                eyebrow="Inventory"
+                title="Total Stock"
+                value={dashboard?.totalStock ?? 0}
+                helper="The combined quantity currently available across all products."
+                tone="emerald"
+              />
+            )}
             <StatCard
               eyebrow="Attention"
               title="Low Stock Items"
@@ -239,27 +244,29 @@ export default function DashboardPage() {
             </Card>
           </div>
 
-          <div className="grid gap-5 xl:grid-cols-2">
-            <Card className="fade-in-up">
-              <div className="mb-5">
-                <h3 className="text-xl font-bold text-white">Stock Trend</h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  A line chart showing inventory movement over time from the analytics API.
-                </p>
-              </div>
-              <StockTrendChart data={stockTrend} />
-            </Card>
+          {activePlan !== 'basic' && (
+            <div className="grid gap-5 xl:grid-cols-2">
+              <Card className="fade-in-up">
+                <div className="mb-5">
+                  <h3 className="text-xl font-bold text-white">Stock Trend</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    A line chart showing inventory movement over time from the analytics API.
+                  </p>
+                </div>
+                <StockTrendChart data={stockTrend} />
+              </Card>
 
-            <Card className="fade-in-up">
-              <div className="mb-5">
-                <h3 className="text-xl font-bold text-white">Category Distribution</h3>
-                <p className="mt-2 text-sm text-slate-300">
-                  A pie chart showing how inventory is distributed across categories.
-                </p>
-              </div>
-              <CategoryDistributionChart data={categoryDistribution} />
-            </Card>
-          </div>
+              <Card className="fade-in-up">
+                <div className="mb-5">
+                  <h3 className="text-xl font-bold text-white">Category Distribution</h3>
+                  <p className="mt-2 text-sm text-slate-300">
+                    A pie chart showing how inventory is distributed across categories.
+                  </p>
+                </div>
+                <CategoryDistributionChart data={categoryDistribution} />
+              </Card>
+            </div>
+          )}
         </div>
       )}
     </section>

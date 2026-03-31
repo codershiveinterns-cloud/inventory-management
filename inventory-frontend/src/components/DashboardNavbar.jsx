@@ -7,6 +7,7 @@ const navItems = [
   { label: 'Add Product', to: '/add-product' },
   { label: 'Inventory Update', to: '/inventory-update' },
   { label: 'Low Stock', to: '/low-stock' },
+  { label: 'Pricing', to: '/pricing' },
   { label: 'Contact', to: '/dashboard/contact' }
 ];
 
@@ -43,6 +44,30 @@ export default function DashboardNavbar() {
                   {item.label}
                 </NavLink>
               ))}
+              
+              {localStorage.getItem('app_plan') && (
+                <div className="ml-4 flex items-center gap-3 border-l border-white/10 pl-4">
+                  <span className="text-sm font-medium text-slate-300">
+                    Plan: <span className="font-bold text-white capitalize">{localStorage.getItem('app_plan')}</span>
+                  </span>
+                  {localStorage.getItem('app_plan') === 'basic' && (
+                    <Link to="/pricing" className="rounded-full bg-gradient-to-r from-cyan-500 to-indigo-500 px-3 py-1.5 text-xs font-bold text-white shadow-lg transition-transform hover:scale-105">
+                      Upgrade
+                    </Link>
+                  )}
+                </div>
+              )}
+              {import.meta.env.VITE_DEV_LOGIN === 'true' && localStorage.getItem('dev_user') && (
+                <button 
+                  onClick={() => {
+                    localStorage.removeItem('dev_user');
+                    window.location.href = '/connect';
+                  }}
+                  className="rounded-full px-4 py-2 text-sm font-medium text-rose-400 hover:bg-rose-500/10 transition duration-300 ml-2"
+                >
+                  Dev Logout
+                </button>
+              )}
             </nav>
 
 
@@ -70,6 +95,30 @@ export default function DashboardNavbar() {
                     {item.label}
                   </NavLink>
                 ))}
+
+                {localStorage.getItem('app_plan') && (
+                  <div className="flex items-center justify-between border-t border-white/10 pt-3">
+                    <span className="text-sm font-medium text-slate-300">
+                      Plan: <span className="font-bold text-white capitalize">{localStorage.getItem('app_plan')}</span>
+                    </span>
+                    {localStorage.getItem('app_plan') === 'basic' && (
+                      <Link to="/pricing" onClick={() => setIsOpen(false)} className="rounded-full bg-gradient-to-r from-cyan-500 to-indigo-500 px-3 py-1.5 text-xs font-bold text-white">
+                        Upgrade
+                      </Link>
+                    )}
+                  </div>
+                )}
+                {import.meta.env.VITE_DEV_LOGIN === 'true' && localStorage.getItem('dev_user') && (
+                  <button 
+                    onClick={() => {
+                      localStorage.removeItem('dev_user');
+                      window.location.href = '/connect';
+                    }}
+                    className="rounded-full px-4 py-2 text-sm font-medium text-rose-400 hover:bg-rose-500/10 transition duration-300 text-left"
+                  >
+                    Dev Logout
+                  </button>
+                )}
               </div>
             </div>
           ) : null}

@@ -34,6 +34,12 @@ export const protect = asyncHandler(async (req, res, next) => {
 
   const token = authHeader.split(" ")[1];
 
+  // Dev Bypass
+  if (process.env.NODE_ENV === 'development' && token === 'dev_token_123') {
+    req.shop = 'test-shop.myshopify.com';
+    return next();
+  }
+
   try {
     const decoded = jwt.verify(token, process.env.SHOPIFY_API_SECRET);
     const shop = decoded.dest.replace("https://", "");

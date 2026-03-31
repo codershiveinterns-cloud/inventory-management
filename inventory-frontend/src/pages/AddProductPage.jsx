@@ -35,6 +35,13 @@ export default function AddProductPage() {
 
       const normalizedSku = normalizeSku(product.sku);
       const products = await getProducts();
+
+      const activePlan = localStorage.getItem('app_plan') || 'basic';
+      if (activePlan === 'basic' && products.length >= 100) {
+        setError('Basic plan limit reached (100 products). Please upgrade to Growth to add more.');
+        return;
+      }
+
       const duplicateProduct = products.find(
         (existingProduct) => normalizeSku(existingProduct.sku ?? '') === normalizedSku
       );

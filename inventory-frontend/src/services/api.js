@@ -46,6 +46,25 @@ export function setupApiInterceptor(app) {
   });
 }
 
+// Dev Mode Global Interceptor Bypass
+api.interceptors.request.use((config) => {
+  const isDevLogin = import.meta.env.VITE_DEV_LOGIN === 'true';
+  if (isDevLogin) {
+    const devUserStr = localStorage.getItem('dev_user');
+    if (devUserStr) {
+      try {
+        const devUser = JSON.parse(devUserStr);
+        if (devUser && devUser.accessToken) {
+          config.headers.Authorization = `Bearer ${devUser.accessToken}`;
+        }
+      } catch (e) {
+        console.error("Failed to parse dev_user", e);
+      }
+    }
+  }
+  return config;
+});
+
 export function getApiErrorMessage(error) {
   const validationErrors = error?.response?.data?.errors;
 

@@ -4,7 +4,8 @@ const footerSections = [
   {
     title: 'Product',
     links: [
-      { label: 'Features', to: '/features' }
+      { label: 'Features', to: '/features' },
+      { label: 'Pricing', to: '/pricing' }
     ]
   },
   {
@@ -27,6 +28,7 @@ const footerSections = [
       { label: 'Terms & Conditions', to: '/terms' },
       { label: 'Privacy Policy', to: '/privacy' },
       { label: 'Cookie Policy', to: '/cookies' },
+      { label: 'Refund Policy', to: '/refund-policy' },
       { label: 'Security', to: '/security' }
     ]
   }
