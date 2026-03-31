@@ -17,6 +17,7 @@ const MinusIcon = () => (
 export default function PricingPage() {
   const navigate = useNavigate();
   const [currentPlan, setCurrentPlan] = useState('basic');
+  const [isYearly, setIsYearly] = useState(false);
 
   useEffect(() => {
     setCurrentPlan(localStorage.getItem('app_plan') || 'basic');
@@ -32,8 +33,8 @@ export default function PricingPage() {
     {
       id: 'basic',
       name: 'Basic Plan',
-      price: '€59',
-      interval: '/month',
+      priceMonthly: 59,
+      priceYearly: 49,
       description: 'Essential features for small businesses.',
       features: [
         'Add/Edit/Delete products',
@@ -49,8 +50,8 @@ export default function PricingPage() {
     {
       id: 'growth',
       name: 'Growth Plan',
-      price: '€199',
-      interval: '/month',
+      priceMonthly: 199,
+      priceYearly: 159,
       description: 'Advanced analytics and scale for growing operations.',
       features: [
         'Everything in Basic',
@@ -66,15 +67,48 @@ export default function PricingPage() {
   ];
 
   return (
-    <section className="pb-16 px-4">
+    <section className="pb-16 pt-32 lg:pt-36 px-4">
       <PageHeader 
         badge="Pricing"
         title="Simple, transparent pricing"
         description="Choose the right plan to manage your inventory and scale your business."
       />
+
+      <div className="mt-10 flex justify-center">
+        <div className="relative flex items-center rounded-full border border-white/10 bg-white/5 p-1">
+          <button
+            onClick={() => setIsYearly(false)}
+            className={`relative w-32 rounded-full py-2.5 text-sm font-semibold transition-colors ${
+              !isYearly ? 'text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Monthly
+            {!isYearly && (
+               <span className="absolute inset-0 rounded-full border border-white/10 bg-white/10 mix-blend-multiply" />
+            )}
+          </button>
+          <button
+            onClick={() => setIsYearly(true)}
+            className={`relative w-32 rounded-full py-2.5 text-sm font-semibold transition-colors ${
+              isYearly ? 'text-white' : 'text-slate-400 hover:text-white'
+            }`}
+          >
+            Yearly
+            <span className="absolute -top-3 -right-3 rounded-full bg-gradient-to-r from-emerald-400 to-emerald-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-wide text-emerald-950 shadow-lg shadow-emerald-500/20">
+              Save 20%
+            </span>
+            {isYearly && (
+               <span className="absolute inset-0 rounded-full border border-white/10 bg-white/10 mix-blend-multiply" />
+            )}
+          </button>
+        </div>
+      </div>
       
       <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-2">
-        {plans.map(plan => (
+        {plans.map(plan => {
+          const currentPrice = isYearly ? plan.priceYearly : plan.priceMonthly;
+          
+          return (
           <div 
             key={plan.id}
             className={`relative flex flex-col rounded-3xl border ${
@@ -88,14 +122,26 @@ export default function PricingPage() {
                 Most Popular
               </div>
             )}
+            {isYearly && plan.highlighted && (
+              <div className="absolute top-4 right-4 rounded-full bg-emerald-500/20 border border-emerald-500/30 px-3 py-1 text-[10px] font-bold uppercase tracking-wider text-emerald-300">
+                Best Value
+              </div>
+            )}
             <div className="mb-6">
               <h3 className="text-2xl font-bold text-white">{plan.name}</h3>
               <p className="mt-2 text-sm text-slate-400">{plan.description}</p>
             </div>
             
-            <div className="mb-8 flex items-baseline text-white">
-              <span className="text-5xl font-extrabold tracking-tight">{plan.price}</span>
-              <span className="ml-1 text-xl font-semibold text-slate-400">{plan.interval}</span>
+            <div className="mb-8">
+              <div className="flex items-baseline text-white">
+                <span className="text-5xl font-extrabold tracking-tight">€{currentPrice}</span>
+                <span className="ml-1 text-xl font-semibold text-slate-400">/month</span>
+              </div>
+              {isYearly && (
+                <p className="mt-2 text-sm text-emerald-400 font-medium">
+                  Billed annually (Save €{(plan.priceMonthly - plan.priceYearly) * 12}/year)
+                </p>
+              )}
             </div>
             
             <ul className="mb-10 flex-1 space-y-4">
@@ -127,7 +173,7 @@ export default function PricingPage() {
               {plan.buttonText}
             </button>
           </div>
-        ))}
+        )})}
       </div>
     </section>
   );

@@ -139,6 +139,7 @@ function AppShell() {
           <Route path="/" element={<LandingPage />} />
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/about" element={<AboutPage />} />
+          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/careers" element={<CareersPage />} />
           <Route path="/blog" element={<BlogPage />} />
@@ -160,7 +161,6 @@ function AppShell() {
           <Route path="/inventory-update" element={<InventoryUpdatePage />} />
           <Route path="/inventory/update" element={<InventoryUpdatePage />} />
           <Route path="/low-stock" element={<LowStockPage />} />
-          <Route path="/pricing" element={<PricingPage />} />
           <Route path="/dashboard/contact" element={<ContactPage />} />
         </Route>
 
