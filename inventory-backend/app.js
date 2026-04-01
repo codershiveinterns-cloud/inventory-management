@@ -61,9 +61,9 @@ app.options(/.*/, cors(corsOptions));
 app.use(
   express.json({
     verify: (req, res, buf) => {
-      // Shopify requires exact raw Buffer bytes for HMAC validation to prevent character stripping
+      // Preserve the exact webhook payload bytes for Shopify HMAC validation.
       if (req.originalUrl.startsWith("/webhooks")) {
-        req.rawBody = buf;
+        req.rawBody = Buffer.from(buf);
       }
     },
   })
@@ -85,8 +85,8 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use("/", shopifyRoutes);
 app.use("/webhooks", webhookRoutes);
+app.use("/", shopifyRoutes);
 
 app.use(notFound);
 app.use(errorHandler);

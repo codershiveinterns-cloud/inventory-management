@@ -1,5 +1,3 @@
-import crypto from "crypto";
-import { SHOPIFY_API_SECRET } from "../config/shopify.js";
 import WebhookLog from "../models/WebhookLog.js";
 import Store from "../models/Store.js";
 import Product, { buildProductOwnerFilter } from "../models/Product.js";
@@ -11,27 +9,22 @@ function getIo(req) {
   return req.app.get("io");
 }
 
-function verifyWebhook(req) {
-  const hmac = req.headers["x-shopify-hmac-sha256"];
-  const topic = req.headers["x-shopify-topic"];
-  const shopDomain = req.headers["x-shopify-shop-domain"];
-  const webhookId = req.headers["x-shopify-webhook-id"];
+function getWebhookContext(req) {
+  return {
+    topic: req.shopifyWebhook?.topic || req.get("x-shopify-topic") || "",
+    shopDomain:
+      req.shopifyWebhook?.shopDomain || req.get("x-shopify-shop-domain") || "",
+    webhookId:
+      req.shopifyWebhook?.webhookId || req.get("x-shopify-webhook-id") || "",
+  };
+}
 
-  if (!hmac || !shopDomain || !webhookId || !req.rawBody) {
-    const error = new Error("Missing required webhook headers or raw body");
+function requireWebhookContext(req, { requireWebhookId = false } = {}) {
+  const { topic, shopDomain, webhookId } = getWebhookContext(req);
+
+  if (!shopDomain || (requireWebhookId && !webhookId)) {
+    const error = new Error("Missing required webhook headers");
     error.statusCode = 400;
-    throw error;
-  }
-
-  // Hash the raw Buffer natively instead of manipulating it through a string decoder!
-  const generatedHash = crypto
-    .createHmac("sha256", SHOPIFY_API_SECRET)
-    .update(req.rawBody)
-    .digest("base64");
-
-  if (generatedHash !== hmac) {
-    const error = new Error("Invalid Shopify Webhook HMAC signature");
-    error.statusCode = 401;
     throw error;
   }
 
@@ -45,18 +38,23 @@ async function checkIdempotency(webhookId, shopDomain, topic) {
       console.log(`Webhook ${webhookId} already processed.`);
       return true;
     }
-    
+
     await WebhookLog.create({ webhookId, shopDomain, topic });
     return false;
   } catch (error) {
-    if (error.code === 11000) return true; // Concurrency duplicate key
+    if (error.code === 11000) {
+      return true;
+    }
+
     throw error;
   }
 }
 
-// 1. orders/create
 export const handleOrdersCreate = asyncHandler(async (req, res) => {
-  const { topic, shopDomain, webhookId } = verifyWebhook(req);
+  const { topic, shopDomain, webhookId } = requireWebhookContext(req, {
+    requireWebhookId: true,
+  });
+
   if (await checkIdempotency(webhookId, shopDomain, topic)) {
     return res.status(200).send("Already processed");
   }
@@ -67,69 +65,87 @@ export const handleOrdersCreate = asyncHandler(async (req, res) => {
 
   for (const item of order.line_items || []) {
     const queryOpts = [];
-    if (item.product_id) queryOpts.push({ shopifyProductId: item.product_id.toString() });
-    if (item.variant_id) queryOpts.push({ shopifyVariantId: item.variant_id.toString() });
-    if (item.sku) queryOpts.push({ sku: item.sku });
 
-    if (queryOpts.length === 0 || !item.quantity) continue;
+    if (item.product_id) {
+      queryOpts.push({ shopifyProductId: item.product_id.toString() });
+    }
+    if (item.variant_id) {
+      queryOpts.push({ shopifyVariantId: item.variant_id.toString() });
+    }
+    if (item.sku) {
+      queryOpts.push({ sku: item.sku });
+    }
+
+    if (queryOpts.length === 0 || !item.quantity) {
+      continue;
+    }
 
     const result = await Product.findOneAndUpdate(
       {
         $or: queryOpts,
-        ...buildProductOwnerFilter(shopDomain)
+        ...buildProductOwnerFilter(shopDomain),
       },
-      { 
-        $inc: { stock: -item.quantity } 
+      {
+        $inc: { stock: -item.quantity },
       },
       { new: true }
     );
-    if (result) updated = true;
+
+    if (result) {
+      updated = true;
+    }
   }
 
   if (updated && io) {
-    io.to("inventory_updates").emit("inventoryUpdated", { source: "orders/create" });
+    io.to("inventory_updates").emit("inventoryUpdated", {
+      source: "orders/create",
+    });
   }
 
   res.status(200).send("OK");
 });
 
-// 2. inventory_levels/update
 export const handleInventoryUpdate = asyncHandler(async (req, res) => {
-  const { topic, shopDomain, webhookId } = verifyWebhook(req);
+  const { topic, shopDomain, webhookId } = requireWebhookContext(req, {
+    requireWebhookId: true,
+  });
+
   if (await checkIdempotency(webhookId, shopDomain, topic)) {
     return res.status(200).send("Already processed");
   }
 
   const payload = req.body;
   const io = getIo(req);
-
-  // Payload structure depending on API version might be an inventory_level object
   const inventoryItemId = payload.inventory_item_id?.toString();
-  const available = payload.available; // absolute available quantity
+  const available = payload.available;
 
   if (inventoryItemId && available !== undefined) {
     const result = await Product.findOneAndUpdate(
       {
         inventoryItemId,
-        ...buildProductOwnerFilter(shopDomain)
+        ...buildProductOwnerFilter(shopDomain),
       },
-      { 
-        stock: available 
+      {
+        stock: available,
       },
       { new: true }
     );
 
     if (result && io) {
-      io.to("inventory_updates").emit("inventoryUpdated", { source: "inventory_levels/update" });
+      io.to("inventory_updates").emit("inventoryUpdated", {
+        source: "inventory_levels/update",
+      });
     }
   }
 
   res.status(200).send("OK");
 });
 
-// 3. products/update
 export const handleProductsUpdate = asyncHandler(async (req, res) => {
-  const { topic, shopDomain, webhookId } = verifyWebhook(req);
+  const { topic, shopDomain, webhookId } = requireWebhookContext(req, {
+    requireWebhookId: true,
+  });
+
   if (await checkIdempotency(webhookId, shopDomain, topic)) {
     return res.status(200).send("Already processed");
   }
@@ -140,54 +156,57 @@ export const handleProductsUpdate = asyncHandler(async (req, res) => {
 
   const shopifyProductId = productMeta.id?.toString();
   if (shopifyProductId) {
-    // Determine total stock from all variants
     let totalStock = 0;
-    
-    // Also try to find inventory_item_id
     let primaryVariantId = null;
     let primaryInventoryItemId = null;
 
     if (Array.isArray(productMeta.variants)) {
-      totalStock = productMeta.variants.reduce((acc, v) => acc + (v.inventory_quantity || 0), 0);
+      totalStock = productMeta.variants.reduce(
+        (acc, variant) => acc + (variant.inventory_quantity || 0),
+        0
+      );
+
       if (productMeta.variants.length > 0) {
         primaryVariantId = productMeta.variants[0].id?.toString();
-        primaryInventoryItemId = productMeta.variants[0].inventory_item_id?.toString();
+        primaryInventoryItemId =
+          productMeta.variants[0].inventory_item_id?.toString();
       }
     }
 
-    const updateFields = { title: productMeta.title };
-    if (primaryVariantId) updateFields.shopifyVariantId = primaryVariantId;
-    if (primaryInventoryItemId) updateFields.inventoryItemId = primaryInventoryItemId;
+    const updateFields = { title: productMeta.title, stock: totalStock };
 
-    // Optional: we can set stock if the product sync is comprehensive
-    updateFields.stock = totalStock;
+    if (primaryVariantId) {
+      updateFields.shopifyVariantId = primaryVariantId;
+    }
+    if (primaryInventoryItemId) {
+      updateFields.inventoryItemId = primaryInventoryItemId;
+    }
 
     const result = await Product.findOneAndUpdate(
       {
         shopifyProductId,
-        ...buildProductOwnerFilter(shopDomain)
+        ...buildProductOwnerFilter(shopDomain),
       },
       { $set: updateFields },
       { new: true }
     );
-    
-    if (result) updated = true;
+
+    if (result) {
+      updated = true;
+    }
   }
 
   if (updated && io) {
-    io.to("inventory_updates").emit("inventoryUpdated", { source: "products/update" });
+    io.to("inventory_updates").emit("inventoryUpdated", {
+      source: "products/update",
+    });
   }
 
   res.status(200).send("OK");
 });
 
-// 4. app/uninstalled
 export const handleAppUninstalled = asyncHandler(async (req, res) => {
-  const shopDomain = req.headers["x-shopify-shop-domain"];
-
-  if (!shopDomain) {
-    return res.status(400).json({ error: "Shop is required" });
-  }
+  const { shopDomain } = requireWebhookContext(req);
 
   try {
     await Product.deleteMany({ shop: shopDomain });
@@ -202,24 +221,29 @@ export const handleAppUninstalled = asyncHandler(async (req, res) => {
   }
 });
 
-// 5. Mandatory GDPR Webhooks
 export const handleCustomersDataRequest = asyncHandler(async (req, res) => {
-  const { topic, shopDomain } = verifyWebhook(req);
-  console.log(`✅ GDPR Webhook Received: ${topic} for ${shopDomain}`);
-  console.log('Payload:', req.body);
+  const { topic, shopDomain } = requireWebhookContext(req);
+
+  console.log(`GDPR webhook received: ${topic} for ${shopDomain}`);
+  console.log("Payload:", req.body);
+
   res.status(200).send("OK");
 });
 
 export const handleCustomersRedact = asyncHandler(async (req, res) => {
-  const { topic, shopDomain } = verifyWebhook(req);
-  console.log(`✅ GDPR Webhook Received: ${topic} for ${shopDomain}`);
-  console.log('Payload:', req.body);
+  const { topic, shopDomain } = requireWebhookContext(req);
+
+  console.log(`GDPR webhook received: ${topic} for ${shopDomain}`);
+  console.log("Payload:", req.body);
+
   res.status(200).send("OK");
 });
 
 export const handleShopRedact = asyncHandler(async (req, res) => {
-  const { topic, shopDomain } = verifyWebhook(req);
-  console.log(`✅ GDPR Webhook Received: ${topic} for ${shopDomain}`);
-  console.log('Payload:', req.body);
+  const { topic, shopDomain } = requireWebhookContext(req);
+
+  console.log(`GDPR webhook received: ${topic} for ${shopDomain}`);
+  console.log("Payload:", req.body);
+
   res.status(200).send("OK");
 });
