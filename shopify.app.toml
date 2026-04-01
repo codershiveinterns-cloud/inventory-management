@@ -1,0 +1,22 @@
+client_id = "YOUR_CLIENT_ID"
+name = "InventoryFlow"
+application_url = "https://your-vercel-domain.vercel.app"
+embedded = true
+
+[build]
+automatically_update_urls_on_dev = true
+
+[webhooks]
+api_version = "2024-01"
+
+[[webhooks.subscriptions]]
+topics = ["customers/data_request"]
+uri = "/webhooks/customers/data_request"
+
+[[webhooks.subscriptions]]
+topics = ["customers/redact"]
+uri = "/webhooks/customers/redact"
+
+[[webhooks.subscriptions]]
+topics = ["shop/redact"]
+uri = "/webhooks/shop/redact"

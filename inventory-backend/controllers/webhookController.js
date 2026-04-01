@@ -23,9 +23,10 @@ function verifyWebhook(req) {
     throw error;
   }
 
+  // Hash the raw Buffer natively instead of manipulating it through a string decoder!
   const generatedHash = crypto
     .createHmac("sha256", SHOPIFY_API_SECRET)
-    .update(req.rawBody, "utf8")
+    .update(req.rawBody)
     .digest("base64");
 
   if (generatedHash !== hmac) {
