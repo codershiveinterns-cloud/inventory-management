@@ -1,0 +1,20 @@
+{
+  "name": "inventory-management",
+  "version": "1.0.0",
+  "description": "A scalable inventory management system built using modern web technologies to manage products, stock levels, and automated low stock alerts.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/codershiveinterns-cloud/inventory-management.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/codershiveinterns-cloud/inventory-management/issues"
+  },
+  "homepage": "https://github.com/codershiveinterns-cloud/inventory-management#readme"
+}
