@@ -7,19 +7,32 @@ function sendUnauthorized(res) {
 }
 
 export function verifyShopifyWebhook(req, res, next) {
+  console.log("Webhook route hit:", {
+    method: req.method,
+    path: req.originalUrl,
+    topic: req.get("x-shopify-topic") || "",
+    shop: req.get("x-shopify-shop-domain") || "",
+  });
+
   if (!SHOPIFY_API_SECRET) {
     return res.status(500).send("SHOPIFY_API_SECRET is not configured");
   }
 
   const hmacHeader = req.get("x-shopify-hmac-sha256");
+  const rawBody = req.body;
 
-  if (!hmacHeader || !req.rawBody) {
+  if (!hmacHeader || !Buffer.isBuffer(rawBody)) {
+    console.error("Webhook HMAC validation failed: missing header or raw body", {
+      path: req.originalUrl,
+      hasHmac: Boolean(hmacHeader),
+      isBuffer: Buffer.isBuffer(rawBody),
+    });
     return sendUnauthorized(res);
   }
 
   const generatedHash = crypto
     .createHmac("sha256", SHOPIFY_API_SECRET)
-    .update(req.rawBody)
+    .update(rawBody)
     .digest("base64");
 
   const generatedHashBuffer = Buffer.from(generatedHash, "utf8");
@@ -29,8 +42,15 @@ export function verifyShopifyWebhook(req, res, next) {
     generatedHashBuffer.length !== hmacHeaderBuffer.length ||
     !crypto.timingSafeEqual(generatedHashBuffer, hmacHeaderBuffer)
   ) {
+    console.error("Webhook HMAC validation failed: signature mismatch", {
+      path: req.originalUrl,
+    });
     return sendUnauthorized(res);
   }
+
+  console.log("Webhook HMAC validation succeeded:", {
+    path: req.originalUrl,
+  });
 
   req.shopifyWebhook = {
     topic: req.get("x-shopify-topic") || "",

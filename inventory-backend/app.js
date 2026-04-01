@@ -58,16 +58,9 @@ const corsOptions = {
 // Core middleware for cross-origin requests and JSON request bodies.
 app.use(cors(corsOptions));
 app.options(/.*/, cors(corsOptions));
-app.use(
-  express.json({
-    verify: (req, res, buf) => {
-      // Preserve the exact webhook payload bytes for Shopify HMAC validation.
-      if (req.originalUrl.startsWith("/webhooks")) {
-        req.rawBody = Buffer.from(buf);
-      }
-    },
-  })
-);
+app.use("/webhooks", express.raw({ type: "*/*" }));
+app.use("/webhooks", webhookRoutes);
+app.use(express.json());
 
 app.get("/", handleAppEntry);
 
@@ -85,7 +78,6 @@ app.use("/api/dashboard", dashboardRoutes);
 app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
-app.use("/webhooks", webhookRoutes);
 app.use("/", shopifyRoutes);
 
 app.use(notFound);
