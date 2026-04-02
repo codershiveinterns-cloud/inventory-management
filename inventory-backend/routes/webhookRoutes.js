@@ -14,6 +14,15 @@ import {
 
 const router = Router();
 
+function acknowledgeUnhandledWebhook(req, res) {
+  console.log("Unhandled webhook route acknowledged:", {
+    method: req.method,
+    path: req.originalUrl,
+  });
+
+  res.status(200).send("OK");
+}
+
 router.post(
   "/orders/create",
   verifyShopifyWebhook,
@@ -58,13 +67,7 @@ router.post(
   handleShopRedact
 );
 
-router.use(verifyShopifyWebhook, (req, res) => {
-  console.log("Unhandled webhook route acknowledged:", {
-    method: req.method,
-    path: req.originalUrl,
-  });
-
-  res.status(200).send("OK");
-});
+router.all("/", verifyShopifyWebhook, acknowledgeUnhandledWebhook);
+router.all("/*webhookPath", verifyShopifyWebhook, acknowledgeUnhandledWebhook);
 
 export default router;
