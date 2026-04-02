@@ -5,13 +5,13 @@ embedded = true
 
 [auth]
 redirect_urls = [
-  "https://inventory-backend-3vjj.onrender.com/auth/callback"
+  "https://inventory-management-7r95.onrender.com/auth/callback"
 ]
 
 [webhooks]
 api_version = "2024-01"
 
   [webhooks.privacy_compliance]
-  customer_deletion_url = "https://inventory-backend-3vjj.onrender.com/webhooks/customers/redact"
-  customer_data_request_url = "https://inventory-backend-3vjj.onrender.com/webhooks/customers/data_request"
-  shop_deletion_url = "https://inventory-backend-3vjj.onrender.com/webhooks/shop/redact"
+  customer_deletion_url = "https://inventory-management-7r95.onrender.com/webhooks/customers/redact"
+  customer_data_request_url = "https://inventory-management-7r95.onrender.com/webhooks/customers/data_request"
+  shop_deletion_url = "https://inventory-management-7r95.onrender.com/webhooks/shop/redact"

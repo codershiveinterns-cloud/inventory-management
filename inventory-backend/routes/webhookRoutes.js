@@ -23,7 +23,7 @@ function acknowledgeUnhandledWebhook(req, res) {
   res.status(200).send("OK");
 }
 
-router.post("/", (_req, res) => {
+router.all("/", (_req, res) => {
   res.status(401).send("Unauthorized");
 });
 
@@ -52,19 +52,19 @@ router.post(
   handleAppUninstalled
 );
 
-router.post(
+router.all(
   "/customers/data_request",
   verifyShopifyWebhook,
   parseShopifyWebhookBody,
   handleCustomersDataRequest
 );
-router.post(
+router.all(
   "/customers/redact",
   verifyShopifyWebhook,
   parseShopifyWebhookBody,
   handleCustomersRedact
 );
-router.post(
+router.all(
   "/shop/redact",
   verifyShopifyWebhook,
   parseShopifyWebhookBody,
