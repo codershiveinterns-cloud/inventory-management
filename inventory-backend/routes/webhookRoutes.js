@@ -39,23 +39,32 @@ router.post(
   handleAppUninstalled
 );
 
-router.all(
+router.post(
   "/customers/data_request",
   verifyShopifyWebhook,
   parseShopifyWebhookBody,
   handleCustomersDataRequest
 );
-router.all(
+router.post(
   "/customers/redact",
   verifyShopifyWebhook,
   parseShopifyWebhookBody,
   handleCustomersRedact
 );
-router.all(
+router.post(
   "/shop/redact",
   verifyShopifyWebhook,
   parseShopifyWebhookBody,
   handleShopRedact
 );
+
+router.use(verifyShopifyWebhook, (req, res) => {
+  console.log("Unhandled webhook route acknowledged:", {
+    method: req.method,
+    path: req.originalUrl,
+  });
+
+  res.status(200).send("OK");
+});
 
 export default router;
