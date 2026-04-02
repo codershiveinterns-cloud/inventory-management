@@ -23,6 +23,10 @@ function acknowledgeUnhandledWebhook(req, res) {
   res.status(200).send("OK");
 }
 
+router.post("/", (_req, res) => {
+  res.status(401).send("Unauthorized");
+});
+
 router.post(
   "/orders/create",
   verifyShopifyWebhook,
@@ -67,7 +71,6 @@ router.post(
   handleShopRedact
 );
 
-router.all("/", verifyShopifyWebhook, acknowledgeUnhandledWebhook);
 router.all("/*webhookPath", verifyShopifyWebhook, acknowledgeUnhandledWebhook);
 
 export default router;
