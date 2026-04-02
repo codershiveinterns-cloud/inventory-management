@@ -1,7 +1,8 @@
-import { Navigate, Outlet, Route, Routes, useLocation, useSearchParams, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import createApp from '@shopify/app-bridge';
 import { setupApiInterceptor } from './services/api';
+import { getShopifyQueryContext, syncShopifyQueryParamsInUrl } from './utils/shopifyQueryParams';
 import DashboardNavbar from './components/DashboardNavbar';
 import LandingNavbar from './components/LandingNavbar';
 import ScrollToTop from './components/ScrollToTop';
@@ -29,12 +30,14 @@ import PricingPage from './pages/PricingPage';
 
 function AppLayout() {
   const location = useLocation();
-  const [params] = useSearchParams();
-  const shop = params.get('shop') || localStorage.getItem('shop');
-  const host = params.get('host') || localStorage.getItem('host');
+  const { shop, host } = getShopifyQueryContext(location.search);
   const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY;
   const navigate = useNavigate();
   const [isAppBridgeReady, setIsAppBridgeReady] = useState(false);
+
+  useEffect(() => {
+    syncShopifyQueryParamsInUrl(location);
+  }, [location]);
 
   useEffect(() => {
     // DEV MODE BYPASS
@@ -61,9 +64,6 @@ function AppLayout() {
       navigate('/connect', { replace: true });
       return;
     }
-    
-    if (shop) localStorage.setItem('shop', shop);
-    if (host) localStorage.setItem('host', host);
 
     if (!host) {
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';

@@ -1,17 +1,17 @@
 import createApp from '@shopify/app-bridge';
 import { Redirect } from '@shopify/app-bridge/actions';
 import { useEffect, useState } from 'react';
+import { getShopifyQueryContext, syncShopifyQueryParamsInUrl } from '../utils/shopifyQueryParams';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function AuthPage() {
-  const params = new URLSearchParams(window.location.search);
-  const shop = params.get("shop");
-  const host = params.get("host") || localStorage.getItem("host");
+  const { shop, host } = getShopifyQueryContext();
 
   const [redirected, setRedirected] = useState(false);
 
   useEffect(() => {
+    syncShopifyQueryParamsInUrl();
     console.log("Shop:", shop);
     console.log("Host:", host);
 
