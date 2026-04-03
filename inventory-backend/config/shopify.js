@@ -14,10 +14,10 @@ export const SHOPIFY_FRONTEND_URL = normalizeUrl(
 );
 export const SHOPIFY_SUCCESS_REDIRECT =
   process.env.SHOPIFY_SUCCESS_REDIRECT?.trim() ||
-  `${SHOPIFY_FRONTEND_URL}/app`;
+  SHOPIFY_FRONTEND_URL;
 export const SHOPIFY_ERROR_REDIRECT =
   process.env.SHOPIFY_ERROR_REDIRECT?.trim() ||
-  `${SHOPIFY_FRONTEND_URL}/shopify/connect`;
+  `${SHOPIFY_FRONTEND_URL}/connect`;
 
 export function assertShopifyEnv() {
   const missing = [

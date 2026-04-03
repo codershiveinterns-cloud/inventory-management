@@ -1,10 +1,10 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
 export default function ConnectPage() {
   const [shop, setShop] = useState('');
   const [error, setError] = useState('');
-  const navigate = useNavigate();
 
   const handleConnect = (e) => {
     e.preventDefault();
@@ -26,8 +26,7 @@ export default function ConnectPage() {
       return;
     }
 
-    // Redirect to /auth route to handle App Bridge breakout safely
-    navigate(`/auth?shop=${parsedShop}`);
+    window.location.href = `${API_URL}/auth?shop=${encodeURIComponent(parsedShop)}`;
   };
 
   return (

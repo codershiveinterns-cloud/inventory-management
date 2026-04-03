@@ -37,7 +37,10 @@ export default function AuthPage() {
       const redirect = Redirect.create(app);
 
       // The string-based payload naturally routes the top-level parent window, bypassing popup blockers cleanly
-      redirect.dispatch(Redirect.Action.REMOTE, `${API_URL}/auth?shop=${shop}`);
+      redirect.dispatch(
+        Redirect.Action.REMOTE,
+        `${API_URL}/auth?shop=${encodeURIComponent(shop)}&host=${encodeURIComponent(host)}`
+      );
 
       setRedirected(true);
     }

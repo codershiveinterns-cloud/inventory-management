@@ -6,6 +6,7 @@ import {
   SHOPIFY_FRONTEND_URL,
 } from "../config/shopify.js";
 import {
+  buildEmbeddedAppHost,
   buildShopifyAuthUrl,
   createSignedState,
   exchangeCodeForAccessToken,
@@ -38,6 +39,16 @@ function buildRedirectUrl(baseUrl, params = {}) {
   });
 
   return target.toString();
+}
+
+function redirectToConnect(res, params = {}) {
+  if (!SHOPIFY_ERROR_REDIRECT) {
+    const error = new Error(params.error || "Shopify authorization failed");
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return res.redirect(buildRedirectUrl(SHOPIFY_ERROR_REDIRECT, params));
 }
 
 async function findStoreForUser(userId, shop) {
@@ -74,6 +85,7 @@ async function findStoreForUser(userId, shop) {
 
 export const handleAppEntry = asyncHandler(async (req, res) => {
   const shopParam = req.query.shop;
+  const host = req.query.host || "";
 
   if (!shopParam) {
     return res.json({
@@ -84,20 +96,37 @@ export const handleAppEntry = asyncHandler(async (req, res) => {
 
   const shop = normalizeShopDomain(shopParam);
   const existingStore = await Store.findOne({ shopName: shop });
+  const embeddedHost = host || buildEmbeddedAppHost(shop);
 
   if (existingStore && existingStore.accessToken) {
-    return res.redirect(`${SHOPIFY_FRONTEND_URL}/dashboard?shop=${shop}`);
+    return res.redirect(
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL, {
+        shop,
+        host: embeddedHost,
+      })
+    );
   }
 
-  const apiKey = process.env.SHOPIFY_API_KEY || "";
-  const host = req.query.host || "";
-  return res.redirect(`${SHOPIFY_FRONTEND_URL}/auth?shop=${shop}&host=${host}&apiKey=${apiKey}`);
+  return res.redirect(
+    buildRedirectUrl(`${SHOPIFY_FRONTEND_URL}/auth`, {
+      shop,
+      host: embeddedHost,
+    })
+  );
 });
 
 export const connectShopifyStore = asyncHandler(async (req, res) => {
   ensureShopifyRedirectUriConfigured();
-  const shop = normalizeShopDomain(req.query.shop || "");
-  const state = createSignedState({ shop });
+  const { shop: shopParam = "", host = "" } = req.query;
+
+  if (!shopParam) {
+    return redirectToConnect(res, {
+      error: "Shop is required to start Shopify OAuth",
+    });
+  }
+
+  const shop = normalizeShopDomain(shopParam);
+  const state = createSignedState({ shop, host });
   const authUrl = buildShopifyAuthUrl({ shop, state });
 
   res.redirect(authUrl);
@@ -109,23 +138,35 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
     const { code, shop, state, host } = req.query;
 
     if (req.query.error) {
-      const error = new Error(
-        req.query.error_description || req.query.error || "Shopify authorization failed"
-      );
-      error.statusCode = 400;
-      throw error;
+      return redirectToConnect(res, {
+        shop: req.query.shop,
+        error:
+          req.query.error_description ||
+          req.query.error ||
+          "Shopify authorization failed",
+      });
     }
 
-    if (!code || !shop || !state) {
-      const error = new Error("Shopify callback requires code, shop, and state");
-      error.statusCode = 400;
-      throw error;
+    if (!code || !shop) {
+      return redirectToConnect(res, {
+        shop,
+        error: "Shopify callback requires code and shop parameters",
+      });
+    }
+
+    if (!state) {
+      return redirectToConnect(res, {
+        shop,
+        error: "Shopify callback state is missing or invalid",
+      });
     }
 
     verifyShopifyCallbackHmac(req.query);
 
     const statePayload = verifySignedState(state);
     const normalizedShop = normalizeShopDomain(shop);
+    const embeddedHost =
+      host || statePayload.host || buildEmbeddedAppHost(normalizedShop);
 
     if (normalizedShop !== statePayload.shop) {
       const error = new Error("Shopify callback shop does not match OAuth state");
@@ -192,19 +233,17 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
     });
 
     res.redirect(
-      buildRedirectUrl(`${SHOPIFY_FRONTEND_URL}/dashboard`, {
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL, {
         shop: normalizedShop,
-        host,
+        host: embeddedHost,
       })
     );
   } catch (error) {
     if (SHOPIFY_ERROR_REDIRECT) {
-      return res.redirect(
-        buildRedirectUrl(SHOPIFY_ERROR_REDIRECT, {
-          shop: req.query.shop,
-          error: error.message,
-        })
-      );
+      return redirectToConnect(res, {
+        shop: req.query.shop,
+        error: error.message,
+      });
     }
 
     return next(error);

@@ -148,6 +148,21 @@ function AppLayout() {
   );
 }
 
+function RootRoute() {
+  const location = useLocation();
+  const { shop, host } = getShopifyQueryContext(location.search);
+
+  if (shop && host) {
+    return <Navigate to={`/dashboard${location.search}`} replace />;
+  }
+
+  if (shop) {
+    return <Navigate to={`/auth${location.search}`} replace />;
+  }
+
+  return <LandingPage />;
+}
+
 function LandingLayout() {
   const location = useLocation();
   return (
@@ -165,7 +180,7 @@ function AppShell() {
       <ScrollToTop />
       <Routes>
         <Route element={<LandingLayout />}>
-          <Route path="/" element={<LandingPage />} />
+          <Route path="/" element={<RootRoute />} />
           <Route path="/features" element={<FeaturesPage />} />
           <Route path="/about" element={<AboutPage />} />
           <Route path="/pricing" element={<PricingPage />} />

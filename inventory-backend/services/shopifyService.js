@@ -70,12 +70,19 @@ export function normalizeShopDomain(shop = "") {
   return normalized;
 }
 
-export function createSignedState({ shop, userId = null }) {
+export function buildEmbeddedAppHost(shop) {
+  const normalizedShop = normalizeShopDomain(shop);
+  const storeHandle = normalizedShop.replace(/\.myshopify\.com$/, "");
+  return base64UrlEncode(`admin.shopify.com/store/${storeHandle}`);
+}
+
+export function createSignedState({ shop, userId = null, host = "" }) {
   assertShopifyEnv();
 
   const payload = JSON.stringify({
     shop,
     userId,
+    host,
     nonce: crypto.randomBytes(12).toString("hex"),
     timestamp: Date.now(),
   });
