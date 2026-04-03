@@ -1,17 +1,26 @@
+# Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
+
 client_id = "bc53d1f27ef652bed3f840172a749001"
 name = "InventoryFlow"
 application_url = "https://inventory-management-liart-tau.vercel.app"
 embedded = true
 
+[webhooks]
+api_version = "2024-01"
+
+  [[webhooks.subscriptions]]
+  uri = "https://inventory-management-7r95.onrender.com/webhooks/customers/data_request"
+  compliance_topics = [ "customers/data_request" ]
+
+  [[webhooks.subscriptions]]
+  uri = "https://inventory-management-7r95.onrender.com/webhooks/customers/redact"
+  compliance_topics = [ "customers/redact" ]
+
+  [[webhooks.subscriptions]]
+  uri = "https://inventory-management-7r95.onrender.com/webhooks/shop/redact"
+  compliance_topics = [ "shop/redact" ]
+
 [auth]
 redirect_urls = [
   "https://inventory-management-7r95.onrender.com/auth/callback"
 ]
-
-[webhooks]
-api_version = "2024-01"
-
-  [webhooks.privacy_compliance]
-  customer_deletion_url = "https://inventory-management-7r95.onrender.com/webhooks/customers/redact"
-  customer_data_request_url = "https://inventory-management-7r95.onrender.com/webhooks/customers/data_request"
-  shop_deletion_url = "https://inventory-management-7r95.onrender.com/webhooks/shop/redact"
