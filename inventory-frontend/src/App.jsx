@@ -1,8 +1,7 @@
 import { Navigate, Outlet, Route, Routes, useLocation, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import createApp from '@shopify/app-bridge';
-import { setupApiInterceptor } from './services/api';
 import { getShopifyQueryContext, syncShopifyQueryParamsInUrl } from './utils/shopifyQueryParams';
+import { initializeShopifyAppBridge, SHOPIFY_API_KEY } from './services/shopifyAppBridge';
 import DashboardNavbar from './components/DashboardNavbar';
 import LandingNavbar from './components/LandingNavbar';
 import ScrollToTop from './components/ScrollToTop';
@@ -28,16 +27,50 @@ import AuthPage from './pages/AuthPage';
 import ConnectPage from './pages/ConnectPage';
 import PricingPage from './pages/PricingPage';
 
-function AppLayout() {
+function shouldBootstrapAppBridge(pathname, search, hasStoredContext) {
+  if (search.includes('host=')) {
+    return true;
+  }
+
+  if (!hasStoredContext) {
+    return false;
+  }
+
+  return (
+    pathname === '/auth' ||
+    pathname === '/app' ||
+    pathname.startsWith('/dashboard') ||
+    pathname.startsWith('/products') ||
+    pathname === '/add-product' ||
+    pathname.startsWith('/inventory') ||
+    pathname === '/low-stock' ||
+    pathname === '/pricing'
+  );
+}
+
+function AppBridgeBootstrap() {
   const location = useLocation();
-  const { shop, host } = getShopifyQueryContext(location.search);
-  const apiKey = import.meta.env.VITE_SHOPIFY_API_KEY;
-  const navigate = useNavigate();
-  const [isAppBridgeReady, setIsAppBridgeReady] = useState(false);
 
   useEffect(() => {
     syncShopifyQueryParamsInUrl(location);
+
+    const { host, shop } = getShopifyQueryContext(location.search);
+
+    if (!shouldBootstrapAppBridge(location.pathname, location.search, Boolean(host || shop))) {
+      return;
+    }
+
+    initializeShopifyAppBridge({ host });
   }, [location]);
+
+  return null;
+}
+
+function AppLayout() {
+  const location = useLocation();
+  const { shop, host } = getShopifyQueryContext(location.search);
+  const navigate = useNavigate();
+  const [isAppBridgeReady, setIsAppBridgeReady] = useState(false);
 
   useEffect(() => {
     // DEV MODE BYPASS
@@ -71,20 +104,15 @@ function AppLayout() {
       return;
     }
 
-    if (host && apiKey) {
+    if (host && SHOPIFY_API_KEY) {
       try {
-        const app = createApp({
-          apiKey,
-          host,
-          forceRedirect: true,
-        });
-        setupApiInterceptor(app);
-        setIsAppBridgeReady(true);
+        const app = initializeShopifyAppBridge({ host });
+        setIsAppBridgeReady(Boolean(app));
       } catch (err) {
         console.error("AppBridge Init Error:", err);
       }
     }
-  }, [host, shop, apiKey, navigate]);
+  }, [host, shop, navigate]);
 
   const activePlan = localStorage.getItem('app_plan');
 
@@ -133,6 +161,7 @@ function LandingLayout() {
 function AppShell() {
   return (
     <>
+      <AppBridgeBootstrap />
       <ScrollToTop />
       <Routes>
         <Route element={<LandingLayout />}>

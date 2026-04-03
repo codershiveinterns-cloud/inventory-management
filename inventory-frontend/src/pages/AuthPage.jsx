@@ -1,7 +1,7 @@
-import createApp from '@shopify/app-bridge';
 import { Redirect } from '@shopify/app-bridge/actions';
 import { useEffect, useState } from 'react';
 import { getShopifyQueryContext, syncShopifyQueryParamsInUrl } from '../utils/shopifyQueryParams';
+import { initializeShopifyAppBridge } from '../services/shopifyAppBridge';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 
@@ -28,11 +28,11 @@ export default function AuthPage() {
     }
 
     if (!redirected && host) {
-      const app = createApp({
-        apiKey: import.meta.env.VITE_SHOPIFY_API_KEY,
-        host,
-        forceRedirect: true
-      });
+      const app = initializeShopifyAppBridge({ host });
+
+      if (!app) {
+        return;
+      }
 
       const redirect = Redirect.create(app);
 

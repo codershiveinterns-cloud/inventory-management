@@ -32,10 +32,25 @@ const api = axios.create({
   }
 });
 
+let currentAppBridge = null;
+let shopifyInterceptorAttached = false;
+
 export function setupApiInterceptor(app) {
+  currentAppBridge = app;
+
+  if (shopifyInterceptorAttached) {
+    return;
+  }
+
+  shopifyInterceptorAttached = true;
+
   api.interceptors.request.use(async (config) => {
+    if (!currentAppBridge) {
+      return config;
+    }
+
     try {
-      const token = await getSessionToken(app);
+      const token = await getSessionToken(currentAppBridge);
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
       }

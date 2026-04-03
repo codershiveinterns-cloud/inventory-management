@@ -3,7 +3,15 @@ const SHOPIFY_SHOP_KEY = 'shopify_shop';
 const LEGACY_HOST_KEY = 'host';
 const LEGACY_SHOP_KEY = 'shop';
 
+function isBrowser() {
+  return typeof window !== 'undefined';
+}
+
 function readStoredValue(primaryKey, legacyKey) {
+  if (!isBrowser()) {
+    return '';
+  }
+
   return (
     window.localStorage.getItem(primaryKey) ||
     window.localStorage.getItem(legacyKey) ||
@@ -12,7 +20,7 @@ function readStoredValue(primaryKey, legacyKey) {
 }
 
 function persistValue(primaryKey, legacyKey, value) {
-  if (!value) {
+  if (!isBrowser() || !value) {
     return;
   }
 
@@ -20,8 +28,18 @@ function persistValue(primaryKey, legacyKey, value) {
   window.localStorage.setItem(legacyKey, value);
 }
 
-export function getShopifyQueryContext(search = window.location.search) {
-  const params = new URLSearchParams(search);
+export function getShopifyQueryContext(search = '') {
+  if (!isBrowser()) {
+    return {
+      hostFromUrl: '',
+      shopFromUrl: '',
+      host: '',
+      shop: '',
+    };
+  }
+
+  const resolvedSearch = search || window.location.search;
+  const params = new URLSearchParams(resolvedSearch);
   const hostFromUrl = params.get('host') || '';
   const shopFromUrl = params.get('shop') || '';
 
@@ -41,11 +59,14 @@ export function getShopifyQueryContext(search = window.location.search) {
   };
 }
 
-export function syncShopifyQueryParamsInUrl({
-  pathname = window.location.pathname,
-  search = window.location.search,
-  hash = window.location.hash,
-} = {}) {
+export function syncShopifyQueryParamsInUrl(location = {}) {
+  if (!isBrowser()) {
+    return;
+  }
+
+  const pathname = location.pathname || window.location.pathname;
+  const search = location.search || window.location.search;
+  const hash = location.hash || window.location.hash;
   const { host, shop } = getShopifyQueryContext(search);
 
   if (!host && !shop) {
