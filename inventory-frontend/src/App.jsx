@@ -208,12 +208,29 @@ function AppShell() {
           <Route path="/dashboard/contact" element={<ContactPage />} />
         </Route>
 
-        <Route path="*" element={<Navigate to="/" replace />} />
+        {/* Shopify Dynamic Loading Route & Wildcard Fallback */}
+        <Route path="/apps/*" element={<FallbackRoute />} />
+        <Route path="*" element={<FallbackRoute />} />
         <Route path="/auth" element={<AuthPage />} />
         <Route path="/connect" element={<ConnectPage />} />
       </Routes>
     </>
   );
+}
+
+function FallbackRoute() {
+  const location = useLocation();
+  const { shop, host } = getShopifyQueryContext(location.search);
+
+  if (shop && host) {
+    return <Navigate to={`/dashboard${location.search}`} replace />;
+  }
+  
+  if (shop) {
+    return <Navigate to={`/auth${location.search}`} replace />;
+  }
+
+  return <Navigate to="/" replace />;
 }
 
 export default function App() {
