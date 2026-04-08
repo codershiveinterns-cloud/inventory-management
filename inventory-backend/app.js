@@ -67,8 +67,6 @@ app.use("/webhooks", express.raw({ type: "*/*" }));
 app.use("/webhooks", webhookRoutes);
 app.use(express.json());
 
-app.get("/", handleAppEntry);
-
 app.get("/api/health", (_req, res) => {
   res.json({
     success: true,
@@ -85,21 +83,12 @@ app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/", shopifyRoutes);
 
-// React Build Static Serving
-app.use(express.static(path.join(__dirname, "build")));
-
-// Fallback for React Router (placed after all API routes)
 app.use((req, res, next) => {
-  if (req.method !== 'GET') {
-    return next();
-  }
   if (req.path.startsWith("/api") || req.path.startsWith("/webhooks")) {
-    return next(); // API paths should hit the standard 404 handler 
+    return notFound(req, res, next);
   }
-  res.sendFile(path.join(__dirname, "build", "index.html"));
+  next(); // Passes the route off to server.js bindings for React App
 });
-
-app.use(notFound);
 app.use(errorHandler);
 
 export default app;
