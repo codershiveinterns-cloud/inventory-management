@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getSessionToken } from '@shopify/app-bridge/utilities';
+import { getSessionToken } from '@shopify/app-bridge-utils';
 
 const DEFAULT_DEV_API_URL = 'http://localhost:5000';
 
