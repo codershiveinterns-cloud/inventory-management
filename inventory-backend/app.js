@@ -1,6 +1,11 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
+import path from "path";
+import { fileURLToPath } from "url";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
@@ -79,6 +84,20 @@ app.use("/api/history", historyRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/inventory", inventoryRoutes);
 app.use("/", shopifyRoutes);
+
+// React Build Static Serving
+app.use(express.static(path.join(__dirname, "build")));
+
+// Fallback for React Router (placed after all API routes)
+app.use((req, res, next) => {
+  if (req.method !== 'GET') {
+    return next();
+  }
+  if (req.path.startsWith("/api") || req.path.startsWith("/webhooks")) {
+    return next(); // API paths should hit the standard 404 handler 
+  }
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 app.use(notFound);
 app.use(errorHandler);

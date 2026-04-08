@@ -26,7 +26,7 @@ const startServer = async () => {
 
     io.on("connection", (socket) => {
       console.log("Client connected via Socket.io:", socket.id);
-      
+
       socket.on("joinGlobal", () => {
         socket.join("inventory_updates");
         console.log(`Socket ${socket.id} joined global inventory updates room`);
