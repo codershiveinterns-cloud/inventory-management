@@ -39,10 +39,12 @@ function isAllowedOrigin(origin) {
   const normalizedOrigin = normalizeOrigin(origin);
   const isLocalhostOrigin = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/i.test(normalizedOrigin);
   const isVercelOrigin = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin);
+  const isRenderOrigin = /^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(normalizedOrigin);
 
   return (
     isLocalhostOrigin ||
     isVercelOrigin ||
+    isRenderOrigin ||
     configuredOrigins.includes(normalizedOrigin)
   );
 }
