@@ -1,11 +1,6 @@
 import "dotenv/config";
 import express from "express";
 import cors from "cors";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
 
 import analyticsRoutes from "./routes/analyticsRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
@@ -15,7 +10,6 @@ import historyRoutes from "./routes/historyRoutes.js";
 import inventoryRoutes from "./routes/inventoryRoutes.js";
 import shopifyRoutes from "./routes/shopifyRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
-import { handleAppEntry } from "./controllers/shopifyController.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
 
@@ -38,12 +32,10 @@ function isAllowedOrigin(origin) {
 
   const normalizedOrigin = normalizeOrigin(origin);
   const isLocalhostOrigin = /^http:\/\/(localhost|127\.0\.0\.1):\d+$/i.test(normalizedOrigin);
-  const isVercelOrigin = /^https:\/\/[a-z0-9-]+\.vercel\.app$/i.test(normalizedOrigin);
   const isRenderOrigin = /^https:\/\/[a-z0-9-]+\.onrender\.com$/i.test(normalizedOrigin);
 
   return (
     isLocalhostOrigin ||
-    isVercelOrigin ||
     isRenderOrigin ||
     configuredOrigins.includes(normalizedOrigin)
   );

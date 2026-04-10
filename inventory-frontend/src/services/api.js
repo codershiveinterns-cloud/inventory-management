@@ -1,28 +1,7 @@
 import axios from 'axios';
 import { getSessionToken } from '@shopify/app-bridge-utils';
 
-const DEFAULT_DEV_API_URL = 'http://localhost:5000';
-
-function normalizeApiUrl(url) {
-  return url.replace(/\/+$/, '');
-}
-
-function resolveApiBaseUrl() {
-  const mode = import.meta.env.MODE;
-  const configuredUrl = import.meta.env.VITE_API_URL?.trim();
-
-  if (mode === 'development') {
-    return `${DEFAULT_DEV_API_URL}/api`;
-  }
-
-  if (!configuredUrl) {
-    throw new Error('VITE_API_URL is required for production builds.');
-  }
-
-  return `${normalizeApiUrl(configuredUrl)}/api`;
-}
-
-export const API_BASE_URL = resolveApiBaseUrl();
+export const API_BASE_URL = '/api';
 
 const api = axios.create({
   baseURL: API_BASE_URL,

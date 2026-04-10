@@ -10,14 +10,17 @@ export const SHOPIFY_API_VERSION =
   process.env.SHOPIFY_API_VERSION?.trim() || "2024-10";
 export const SHOPIFY_STATE_TTL_MS = 10 * 60 * 1000;
 export const SHOPIFY_FRONTEND_URL = normalizeUrl(
-  process.env.FRONTEND_URL || "http://localhost:5173"
+  process.env.FRONTEND_URL ||
+    process.env.APP_URL ||
+    process.env.RENDER_EXTERNAL_URL ||
+    ""
 );
 export const SHOPIFY_SUCCESS_REDIRECT =
   process.env.SHOPIFY_SUCCESS_REDIRECT?.trim() ||
   SHOPIFY_FRONTEND_URL;
 export const SHOPIFY_ERROR_REDIRECT =
   process.env.SHOPIFY_ERROR_REDIRECT?.trim() ||
-  `${SHOPIFY_FRONTEND_URL}/connect`;
+  (SHOPIFY_FRONTEND_URL ? `${SHOPIFY_FRONTEND_URL}/connect` : "/connect");
 
 export function assertShopifyEnv() {
   const missing = [

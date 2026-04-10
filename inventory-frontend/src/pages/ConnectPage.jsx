@@ -1,7 +1,5 @@
 import { useState } from 'react';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
 export default function ConnectPage() {
   const [shop, setShop] = useState('');
   const [error, setError] = useState('');
@@ -26,7 +24,7 @@ export default function ConnectPage() {
       return;
     }
 
-    window.location.href = `${API_URL}/auth?shop=${encodeURIComponent(parsedShop)}`;
+    window.location.href = `/auth?shop=${encodeURIComponent(parsedShop)}`;
   };
 
   return (

@@ -3,8 +3,6 @@ import { useEffect, useState } from 'react';
 import { getShopifyQueryContext, syncShopifyQueryParamsInUrl } from '../utils/shopifyQueryParams';
 import { initializeShopifyAppBridge } from '../services/shopifyAppBridge';
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-
 export default function AuthPage() {
   const { shop, host } = getShopifyQueryContext();
 
@@ -23,7 +21,7 @@ export default function AuthPage() {
     if (!host) {
       console.warn('Missing host. Restarting OAuth natively.');
       // Securely hit the native backend OAuth entry
-      window.location.href = `${API_URL}/auth?shop=${shop}`;
+      window.location.href = `/auth?shop=${encodeURIComponent(shop)}`;
       return;
     }
 
@@ -39,7 +37,7 @@ export default function AuthPage() {
       // The string-based payload naturally routes the top-level parent window, bypassing popup blockers cleanly
       redirect.dispatch(
         Redirect.Action.REMOTE,
-        `${API_URL}/auth?shop=${encodeURIComponent(shop)}&host=${encodeURIComponent(host)}`
+        `/auth?shop=${encodeURIComponent(shop)}&host=${encodeURIComponent(host)}`
       );
 
       setRedirected(true);

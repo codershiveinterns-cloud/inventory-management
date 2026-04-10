@@ -30,7 +30,14 @@ function ensureShopifyRedirectUriConfigured() {
 }
 
 function buildRedirectUrl(baseUrl, params = {}) {
-  const target = new URL(baseUrl);
+  if (!baseUrl) {
+    baseUrl = "/";
+  }
+
+  const isAbsolute = /^https?:\/\//i.test(baseUrl);
+  const target = isAbsolute
+    ? new URL(baseUrl)
+    : new URL(baseUrl, "http://localhost");
 
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
@@ -38,7 +45,11 @@ function buildRedirectUrl(baseUrl, params = {}) {
     }
   });
 
-  return target.toString();
+  if (isAbsolute) {
+    return target.toString();
+  }
+
+  return `${target.pathname}${target.search}${target.hash}`;
 }
 
 function redirectToConnect(res, params = {}) {
@@ -100,7 +111,7 @@ export const handleAppEntry = asyncHandler(async (req, res) => {
 
   if (existingStore && existingStore.accessToken) {
     return res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL, {
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
         shop,
         host: embeddedHost,
       })
@@ -108,10 +119,13 @@ export const handleAppEntry = asyncHandler(async (req, res) => {
   }
 
   return res.redirect(
-    buildRedirectUrl(`${SHOPIFY_FRONTEND_URL}/auth`, {
-      shop,
-      host: embeddedHost,
-    })
+    buildRedirectUrl(
+      SHOPIFY_FRONTEND_URL ? `${SHOPIFY_FRONTEND_URL}/auth` : "/auth",
+      {
+        shop,
+        host: embeddedHost,
+      }
+    )
   );
 });
 
@@ -233,7 +247,7 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
     });
 
     res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL, {
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
         shop: normalizedShop,
         host: embeddedHost,
       })

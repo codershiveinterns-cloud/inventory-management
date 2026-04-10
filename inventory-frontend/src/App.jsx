@@ -99,8 +99,7 @@ function AppLayout() {
     }
 
     if (!host) {
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000';
-      window.location.href = `${apiUrl}/auth?shop=${shop}`;
+      window.location.href = `/auth?shop=${encodeURIComponent(shop)}`;
       return;
     }
 

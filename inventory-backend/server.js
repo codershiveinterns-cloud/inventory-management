@@ -12,19 +12,17 @@ dotenv.config();
 
 const PORT = process.env.PORT || 5000;
 
-// __dirname fix for ES modules
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const startServer = async () => {
+async function startServer() {
   try {
     await connectDB();
 
     const server = createServer(app);
     const io = new Server(server, {
       cors: {
-        origin: "*",
-        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        origin: true,
         credentials: true,
       },
     });
@@ -43,16 +41,10 @@ const startServer = async () => {
       });
     });
 
-    // React Frontend Serving (MUST be at the bottom before listen)
     app.use(express.static(path.join(__dirname, "build")));
 
-    // Fallback React SPA route correctly resolving for Express 5 compatibility
-    app.use((req, res, next) => {
-      if (req.method === 'GET') {
-        res.sendFile(path.join(__dirname, "build", "index.html"));
-      } else {
-        next();
-      }
+    app.get("/{*path}", (req, res) => {
+      res.sendFile(path.join(__dirname, "build", "index.html"));
     });
 
     server.listen(PORT, () => {
@@ -62,6 +54,6 @@ const startServer = async () => {
     console.error("Failed to start server:", error.message);
     process.exit(1);
   }
-};
+}
 
 startServer();
