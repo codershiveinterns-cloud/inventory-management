@@ -41,11 +41,18 @@ export const requireActiveBilling = asyncHandler(async (req, res, next) => {
     "+accessToken"
   );
 
+  console.log("Store from DB:", {
+    shop: normalized,
+    found: Boolean(store),
+    hasAccessToken: Boolean(store?.accessToken),
+  });
+
   if (!store?.accessToken) {
     return res.status(401).json({
       success: false,
       code: "SHOP_NOT_AUTHENTICATED",
       error: "Shopify store is not authenticated",
+      shop: normalized,
     });
   }
 

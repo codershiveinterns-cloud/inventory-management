@@ -198,6 +198,13 @@ export const handleAppEntry = asyncHandler(async (req, res, next) => {
   );
   const embeddedHost = host || buildEmbeddedAppHost(shop);
 
+  console.log("Store from DB:", {
+    shop,
+    found: Boolean(existingStore),
+    hasAccessToken: Boolean(existingStore?.accessToken),
+    id: existingStore?._id?.toString(),
+  });
+
   if (!existingStore?.accessToken) {
     console.log("route:", req.path, "shop:", shop, "accessToken: none → redirect /auth");
     return res.redirect(
@@ -281,6 +288,8 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       throw error;
     }
 
+    console.log("OAuth callback shop:", normalizedShop);
+
     const tokenResponse = await exchangeCodeForAccessToken({
       shop: normalizedShop,
       code,
@@ -288,21 +297,18 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
 
     const accessToken = tokenResponse.access_token;
 
+    console.log(
+      "Access token received:",
+      accessToken ? `yes (len=${accessToken.length})` : "NO"
+    );
+
     if (!accessToken) {
       const error = new Error("Shopify did not return an access token");
       error.statusCode = 502;
       throw error;
     }
 
-    const productResponse = await fetchShopifyProducts({
-      shop: normalizedShop,
-      accessToken,
-    });
-    const products = Array.isArray(productResponse?.products)
-      ? productResponse.products
-      : [];
-
-    await Store.findOneAndUpdate(
+    const storeRecord = await Store.findOneAndUpdate(
       {
         user: statePayload.userId ?? null,
         shopName: normalizedShop,
@@ -338,26 +344,54 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       }
     );
 
-    console.log("Shopify access token stored", {
-      userId: statePayload.userId ?? null,
-      shop: normalizedShop,
-    });
-    
-    // Register webhooks for real-time sync
-    await registerWebhooks({ shop: normalizedShop, accessToken });
-
-    console.log("Shopify products fetched", {
-      shop: normalizedShop,
-      count: products.length,
-      productIds: products.slice(0, 10).map((product) => product?.id).filter(Boolean),
+    console.log("Store from DB:", {
+      id: storeRecord?._id?.toString(),
+      shopName: storeRecord?.shopName,
+      scopes: storeRecord?.scopes,
+      hasAccessToken: Boolean(accessToken),
+      connectedAt: storeRecord?.connectedAt,
     });
 
-    const subscription = await getActiveSubscription({
-      shop: normalizedShop,
-      accessToken,
-    });
+    try {
+      await registerWebhooks({ shop: normalizedShop, accessToken });
+    } catch (hookErr) {
+      console.error("registerWebhooks failed (non-fatal):", hookErr.message);
+    }
 
-    console.log("route:", req.path, "shop:", normalizedShop, "subscription:", subscription?.status || "NONE");
+    try {
+      const productResponse = await fetchShopifyProducts({
+        shop: normalizedShop,
+        accessToken,
+      });
+      const products = Array.isArray(productResponse?.products)
+        ? productResponse.products
+        : [];
+      console.log("Shopify products fetched", {
+        shop: normalizedShop,
+        count: products.length,
+      });
+    } catch (prodErr) {
+      console.error("fetchShopifyProducts failed (non-fatal):", prodErr.message);
+    }
+
+    let subscription = null;
+    try {
+      subscription = await getActiveSubscription({
+        shop: normalizedShop,
+        accessToken,
+      });
+    } catch (subErr) {
+      console.error("getActiveSubscription failed (non-fatal):", subErr.message);
+    }
+
+    console.log(
+      "route:",
+      req.path,
+      "shop:",
+      normalizedShop,
+      "subscription:",
+      subscription?.status || "NONE"
+    );
 
     if (!subscription) {
       return res.redirect(
