@@ -12,6 +12,8 @@ import shopifyRoutes from "./routes/shopifyRoutes.js";
 import webhookRoutes from "./routes/webhookRoutes.js";
 import notFound from "./middleware/notFound.js";
 import errorHandler from "./middleware/errorHandler.js";
+import { protect } from "./middleware/protect.js";
+import { requireActiveBilling } from "./middleware/billingGuard.js";
 
 const app = express();
 
@@ -68,6 +70,8 @@ app.get("/api/health", (_req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+app.use("/api", protect, requireActiveBilling);
 
 app.use("/api/categories", categoryRoutes);
 app.use("/api/analytics", analyticsRoutes);

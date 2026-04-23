@@ -16,8 +16,63 @@ import {
   verifySignedState,
   registerWebhooks,
   hasActiveSubscription,
+  getActiveSubscription,
   createAppSubscription,
 } from "../services/shopifyService.js";
+
+function extractPlanDetails(subscription) {
+  const lineItem = subscription?.lineItems?.[0];
+  const pricing = lineItem?.plan?.pricingDetails;
+  if (!pricing || pricing.__typename !== "AppRecurringPricing") {
+    return { interval: null, amount: null, currencyCode: null };
+  }
+  return {
+    interval: pricing.interval || null,
+    amount: pricing.price?.amount
+      ? Number.parseFloat(pricing.price.amount)
+      : null,
+    currencyCode: pricing.price?.currencyCode || null,
+  };
+}
+
+function inferPlanType(name = "") {
+  const normalized = String(name).toUpperCase();
+  if (normalized.includes("GROWTH")) return "GROWTH";
+  if (normalized.includes("BASIC")) return "BASIC";
+  return null;
+}
+
+async function persistSubscription({ shop, subscription }) {
+  const update = subscription
+    ? {
+        subscription: {
+          id: subscription.id,
+          name: subscription.name,
+          status: subscription.status,
+          test: Boolean(subscription.test),
+          planType: inferPlanType(subscription.name),
+          planInterval: extractPlanDetails(subscription).interval,
+          amount: extractPlanDetails(subscription).amount,
+          currencyCode: extractPlanDetails(subscription).currencyCode,
+          verifiedAt: new Date(),
+        },
+      }
+    : {
+        subscription: {
+          id: null,
+          name: null,
+          status: null,
+          test: false,
+          planType: null,
+          planInterval: null,
+          amount: null,
+          currencyCode: null,
+          verifiedAt: new Date(),
+        },
+      };
+
+  await Store.updateOne({ shopName: shop }, { $set: update });
+}
 
 function getBackendOrigin() {
   return new URL(SHOPIFY_REDIRECT_URI).origin;
@@ -25,6 +80,13 @@ function getBackendOrigin() {
 
 function buildBillingReturnUrl({ shop, host }) {
   const url = new URL("/billing/callback", getBackendOrigin());
+  url.searchParams.set("shop", shop);
+  if (host) url.searchParams.set("host", host);
+  return url.toString();
+}
+
+function buildBillingEntryUrl({ shop, host }) {
+  const url = new URL("/billing", getBackendOrigin());
   url.searchParams.set("shop", shop);
   if (host) url.searchParams.set("host", host);
   return url.toString();
@@ -121,38 +183,46 @@ async function findStoreForUser(userId, shop) {
     .select("+accessToken");
 }
 
-export const handleAppEntry = asyncHandler(async (req, res) => {
+export const handleAppEntry = asyncHandler(async (req, res, next) => {
   const shopParam = req.query.shop;
   const host = req.query.host || "";
 
   if (!shopParam) {
-    return res.json({
-      success: true,
-      message: "Inventory Management API is running",
-    });
+    return next();
   }
 
   const shop = normalizeShopDomain(shopParam);
-  const existingStore = await Store.findOne({ shopName: shop });
+  const existingStore = await Store.findOne({ shopName: shop }).select(
+    "+accessToken"
+  );
   const embeddedHost = host || buildEmbeddedAppHost(shop);
 
-  if (existingStore && existingStore.accessToken) {
+  if (!existingStore?.accessToken) {
     return res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
-        shop,
-        host: embeddedHost,
-      })
+      buildRedirectUrl(
+        SHOPIFY_FRONTEND_URL ? `${SHOPIFY_FRONTEND_URL}/auth` : "/auth",
+        { shop, host: embeddedHost }
+      )
     );
   }
 
+  const subscription = await getActiveSubscription({
+    shop,
+    accessToken: existingStore.accessToken,
+  });
+
+  if (!subscription) {
+    await persistSubscription({ shop, subscription: null });
+    return res.redirect(buildBillingEntryUrl({ shop, host: embeddedHost }));
+  }
+
+  await persistSubscription({ shop, subscription });
+
   return res.redirect(
-    buildRedirectUrl(
-      SHOPIFY_FRONTEND_URL ? `${SHOPIFY_FRONTEND_URL}/auth` : "/auth",
-      {
-        shop,
-        host: embeddedHost,
-      }
-    )
+    buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
+      shop,
+      host: embeddedHost,
+    })
   );
 });
 
@@ -242,14 +312,27 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
         shopName: normalizedShop,
       },
       {
-        user: statePayload.userId ?? null,
-        shopName: normalizedShop,
-        accessToken,
-        scopes: (tokenResponse.scope || "")
-          .split(",")
-          .map((scope) => scope.trim())
-          .filter(Boolean),
-        connectedAt: new Date(),
+        $set: {
+          user: statePayload.userId ?? null,
+          shopName: normalizedShop,
+          accessToken,
+          scopes: (tokenResponse.scope || "")
+            .split(",")
+            .map((scope) => scope.trim())
+            .filter(Boolean),
+          connectedAt: new Date(),
+          subscription: {
+            id: null,
+            name: null,
+            status: null,
+            test: false,
+            planType: null,
+            planInterval: null,
+            amount: null,
+            currencyCode: null,
+            verifiedAt: null,
+          },
+        },
       },
       {
         new: true,
@@ -271,6 +354,22 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       shop: normalizedShop,
       count: products.length,
       productIds: products.slice(0, 10).map((product) => product?.id).filter(Boolean),
+    });
+
+    const subscription = await getActiveSubscription({
+      shop: normalizedShop,
+      accessToken,
+    });
+
+    if (!subscription) {
+      return res.redirect(
+        buildBillingEntryUrl({ shop: normalizedShop, host: embeddedHost })
+      );
+    }
+
+    await persistSubscription({
+      shop: normalizedShop,
+      subscription,
     });
 
     res.redirect(
@@ -300,6 +399,50 @@ export const getShopifyProducts = asyncHandler(async (req, res) => {
   });
 });
 
+export const handleBillingEntry = asyncHandler(async (req, res) => {
+  const { shop: shopParam, host } = req.query;
+
+  if (!shopParam) {
+    return redirectToConnect(res, {
+      error: "Billing entry requires shop parameter",
+    });
+  }
+
+  const { normalizedShop, accessToken } = await resolveStoreByShop(shopParam);
+  const embeddedHost = host || buildEmbeddedAppHost(normalizedShop);
+
+  const subscription = await getActiveSubscription({
+    shop: normalizedShop,
+    accessToken,
+  });
+
+  if (subscription) {
+    await persistSubscription({
+      shop: normalizedShop,
+      subscription,
+    });
+    return res.redirect(
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
+        shop: normalizedShop,
+        host: embeddedHost,
+        billing: "active",
+      })
+    );
+  }
+
+  const pricingPath = SHOPIFY_FRONTEND_URL
+    ? `${SHOPIFY_FRONTEND_URL}/pricing`
+    : "/pricing";
+
+  res.redirect(
+    buildRedirectUrl(pricingPath, {
+      shop: normalizedShop,
+      host: embeddedHost,
+      billing: "required",
+    })
+  );
+});
+
 export const handleBillingCallback = asyncHandler(async (req, res, next) => {
   try {
     const { shop: shopParam, host } = req.query;
@@ -312,16 +455,32 @@ export const handleBillingCallback = asyncHandler(async (req, res, next) => {
 
     const { normalizedShop, accessToken } = await resolveStoreByShop(shopParam);
     const embeddedHost = host || buildEmbeddedAppHost(normalizedShop);
-    const active = await hasActiveSubscription({
+
+    const subscription = await getActiveSubscription({
       shop: normalizedShop,
       accessToken,
+    });
+
+    if (!subscription) {
+      await persistSubscription({
+        shop: normalizedShop,
+        subscription: null,
+      });
+      return res.redirect(
+        buildBillingEntryUrl({ shop: normalizedShop, host: embeddedHost })
+      );
+    }
+
+    await persistSubscription({
+      shop: normalizedShop,
+      subscription,
     });
 
     res.redirect(
       buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
         shop: normalizedShop,
         host: embeddedHost,
-        billing: active ? "active" : "declined",
+        billing: "active",
       })
     );
   } catch (error) {

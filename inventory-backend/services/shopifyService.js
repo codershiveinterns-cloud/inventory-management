@@ -251,7 +251,7 @@ async function shopifyGraphQL({ shop, accessToken, query, variables }) {
   }
 }
 
-export async function hasActiveSubscription({ shop, accessToken }) {
+export async function getActiveSubscription({ shop, accessToken }) {
   const query = `
     query currentSubscriptions {
       currentAppInstallation {
@@ -260,6 +260,20 @@ export async function hasActiveSubscription({ shop, accessToken }) {
           name
           status
           test
+          lineItems {
+            plan {
+              pricingDetails {
+                __typename
+                ... on AppRecurringPricing {
+                  interval
+                  price {
+                    amount
+                    currencyCode
+                  }
+                }
+              }
+            }
+          }
         }
       }
     }
@@ -267,7 +281,12 @@ export async function hasActiveSubscription({ shop, accessToken }) {
 
   const data = await shopifyGraphQL({ shop, accessToken, query });
   const subs = data?.currentAppInstallation?.activeSubscriptions || [];
-  return subs.some((sub) => sub.status === "ACTIVE");
+  return subs.find((sub) => sub.status === "ACTIVE") || null;
+}
+
+export async function hasActiveSubscription({ shop, accessToken }) {
+  const sub = await getActiveSubscription({ shop, accessToken });
+  return Boolean(sub);
 }
 
 export const BILLING_PLANS = {
