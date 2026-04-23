@@ -2,7 +2,7 @@
 
 client_id = "bc53d1f27ef652bed3f840172a749001"
 name = "InventoryFlow"
-application_url = "https://inventory-management-liart-tau.vercel.app"
+application_url = "application_url = "https://inventory-management-7r95.onrender.com"
 embedded = true
 
 [webhooks]

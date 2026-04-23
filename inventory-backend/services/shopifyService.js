@@ -7,6 +7,8 @@ import {
   SHOPIFY_REDIRECT_URI,
   SHOPIFY_SCOPES,
   SHOPIFY_STATE_TTL_MS,
+  SHOPIFY_BILLING_TRIAL_DAYS,
+  SHOPIFY_BILLING_TEST,
   assertShopifyEnv,
 } from "../config/shopify.js";
 
@@ -216,6 +218,198 @@ export async function fetchShopifyProducts({ shop, accessToken }) {
       "Failed to fetch products from Shopify"
     );
   }
+}
+
+async function shopifyGraphQL({ shop, accessToken, query, variables }) {
+  const normalizedShop = normalizeShopDomain(shop);
+  try {
+    const response = await axios.post(
+      `https://${normalizedShop}/admin/api/${SHOPIFY_API_VERSION}/graphql.json`,
+      { query, variables },
+      {
+        headers: {
+          "X-Shopify-Access-Token": accessToken,
+          "Content-Type": "application/json",
+        },
+        timeout: 15000,
+      }
+    );
+
+    if (response.data?.errors?.length) {
+      const message = response.data.errors
+        .map((err) => err.message)
+        .join("; ");
+      const error = new Error(`Shopify GraphQL error: ${message}`);
+      error.statusCode = 502;
+      throw error;
+    }
+
+    return response.data?.data;
+  } catch (error) {
+    if (error.statusCode) throw error;
+    throw createShopifyApiError(error, "Shopify GraphQL request failed");
+  }
+}
+
+export async function hasActiveSubscription({ shop, accessToken }) {
+  const query = `
+    query currentSubscriptions {
+      currentAppInstallation {
+        activeSubscriptions {
+          id
+          name
+          status
+          test
+        }
+      }
+    }
+  `;
+
+  const data = await shopifyGraphQL({ shop, accessToken, query });
+  const subs = data?.currentAppInstallation?.activeSubscriptions || [];
+  return subs.some((sub) => sub.status === "ACTIVE");
+}
+
+export const BILLING_PLANS = {
+  BASIC: {
+    MONTHLY: {
+      name: "Basic Plan - Monthly",
+      amount: 59,
+      interval: "EVERY_30_DAYS",
+      currencyCode: "EUR",
+    },
+    YEARLY: {
+      name: "Basic Plan - Yearly",
+      amount: 49 * 12,
+      interval: "ANNUAL",
+      currencyCode: "EUR",
+    },
+  },
+  GROWTH: {
+    MONTHLY: {
+      name: "Growth Plan - Monthly",
+      amount: 199,
+      interval: "EVERY_30_DAYS",
+      currencyCode: "EUR",
+    },
+    YEARLY: {
+      name: "Growth Plan - Yearly",
+      amount: 159 * 12,
+      interval: "ANNUAL",
+      currencyCode: "EUR",
+    },
+  },
+};
+
+export function resolvePlan({ planType, billingInterval }) {
+  const plan = String(planType || "").toUpperCase();
+  const interval = String(billingInterval || "").toUpperCase();
+
+  const planGroup = BILLING_PLANS[plan];
+  if (!planGroup) {
+    const error = new Error(
+      `Invalid planType "${planType}". Must be BASIC or GROWTH.`
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
+  const resolved = planGroup[interval];
+  if (!resolved) {
+    const error = new Error(
+      `Invalid billingInterval "${billingInterval}". Must be MONTHLY or YEARLY.`
+    );
+    error.statusCode = 400;
+    throw error;
+  }
+
+  return { ...resolved, planType: plan, billingInterval: interval };
+}
+
+export async function createAppSubscription({
+  shop,
+  accessToken,
+  returnUrl,
+  planType,
+  billingInterval,
+}) {
+  const plan = resolvePlan({ planType, billingInterval });
+
+  const mutation = `
+    mutation appSubscriptionCreate(
+      $name: String!
+      $returnUrl: URL!
+      $test: Boolean
+      $trialDays: Int
+      $lineItems: [AppSubscriptionLineItemInput!]!
+    ) {
+      appSubscriptionCreate(
+        name: $name
+        returnUrl: $returnUrl
+        test: $test
+        trialDays: $trialDays
+        lineItems: $lineItems
+      ) {
+        appSubscription {
+          id
+          name
+          status
+        }
+        confirmationUrl
+        userErrors {
+          field
+          message
+        }
+      }
+    }
+  `;
+
+  const variables = {
+    name: plan.name,
+    returnUrl,
+    test: SHOPIFY_BILLING_TEST,
+    trialDays: SHOPIFY_BILLING_TRIAL_DAYS,
+    lineItems: [
+      {
+        plan: {
+          appRecurringPricingDetails: {
+            price: {
+              amount: plan.amount,
+              currencyCode: plan.currencyCode,
+            },
+            interval: plan.interval,
+          },
+        },
+      },
+    ],
+  };
+
+  const data = await shopifyGraphQL({
+    shop,
+    accessToken,
+    query: mutation,
+    variables,
+  });
+
+  const result = data?.appSubscriptionCreate;
+  if (result?.userErrors?.length) {
+    const message = result.userErrors.map((e) => e.message).join("; ");
+    const error = new Error(`appSubscriptionCreate failed: ${message}`);
+    error.statusCode = 400;
+    throw error;
+  }
+
+  if (!result?.confirmationUrl) {
+    const error = new Error("Shopify did not return a confirmationUrl");
+    error.statusCode = 502;
+    throw error;
+  }
+
+  return {
+    confirmationUrl: result.confirmationUrl,
+    subscription: result.appSubscription,
+    plan,
+  };
 }
 
 export async function registerWebhooks({ shop, accessToken }) {

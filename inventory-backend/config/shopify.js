@@ -22,6 +22,11 @@ export const SHOPIFY_ERROR_REDIRECT =
   process.env.SHOPIFY_ERROR_REDIRECT?.trim() ||
   (SHOPIFY_FRONTEND_URL ? `${SHOPIFY_FRONTEND_URL}/connect` : "/connect");
 
+export const SHOPIFY_BILLING_TRIAL_DAYS =
+  Number.parseInt(process.env.SHOPIFY_BILLING_TRIAL_DAYS, 10) || 0;
+export const SHOPIFY_BILLING_TEST =
+  (process.env.SHOPIFY_BILLING_TEST ?? "true").toString().toLowerCase() !== "false";
+
 export function assertShopifyEnv() {
   const missing = [
     ["SHOPIFY_API_KEY", SHOPIFY_API_KEY],

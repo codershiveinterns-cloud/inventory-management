@@ -15,7 +15,34 @@ import {
   verifyShopifyCallbackHmac,
   verifySignedState,
   registerWebhooks,
+  hasActiveSubscription,
+  createAppSubscription,
 } from "../services/shopifyService.js";
+
+function getBackendOrigin() {
+  return new URL(SHOPIFY_REDIRECT_URI).origin;
+}
+
+function buildBillingReturnUrl({ shop, host }) {
+  const url = new URL("/billing/callback", getBackendOrigin());
+  url.searchParams.set("shop", shop);
+  if (host) url.searchParams.set("host", host);
+  return url.toString();
+}
+
+async function resolveStoreByShop(shop) {
+  const normalizedShop = normalizeShopDomain(shop);
+  const record = await Store.findOne({ shopName: normalizedShop })
+    .select("+accessToken");
+
+  if (!record?.accessToken) {
+    const error = new Error("Shopify store is not authenticated");
+    error.statusCode = 401;
+    throw error;
+  }
+
+  return { normalizedShop, accessToken: record.accessToken };
+}
 
 function normalizeUrl(url = "") {
   return url.trim().replace(/\/+$/, "");
@@ -270,5 +297,99 @@ export const getShopifyProducts = asyncHandler(async (req, res) => {
     shop: req.shop || "test-store.myshopify.com",
     count: 0,
     data: [],
+  });
+});
+
+export const handleBillingCallback = asyncHandler(async (req, res, next) => {
+  try {
+    const { shop: shopParam, host } = req.query;
+
+    if (!shopParam) {
+      return redirectToConnect(res, {
+        error: "Billing callback missing shop parameter",
+      });
+    }
+
+    const { normalizedShop, accessToken } = await resolveStoreByShop(shopParam);
+    const embeddedHost = host || buildEmbeddedAppHost(normalizedShop);
+    const active = await hasActiveSubscription({
+      shop: normalizedShop,
+      accessToken,
+    });
+
+    res.redirect(
+      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
+        shop: normalizedShop,
+        host: embeddedHost,
+        billing: active ? "active" : "declined",
+      })
+    );
+  } catch (error) {
+    if (SHOPIFY_ERROR_REDIRECT) {
+      return redirectToConnect(res, {
+        shop: req.query.shop,
+        error: error.message,
+      });
+    }
+    return next(error);
+  }
+});
+
+export const getSubscriptionStatus = asyncHandler(async (req, res) => {
+  const shopParam = req.query.shop || req.shop;
+  if (!shopParam) {
+    res.status(400);
+    throw new Error("shop query parameter is required");
+  }
+
+  const { normalizedShop, accessToken } = await resolveStoreByShop(shopParam);
+  const active = await hasActiveSubscription({
+    shop: normalizedShop,
+    accessToken,
+  });
+
+  res.json({
+    success: true,
+    shop: normalizedShop,
+    active,
+  });
+});
+
+export const createBillingSubscription = asyncHandler(async (req, res) => {
+  const { plan, interval } = req.body || {};
+  const shopParam = req.body?.shop || req.query?.shop || req.shop;
+  const host = req.body?.host || req.query?.host || "";
+
+  if (!shopParam) {
+    res.status(400);
+    throw new Error("shop is required");
+  }
+  if (!plan || !interval) {
+    res.status(400);
+    throw new Error("plan and interval are required");
+  }
+
+  const { normalizedShop, accessToken } = await resolveStoreByShop(shopParam);
+  const embeddedHost = host || buildEmbeddedAppHost(normalizedShop);
+  const returnUrl = buildBillingReturnUrl({
+    shop: normalizedShop,
+    host: embeddedHost,
+  });
+
+  const { confirmationUrl, subscription, plan: resolvedPlan } =
+    await createAppSubscription({
+      shop: normalizedShop,
+      accessToken,
+      returnUrl,
+      planType: plan,
+      billingInterval: interval,
+    });
+
+  res.json({
+    success: true,
+    shop: normalizedShop,
+    confirmationUrl,
+    subscription,
+    plan: resolvedPlan,
   });
 });

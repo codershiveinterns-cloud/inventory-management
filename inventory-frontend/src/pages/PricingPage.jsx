@@ -1,6 +1,9 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PageHeader from '../components/PageHeader';
+import { getShopifyQueryContext } from '../utils/shopifyQueryParams';
+
+const BILLING_ENDPOINT = '/billing/create';
 
 const CheckIcon = () => (
   <svg className="mr-3 h-6 w-6 shrink-0 text-cyan-400" viewBox="0 0 24 24" fill="currentColor">
@@ -18,15 +21,61 @@ export default function PricingPage() {
   const navigate = useNavigate();
   const [currentPlan, setCurrentPlan] = useState('basic');
   const [isYearly, setIsYearly] = useState(false);
+  const [loadingPlan, setLoadingPlan] = useState(null);
+  const [errorMessage, setErrorMessage] = useState('');
 
   useEffect(() => {
     setCurrentPlan(localStorage.getItem('app_plan') || 'basic');
   }, []);
 
-  const handleChoosePlan = (plan) => {
-    localStorage.setItem('app_plan', plan);
-    setCurrentPlan(plan);
-    navigate('/app');
+  const handlePlanSelection = async (plan, interval) => {
+    const { shop, host } = getShopifyQueryContext();
+
+    if (!shop) {
+      setErrorMessage(
+        'Missing Shopify shop context. Please reopen the app from your Shopify admin.'
+      );
+      return;
+    }
+
+    setErrorMessage('');
+    setLoadingPlan(`${plan}_${interval}`);
+
+    try {
+      const response = await fetch(BILLING_ENDPOINT, {
+        method: 'POST',
+        credentials: 'include',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          shop,
+          host,
+          plan: plan.toUpperCase(),
+          interval: interval.toUpperCase(),
+        }),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok || !data?.confirmationUrl) {
+        throw new Error(
+          data?.message || data?.error || 'Failed to create subscription.'
+        );
+      }
+
+      localStorage.setItem('app_plan', plan);
+      setCurrentPlan(plan);
+
+      if (window.top) {
+        window.top.location.href = data.confirmationUrl;
+      } else {
+        window.location.href = data.confirmationUrl;
+      }
+    } catch (error) {
+      setErrorMessage(
+        error?.message || 'Something went wrong while starting checkout.'
+      );
+      setLoadingPlan(null);
+    }
   };
 
   const plans = [
@@ -44,7 +93,6 @@ export default function PricingPage() {
         'Limit: 100 products'
       ],
       missingFeatures: ['Dashboard analytics', 'Priority support'],
-      buttonText: currentPlan === 'basic' ? 'Current Plan' : 'Choose Basic',
       highlighted: false
     },
     {
@@ -61,14 +109,13 @@ export default function PricingPage() {
         'Priority support'
       ],
       missingFeatures: [],
-      buttonText: currentPlan === 'growth' ? 'Current Plan' : 'Choose Growth',
       highlighted: true
     }
   ];
 
   return (
     <section className="pb-16 pt-32 lg:pt-36 px-4">
-      <PageHeader 
+      <PageHeader
         badge="Pricing"
         title="Simple, transparent pricing"
         description="Choose the right plan to manage your inventory and scale your business."
@@ -103,17 +150,33 @@ export default function PricingPage() {
           </button>
         </div>
       </div>
-      
+
+      {errorMessage && (
+        <div className="mx-auto mt-6 max-w-2xl rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-center text-sm font-medium text-red-300">
+          {errorMessage}
+        </div>
+      )}
+
       <div className="mx-auto mt-12 grid max-w-5xl gap-8 lg:grid-cols-2">
         {plans.map(plan => {
           const currentPrice = isYearly ? plan.priceYearly : plan.priceMonthly;
-          
+          const interval = isYearly ? 'YEARLY' : 'MONTHLY';
+          const loadingKey = `${plan.id}_${interval}`;
+          const isLoading = loadingPlan === loadingKey;
+          const isAnyLoading = loadingPlan !== null;
+          const isCurrent = currentPlan === plan.id;
+          const buttonText = isLoading
+            ? 'Redirecting to Shopify…'
+            : isCurrent
+            ? 'Current Plan'
+            : `Choose ${plan.name.replace(' Plan', '')}`;
+
           return (
-          <div 
+          <div
             key={plan.id}
             className={`relative flex flex-col rounded-3xl border ${
-              plan.highlighted 
-                ? 'border-cyan-500/50 bg-gradient-to-b from-cyan-900/20 to-slate-900 shadow-2xl shadow-cyan-500/10' 
+              plan.highlighted
+                ? 'border-cyan-500/50 bg-gradient-to-b from-cyan-900/20 to-slate-900 shadow-2xl shadow-cyan-500/10'
                 : 'border-white/10 bg-white/5'
             } p-8 xl:p-10`}
           >
@@ -131,7 +194,7 @@ export default function PricingPage() {
               <h3 className="text-2xl font-bold text-white">{plan.name}</h3>
               <p className="mt-2 text-sm text-slate-400">{plan.description}</p>
             </div>
-            
+
             <div className="mb-8">
               <div className="flex items-baseline text-white">
                 <span className="text-5xl font-extrabold tracking-tight">€{currentPrice}</span>
@@ -143,7 +206,7 @@ export default function PricingPage() {
                 </p>
               )}
             </div>
-            
+
             <ul className="mb-10 flex-1 space-y-4">
               {plan.features.map(feature => (
                 <li key={feature} className="flex items-start">
@@ -158,19 +221,25 @@ export default function PricingPage() {
                 </li>
               ))}
             </ul>
-            
+
             <button
-              onClick={() => handleChoosePlan(plan.id)}
-              disabled={currentPlan === plan.id}
-              className={`mt-auto w-full rounded-xl px-4 py-3.5 text-center text-sm font-bold transition-all duration-300 ${
-                currentPlan === plan.id
+              onClick={() => handlePlanSelection(plan.id, interval)}
+              disabled={isCurrent || isAnyLoading}
+              className={`mt-auto flex w-full items-center justify-center rounded-xl px-4 py-3.5 text-center text-sm font-bold transition-all duration-300 ${
+                isCurrent || isAnyLoading
                   ? 'cursor-not-allowed bg-white/5 text-slate-500'
                   : plan.highlighted
                   ? 'bg-gradient-to-r from-cyan-500 to-indigo-500 text-white shadow-lg hover:scale-[1.02] hover:shadow-cyan-500/25 active:scale-95'
                   : 'bg-white/10 text-white hover:bg-white/20 active:scale-95'
               }`}
             >
-              {plan.buttonText}
+              {isLoading && (
+                <svg className="mr-2 h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none">
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                </svg>
+              )}
+              {buttonText}
             </button>
           </div>
         )})}
