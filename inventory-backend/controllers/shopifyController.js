@@ -188,6 +188,7 @@ export const handleAppEntry = asyncHandler(async (req, res, next) => {
   const host = req.query.host || "";
 
   if (!shopParam) {
+    console.log("route:", req.path, "shop: none → fall-through to SPA");
     return next();
   }
 
@@ -198,11 +199,9 @@ export const handleAppEntry = asyncHandler(async (req, res, next) => {
   const embeddedHost = host || buildEmbeddedAppHost(shop);
 
   if (!existingStore?.accessToken) {
+    console.log("route:", req.path, "shop:", shop, "accessToken: none → redirect /auth");
     return res.redirect(
-      buildRedirectUrl(
-        SHOPIFY_FRONTEND_URL ? `${SHOPIFY_FRONTEND_URL}/auth` : "/auth",
-        { shop, host: embeddedHost }
-      )
+      buildRedirectUrl("/auth", { shop, host: embeddedHost })
     );
   }
 
@@ -211,6 +210,8 @@ export const handleAppEntry = asyncHandler(async (req, res, next) => {
     accessToken: existingStore.accessToken,
   });
 
+  console.log("route:", req.path, "shop:", shop, "subscription:", subscription?.status || "NONE");
+
   if (!subscription) {
     await persistSubscription({ shop, subscription: null });
     return res.redirect(buildBillingEntryUrl({ shop, host: embeddedHost }));
@@ -218,12 +219,7 @@ export const handleAppEntry = asyncHandler(async (req, res, next) => {
 
   await persistSubscription({ shop, subscription });
 
-  return res.redirect(
-    buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
-      shop,
-      host: embeddedHost,
-    })
-  );
+  return next();
 });
 
 export const connectShopifyStore = asyncHandler(async (req, res) => {
@@ -361,6 +357,8 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
       accessToken,
     });
 
+    console.log("route:", req.path, "shop:", normalizedShop, "subscription:", subscription?.status || "NONE");
+
     if (!subscription) {
       return res.redirect(
         buildBillingEntryUrl({ shop: normalizedShop, host: embeddedHost })
@@ -373,7 +371,7 @@ export const handleShopifyCallback = asyncHandler(async (req, res, next) => {
     });
 
     res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
+      buildRedirectUrl("/", {
         shop: normalizedShop,
         host: embeddedHost,
       })
@@ -416,13 +414,15 @@ export const handleBillingEntry = asyncHandler(async (req, res) => {
     accessToken,
   });
 
+  console.log("route:", req.path, "shop:", normalizedShop, "subscription:", subscription?.status || "NONE");
+
   if (subscription) {
     await persistSubscription({
       shop: normalizedShop,
       subscription,
     });
     return res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
+      buildRedirectUrl("/", {
         shop: normalizedShop,
         host: embeddedHost,
         billing: "active",
@@ -430,12 +430,8 @@ export const handleBillingEntry = asyncHandler(async (req, res) => {
     );
   }
 
-  const pricingPath = SHOPIFY_FRONTEND_URL
-    ? `${SHOPIFY_FRONTEND_URL}/pricing`
-    : "/pricing";
-
   res.redirect(
-    buildRedirectUrl(pricingPath, {
+    buildRedirectUrl("/pricing", {
       shop: normalizedShop,
       host: embeddedHost,
       billing: "required",
@@ -461,6 +457,8 @@ export const handleBillingCallback = asyncHandler(async (req, res, next) => {
       accessToken,
     });
 
+    console.log("route:", req.path, "shop:", normalizedShop, "subscription:", subscription?.status || "NONE");
+
     if (!subscription) {
       await persistSubscription({
         shop: normalizedShop,
@@ -477,7 +475,7 @@ export const handleBillingCallback = asyncHandler(async (req, res, next) => {
     });
 
     res.redirect(
-      buildRedirectUrl(SHOPIFY_FRONTEND_URL || "/", {
+      buildRedirectUrl("/", {
         shop: normalizedShop,
         host: embeddedHost,
         billing: "active",
